@@ -1,0 +1,318 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 800" preserveAspectRatio="xMidYMax slice" role="img" aria-label="Tunisian city illustration">
+  <defs>
+    <filter id="sp-grain" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.72 0.65" numOctaves="4" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise" result="grayNoise"/>
+      <feBlend in="SourceGraphic" in2="grayNoise" mode="soft-light" result="blended"/>
+      <feComposite in="blended" in2="SourceGraphic" operator="in"/>
+    </filter>
+  </defs>
+
+  <!-- ============================================ -->
+  <!-- LAYER BG — Distant city silhouettes          -->
+  <!-- ============================================ -->
+  <g id="bf-layer-bg">
+    <!-- Sky texture blocks -->
+    <rect x="0" y="0" width="1440" height="800" fill="#050505"/>
+    <!-- Distant building cluster 1 — far left -->
+    <rect x="30"  y="370" width="160" height="280" fill="#111110"/>
+    <rect x="55"  y="340" width="80"  height="310" fill="#0e0e0d"/>
+    <rect x="170" y="400" width="100" height="250" fill="#0d0d0c"/>
+    <!-- Distant building cluster 2 — left-center -->
+    <rect x="440" y="390" width="180" height="260" fill="#121211"/>
+    <rect x="480" y="360" width="90"  height="290" fill="#0f0f0e"/>
+    <rect x="600" y="410" width="110" height="240" fill="#111110"/>
+    <!-- Distant building cluster 3 — center-right -->
+    <rect x="810" y="380" width="220" height="270" fill="#0e0e0d"/>
+    <rect x="880" y="350" width="100" height="300" fill="#111110"/>
+    <!-- Distant building cluster 4 — far right -->
+    <rect x="1180" y="390" width="160" height="260" fill="#0d0d0c"/>
+    <rect x="1270" y="360" width="90"  height="290" fill="#111110"/>
+    <rect x="1360" y="420" width="120" height="230" fill="#0e0e0d"/>
+    <!-- Distant rooftop lines -->
+    <rect x="30"  y="367" width="240" height="5" fill="#1a1a19"/>
+    <rect x="440" y="387" width="270" height="5" fill="#1a1a19"/>
+    <rect x="810" y="377" width="270" height="5" fill="#1a1a19"/>
+    <rect x="1180" y="387" width="200" height="5" fill="#1a1a19"/>
+    <!-- Distant antennas -->
+    <rect x="120" y="300" width="3" height="72" fill="#181817"/>
+    <rect x="520" y="310" width="3" height="52" fill="#181817"/>
+    <rect x="940" y="300" width="3" height="52" fill="#181817"/>
+    <rect x="1230" y="315" width="3" height="47" fill="#181817"/>
+    <!-- Far-off wire -->
+    <polyline points="0,310 200,308 400,315 650,312 900,310 1200,315 1440,320" fill="none" stroke="#161615" stroke-width="1" opacity="0.7"/>
+  </g>
+
+  <!-- ============================================ -->
+  <!-- LAYER MID — Main buildings, pole, palm       -->
+  <!-- ============================================ -->
+  <g id="bf-layer-mid">
+
+    <!-- === BUILDING A — Far left, cropped === -->
+    <rect x="-25" y="175" width="165" height="475" fill="#0c0c0b"/>
+    <!-- Window rows -->
+    <rect x="5"   y="220" width="32" height="22" fill="#F1EEE6" opacity="0.85"/>
+    <rect x="55"  y="220" width="32" height="22" fill="#F1EEE6" opacity="0.55"/>
+    <rect x="5"   y="268" width="32" height="22" fill="#F1EEE6" opacity="0.65"/>
+    <rect x="55"  y="268" width="32" height="22" fill="#F1EEE6" opacity="0.9"/>
+    <rect x="5"   y="316" width="32" height="22" fill="#F1EEE6" opacity="0.4"/>
+    <rect x="55"  y="316" width="32" height="22" fill="#F1EEE6" opacity="0.75"/>
+    <rect x="5"   y="364" width="32" height="22" fill="#F1EEE6" opacity="0.9"/>
+    <rect x="55"  y="364" width="32" height="22" fill="#F1EEE6" opacity="0.3"/>
+    <rect x="5"   y="412" width="32" height="22" fill="#F1EEE6" opacity="0.6"/>
+    <!-- Rooftop A -->
+    <rect x="-25" y="170" width="165" height="7"  fill="#F1EEE6" opacity="0.45"/>
+    <rect x="40"  y="148" width="14"  height="26" fill="#F1EEE6" opacity="0.5"/>
+    <rect x="80"  y="155" width="10"  height="18" fill="#F1EEE6" opacity="0.35"/>
+    <!-- Side texture -->
+    <rect x="135" y="175" width="5"   height="475" fill="#080807"/>
+
+    <!-- === BUILDING B — Left complex === -->
+    <rect x="138"  y="255" width="242" height="395" fill="#161614"/>
+    <!-- Stepped roofline B -->
+    <polygon points="138,255 240,225 310,240 380,255" fill="#1a1a18"/>
+    <rect x="138" y="222" width="102" height="7" fill="#F1EEE6" opacity="0.35"/>
+    <!-- Window rows B -->
+    <rect x="158" y="285" width="38" height="26" fill="#F1EEE6" opacity="0.8"/>
+    <rect x="216" y="285" width="38" height="26" fill="#F1EEE6" opacity="0.5"/>
+    <rect x="274" y="285" width="38" height="26" fill="#F1EEE6" opacity="0.9"/>
+    <rect x="332" y="285" width="38" height="26" fill="#F1EEE6" opacity="0.35"/>
+    <rect x="158" y="335" width="38" height="26" fill="#F1EEE6" opacity="0.55"/>
+    <rect x="216" y="335" width="38" height="26" fill="#F1EEE6" opacity="0.85"/>
+    <rect x="274" y="335" width="38" height="26" fill="#F1EEE6" opacity="0.3"/>
+    <rect x="332" y="335" width="38" height="26" fill="#F1EEE6" opacity="0.7"/>
+    <rect x="158" y="385" width="38" height="26" fill="#F1EEE6" opacity="0.9"/>
+    <rect x="216" y="385" width="38" height="26" fill="#F1EEE6" opacity="0.4"/>
+    <rect x="332" y="385" width="38" height="26" fill="#F1EEE6" opacity="0.65"/>
+    <rect x="158" y="435" width="38" height="26" fill="#F1EEE6" opacity="0.45"/>
+    <rect x="216" y="435" width="38" height="26" fill="#F1EEE6" opacity="0.75"/>
+    <rect x="274" y="435" width="38" height="26" fill="#F1EEE6" opacity="0.6"/>
+    <rect x="158" y="485" width="38" height="26" fill="#F1EEE6" opacity="0.8"/>
+    <rect x="274" y="485" width="38" height="26" fill="#F1EEE6" opacity="0.5"/>
+    <rect x="332" y="485" width="38" height="26" fill="#F1EEE6" opacity="0.85"/>
+    <!-- Rooftop water tank B -->
+    <rect x="296" y="237" width="58" height="28" fill="#0a0a09"/>
+    <rect x="291" y="265" width="68" height="5"  fill="#F1EEE6" opacity="0.55"/>
+    <rect x="305" y="220" width="8"  height="20" fill="#F1EEE6" opacity="0.4"/>
+    <!-- Doorway B -->
+    <rect x="200" y="570" width="55" height="80" fill="#080807"/>
+    <rect x="197" y="567" width="61" height="6"  fill="#F1EEE6" opacity="0.5"/>
+
+    <!-- === MINARET / TOWER === -->
+    <rect x="378" y="105" width="32" height="545" fill="#0e0e0c"/>
+    <!-- Decorative horizontal bands -->
+    <rect x="375" y="195" width="38" height="6"  fill="#F1EEE6" opacity="0.55"/>
+    <rect x="375" y="265" width="38" height="4"  fill="#F1EEE6" opacity="0.35"/>
+    <rect x="375" y="335" width="38" height="6"  fill="#F1EEE6" opacity="0.5"/>
+    <rect x="375" y="405" width="38" height="4"  fill="#F1EEE6" opacity="0.3"/>
+    <rect x="375" y="475" width="38" height="6"  fill="#F1EEE6" opacity="0.45"/>
+    <!-- Dome cap -->
+    <polygon points="378,105 394,72 410,105" fill="#0f0f0e"/>
+    <polygon points="381,105 394,78 407,105" fill="#F1EEE6" opacity="0.08"/>
+    <!-- Mast & crescent -->
+    <rect x="392" y="52" width="4" height="22" fill="#F1EEE6" opacity="0.75"/>
+    <ellipse cx="397" cy="50" rx="7" ry="6" fill="none" stroke="#F1EEE6" stroke-width="1.8" opacity="0.75"/>
+    <!-- Small balcony detail -->
+    <rect x="368" y="215" width="52" height="8" fill="#F1EEE6" opacity="0.3"/>
+    <rect x="368" y="213" width="52" height="4" fill="#141412"/>
+
+    <!-- === BUILDING C — Wide block === -->
+    <rect x="408"  y="285" width="228" height="365" fill="#131312"/>
+    <rect x="408"  y="240" width="148" height="50"  fill="#181816"/>
+    <!-- Windows C -->
+    <rect x="428" y="312" width="42" height="30" fill="#F1EEE6" opacity="0.7"/>
+    <rect x="494" y="312" width="42" height="30" fill="#F1EEE6" opacity="0.4"/>
+    <rect x="560" y="312" width="42" height="30" fill="#F1EEE6" opacity="0.85"/>
+    <rect x="428" y="368" width="42" height="30" fill="#F1EEE6" opacity="0.5"/>
+    <rect x="494" y="368" width="42" height="30" fill="#F1EEE6" opacity="0.9"/>
+    <rect x="560" y="368" width="42" height="30" fill="#F1EEE6" opacity="0.3"/>
+    <rect x="428" y="424" width="42" height="30" fill="#F1EEE6" opacity="0.8"/>
+    <rect x="560" y="424" width="42" height="30" fill="#F1EEE6" opacity="0.6"/>
+    <rect x="428" y="480" width="42" height="30" fill="#F1EEE6" opacity="0.4"/>
+    <rect x="494" y="480" width="42" height="30" fill="#F1EEE6" opacity="0.75"/>
+    <rect x="560" y="480" width="42" height="30" fill="#F1EEE6" opacity="0.55"/>
+    <!-- Large arch C -->
+    <rect x="490" y="552" width="82" height="98" fill="#080807"/>
+    <rect x="487" y="548" width="88" height="7" fill="#F1EEE6" opacity="0.4"/>
+    <!-- Rooftop line C -->
+    <rect x="408" y="237" width="228" height="5" fill="#F1EEE6" opacity="0.35"/>
+    <rect x="408" y="280" width="228" height="7" fill="#1e1e1c"/>
+
+    <!-- === BUILDING D — Irregular polygon shape === -->
+    <polygon points="634,218 776,218 776,650 634,650" fill="#0f0f0e"/>
+    <polygon points="634,218 706,192 776,218" fill="#1c1c1a"/>
+    <!-- Lower wing D -->
+    <rect x="776" y="275" width="106" height="375" fill="#141412"/>
+    <!-- Windows D -->
+    <rect x="650" y="252" width="46" height="32" fill="#F1EEE6" opacity="0.65"/>
+    <rect x="718" y="252" width="46" height="32" fill="#F1EEE6" opacity="0.9"/>
+    <rect x="650" y="312" width="46" height="32" fill="#F1EEE6" opacity="0.4"/>
+    <rect x="718" y="312" width="46" height="32" fill="#F1EEE6" opacity="0.75"/>
+    <rect x="650" y="372" width="46" height="32" fill="#F1EEE6" opacity="0.85"/>
+    <rect x="718" y="372" width="46" height="32" fill="#F1EEE6" opacity="0.3"/>
+    <rect x="650" y="432" width="46" height="32" fill="#F1EEE6" opacity="0.6"/>
+    <rect x="718" y="432" width="46" height="32" fill="#F1EEE6" opacity="0.5"/>
+    <rect x="650" y="492" width="46" height="32" fill="#F1EEE6" opacity="0.8"/>
+    <!-- Wing windows -->
+    <rect x="796" y="305" width="34" height="26" fill="#F1EEE6" opacity="0.7"/>
+    <rect x="844" y="305" width="34" height="26" fill="#F1EEE6" opacity="0.4"/>
+    <rect x="796" y="355" width="34" height="26" fill="#F1EEE6" opacity="0.85"/>
+    <rect x="844" y="355" width="34" height="26" fill="#F1EEE6" opacity="0.55"/>
+    <rect x="796" y="405" width="34" height="26" fill="#F1EEE6" opacity="0.4"/>
+    <rect x="844" y="455" width="34" height="26" fill="#F1EEE6" opacity="0.7"/>
+    <!-- Rooftop D -->
+    <rect x="634" y="188" width="142" height="6" fill="#F1EEE6" opacity="0.4"/>
+    <!-- Water tower D -->
+    <rect x="640" y="165" width="40" height="30" fill="#0a0a09"/>
+    <rect x="635" y="195" width="50" height="5"  fill="#F1EEE6" opacity="0.45"/>
+
+    <!-- === MAIN ELECTRICITY POLE === -->
+    <rect x="878" y="132" width="14" height="518" fill="#F1EEE6" opacity="0.85"/>
+    <!-- Main crossarm -->
+    <rect x="830" y="170" width="110" height="7" fill="#F1EEE6" opacity="0.85"/>
+    <!-- Insulators on crossarm -->
+    <rect x="830" y="164" width="8"  height="18" fill="#F1EEE6" opacity="0.65"/>
+    <rect x="929" y="164" width="8"  height="18" fill="#F1EEE6" opacity="0.65"/>
+    <rect x="881" y="183" width="8"  height="14" fill="#F1EEE6" opacity="0.55"/>
+    <!-- Secondary crossarm -->
+    <rect x="844" y="242" width="82" height="6"  fill="#F1EEE6" opacity="0.65"/>
+    <rect x="844" y="237" width="6"  height="16" fill="#F1EEE6" opacity="0.5"/>
+    <rect x="920" y="237" width="6"  height="16" fill="#F1EEE6" opacity="0.5"/>
+    <!-- === WIRES FROM POLE === -->
+    <!-- Left wires -->
+    <polyline points="832,173 720,195 580,212 420,228 240,244 60,258" fill="none" stroke="#F1EEE6" stroke-width="1.6" opacity="0.65"/>
+    <polyline points="834,177 700,202 540,219 360,234 160,250 0,262" fill="none" stroke="#F1EEE6" stroke-width="1.1" opacity="0.45"/>
+    <polyline points="885,198 760,215 600,228 400,242" fill="none" stroke="#F1EEE6" stroke-width="0.9" opacity="0.35"/>
+    <!-- Right wires -->
+    <polyline points="936,173 1060,182 1200,195 1360,212 1500,228" fill="none" stroke="#F1EEE6" stroke-width="1.6" opacity="0.65"/>
+    <polyline points="938,177 1080,188 1250,204 1440,222" fill="none" stroke="#F1EEE6" stroke-width="1.1" opacity="0.45"/>
+
+    <!-- === BUILDING E — Right of pole === -->
+    <rect x="890"  y="252" width="208" height="398" fill="#121210"/>
+    <rect x="890"  y="202" width="130" height="56"  fill="#171715"/>
+    <!-- Windows E -->
+    <rect x="910" y="282" width="40" height="28" fill="#F1EEE6" opacity="0.8"/>
+    <rect x="968" y="282" width="40" height="28" fill="#F1EEE6" opacity="0.5"/>
+    <rect x="1026" y="282" width="40" height="28" fill="#F1EEE6" opacity="0.9"/>
+    <rect x="910" y="336" width="40" height="28" fill="#F1EEE6" opacity="0.4"/>
+    <rect x="968" y="336" width="40" height="28" fill="#F1EEE6" opacity="0.75"/>
+    <rect x="1026" y="336" width="40" height="28" fill="#F1EEE6" opacity="0.3"/>
+    <rect x="910" y="390" width="40" height="28" fill="#F1EEE6" opacity="0.65"/>
+    <rect x="1026" y="390" width="40" height="28" fill="#F1EEE6" opacity="0.85"/>
+    <rect x="910" y="444" width="40" height="28" fill="#F1EEE6" opacity="0.7"/>
+    <rect x="968" y="444" width="40" height="28" fill="#F1EEE6" opacity="0.4"/>
+    <rect x="1026" y="444" width="40" height="28" fill="#F1EEE6" opacity="0.6"/>
+    <rect x="910" y="498" width="40" height="28" fill="#F1EEE6" opacity="0.5"/>
+    <rect x="968" y="498" width="40" height="28" fill="#F1EEE6" opacity="0.8"/>
+    <!-- Rooftop E -->
+    <rect x="890" y="198" width="208" height="6"  fill="#F1EEE6" opacity="0.45"/>
+    <rect x="890" y="248" width="208" height="6"  fill="#222220"/>
+
+    <!-- === PALM TREE (geometric) === -->
+    <!-- Trunk -->
+    <polygon points="1095,650 1108,650 1104,455 1099,455" fill="#F1EEE6" opacity="0.8"/>
+    <!-- Trunk segment marks -->
+    <rect x="1099" y="490" width="5" height="2" fill="#050505" opacity="0.4"/>
+    <rect x="1099" y="520" width="5" height="2" fill="#050505" opacity="0.4"/>
+    <rect x="1099" y="550" width="5" height="2" fill="#050505" opacity="0.4"/>
+    <rect x="1099" y="580" width="5" height="2" fill="#050505" opacity="0.4"/>
+    <rect x="1099" y="610" width="5" height="2" fill="#050505" opacity="0.4"/>
+    <!-- Palm fronds — main arcs -->
+    <path d="M1101,460 Q1052,428 1018,408" stroke="#F1EEE6" stroke-width="4" fill="none" opacity="0.8" stroke-linecap="square"/>
+    <path d="M1101,460 Q1062,408 1070,374" stroke="#F1EEE6" stroke-width="4" fill="none" opacity="0.75" stroke-linecap="square"/>
+    <path d="M1101,460 Q1080,416 1094,382" stroke="#F1EEE6" stroke-width="3" fill="none" opacity="0.65" stroke-linecap="square"/>
+    <path d="M1101,460 Q1118,412 1128,378" stroke="#F1EEE6" stroke-width="4" fill="none" opacity="0.75" stroke-linecap="square"/>
+    <path d="M1101,460 Q1140,420 1162,404" stroke="#F1EEE6" stroke-width="4" fill="none" opacity="0.8" stroke-linecap="square"/>
+    <path d="M1101,460 Q1152,448 1174,446" stroke="#F1EEE6" stroke-width="3" fill="none" opacity="0.65" stroke-linecap="square"/>
+    <!-- Frond fill triangles -->
+    <polygon points="1101,460 1018,405 1040,418" fill="#F1EEE6" opacity="0.18"/>
+    <polygon points="1101,460 1065,372 1085,392" fill="#F1EEE6" opacity="0.14"/>
+    <polygon points="1101,460 1128,376 1114,398" fill="#F1EEE6" opacity="0.18"/>
+    <polygon points="1101,460 1162,402 1148,422" fill="#F1EEE6" opacity="0.14"/>
+
+    <!-- === BUILDING F — Right cluster === -->
+    <rect x="1108" y="238" width="248" height="412" fill="#0e0e0c"/>
+    <rect x="1108" y="185" width="158" height="58" fill="#141412"/>
+    <!-- Windows F -->
+    <rect x="1128" y="268" width="44" height="32" fill="#F1EEE6" opacity="0.7"/>
+    <rect x="1192" y="268" width="44" height="32" fill="#F1EEE6" opacity="0.4"/>
+    <rect x="1256" y="268" width="44" height="32" fill="#F1EEE6" opacity="0.9"/>
+    <rect x="1316" y="268" width="26" height="32" fill="#F1EEE6" opacity="0.5"/>
+    <rect x="1128" y="324" width="44" height="32" fill="#F1EEE6" opacity="0.5"/>
+    <rect x="1192" y="324" width="44" height="32" fill="#F1EEE6" opacity="0.8"/>
+    <rect x="1256" y="324" width="44" height="32" fill="#F1EEE6" opacity="0.3"/>
+    <rect x="1128" y="380" width="44" height="32" fill="#F1EEE6" opacity="0.9"/>
+    <rect x="1192" y="380" width="44" height="32" fill="#F1EEE6" opacity="0.55"/>
+    <rect x="1256" y="380" width="44" height="32" fill="#F1EEE6" opacity="0.7"/>
+    <rect x="1128" y="436" width="44" height="32" fill="#F1EEE6" opacity="0.4"/>
+    <rect x="1256" y="436" width="44" height="32" fill="#F1EEE6" opacity="0.65"/>
+    <rect x="1316" y="436" width="26" height="32" fill="#F1EEE6" opacity="0.8"/>
+    <rect x="1128" y="492" width="44" height="32" fill="#F1EEE6" opacity="0.6"/>
+    <rect x="1192" y="492" width="44" height="32" fill="#F1EEE6" opacity="0.8"/>
+    <rect x="1256" y="492" width="44" height="32" fill="#F1EEE6" opacity="0.45"/>
+    <!-- Large door/arch F -->
+    <rect x="1210" y="556" width="62" height="94" fill="#080807"/>
+    <rect x="1207" y="552" width="68" height="7" fill="#F1EEE6" opacity="0.5"/>
+    <!-- Rooftop F -->
+    <rect x="1108" y="181" width="248" height="6"  fill="#F1EEE6" opacity="0.4"/>
+    <rect x="1108" y="234" width="248" height="6"  fill="#222220"/>
+    <!-- Rooftop detail F -->
+    <rect x="1138" y="162" width="12" height="24" fill="#F1EEE6" opacity="0.38"/>
+    <rect x="1200" y="148" width="10" height="36" fill="#F1EEE6" opacity="0.3"/>
+
+    <!-- === BUILDING G — Far right, cropped === -->
+    <rect x="1352" y="195" width="200" height="455" fill="#111110"/>
+    <!-- Windows G -->
+    <rect x="1372" y="228" width="42" height="30" fill="#F1EEE6" opacity="0.8"/>
+    <rect x="1432" y="228" width="42" height="30" fill="#F1EEE6" opacity="0.5"/>
+    <rect x="1372" y="282" width="42" height="30" fill="#F1EEE6" opacity="0.55"/>
+    <rect x="1432" y="282" width="42" height="30" fill="#F1EEE6" opacity="0.9"/>
+    <rect x="1372" y="336" width="42" height="30" fill="#F1EEE6" opacity="0.35"/>
+    <rect x="1432" y="336" width="42" height="30" fill="#F1EEE6" opacity="0.7"/>
+    <rect x="1372" y="390" width="42" height="30" fill="#F1EEE6" opacity="0.75"/>
+    <rect x="1372" y="444" width="42" height="30" fill="#F1EEE6" opacity="0.5"/>
+    <rect x="1432" y="444" width="42" height="30" fill="#F1EEE6" opacity="0.3"/>
+    <!-- Rooftop G -->
+    <rect x="1352" y="190" width="200" height="7"  fill="#F1EEE6" opacity="0.38"/>
+    <rect x="1380" y="172" width="16" height="22" fill="#F1EEE6" opacity="0.35"/>
+    <rect x="1450" y="158" width="12" height="36" fill="#F1EEE6" opacity="0.28"/>
+
+    <!-- === GROUND LINE === -->
+    <rect x="0" y="648" width="1440" height="3" fill="#F1EEE6" opacity="0.25"/>
+    <rect x="0" y="651" width="1440" height="149" fill="#080807"/>
+
+    <!-- Street details -->
+    <rect x="180" y="678" width="110" height="4" fill="#F1EEE6" opacity="0.12"/>
+    <rect x="480" y="678" width="110" height="4" fill="#F1EEE6" opacity="0.10"/>
+    <rect x="880" y="678" width="110" height="4" fill="#F1EEE6" opacity="0.12"/>
+    <rect x="1200" y="678" width="110" height="4" fill="#F1EEE6" opacity="0.10"/>
+  </g>
+
+  <!-- ============================================ -->
+  <!-- LAYER FG — Foreground fragments and shadows  -->
+  <!-- ============================================ -->
+  <g id="bf-layer-fg">
+    <!-- Foreground fragment — far left wall -->
+    <rect x="-35" y="440" width="62" height="210" fill="#070706"/>
+    <!-- Foreground fragment — bottom left shadow -->
+    <polygon points="0,651 210,651 145,800 0,800" fill="#060605"/>
+    <!-- Foreground fragment — right shadow -->
+    <polygon points="1150,651 1440,651 1440,790 1280,790" fill="#060605"/>
+    <!-- Foreground wire sag (closer to viewer) -->
+    <path d="M 0,222 Q 240,258 480,248 Q 720,238 960,252 Q 1200,265 1440,258" stroke="#F1EEE6" stroke-width="1.2" fill="none" opacity="0.28"/>
+    <path d="M 0,228 Q 280,268 560,255 Q 840,242 1120,260 Q 1300,272 1440,266" stroke="#F1EEE6" stroke-width="0.8" fill="none" opacity="0.18"/>
+    <!-- Street lamp — left -->
+    <rect x="278" y="534" width="7" height="117" fill="#F1EEE6" opacity="0.35"/>
+    <rect x="263" y="530" width="28" height="7"  fill="#F1EEE6" opacity="0.35"/>
+    <rect x="263" y="530" width="7"  height="14" fill="#F1EEE6" opacity="0.25"/>
+    <!-- Street lamp — right -->
+    <rect x="1102" y="534" width="7" height="117" fill="#F1EEE6" opacity="0.35"/>
+    <rect x="1087" y="530" width="28" height="7"  fill="#F1EEE6" opacity="0.35"/>
+    <rect x="1109" y="530" width="7"  height="14" fill="#F1EEE6" opacity="0.25"/>
+    <!-- Debris / low-level blocks -->
+    <rect x="385" y="638" width="32" height="13" fill="#0a0a09"/>
+    <rect x="690" y="640" width="22" height="11" fill="#0c0c0b"/>
+    <rect x="1010" y="637" width="28" height="14" fill="#0a0a09"/>
+  </g>
+
+</svg>

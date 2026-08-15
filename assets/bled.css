@@ -1,0 +1,1520 @@
+/* =============================================================
+   BLED FAKE — BLED BLOCKS DESIGN SYSTEM
+   bled.css — Complete stylesheet
+   Brand: #050505 background / #F1EEE6 foreground
+   Typography: Bebas Neue (display) / Space Grotesk (body)
+   ============================================================= */
+
+/* ---------------------------------------------------------
+   1. CSS CUSTOM PROPERTIES (Design Tokens)
+   --------------------------------------------------------- */
+:root {
+  /* Core palette */
+  --bf-black:       #050505;
+  --bf-dark:        #0a0a08;
+  --bf-dark-2:      #141412;
+  --bf-mid:         #2a2a27;
+  --bf-off-white:   #F1EEE6;
+  --bf-off-white-2: #D8D5CE;
+  --bf-off-white-3: rgba(241, 238, 230, 0.65);
+  --bf-off-white-4: rgba(241, 238, 230, 0.12);
+
+  /* Typography */
+  --font-display: 'Bebas Neue', 'Impact', 'Arial Narrow', sans-serif;
+  --font-body:    'Space Grotesk', 'Courier New', monospace;
+
+  /* Spacing scale */
+  --sp-1: 0.5rem;
+  --sp-2: 1rem;
+  --sp-3: 1.5rem;
+  --sp-4: 2rem;
+  --sp-6: 3rem;
+  --sp-8: 4rem;
+  --sp-12: 6rem;
+
+  /* Parallax offsets — updated by JS on mousemove */
+  --px: 0;
+  --py: 0;
+
+  /* Easing */
+  --ease-block:  cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-snap:   cubic-bezier(0.23, 1, 0.32, 1);
+
+  /* Timing */
+  --t-fast:   120ms;
+  --t-mid:    280ms;
+  --t-slow:   550ms;
+  --t-xslow:  900ms;
+}
+
+/* ---------------------------------------------------------
+   2. RESET + BASE
+   --------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--bf-black);
+  color: var(--bf-off-white);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.4;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  cursor: none;
+}
+
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; cursor: none; }
+button { background: none; border: none; color: inherit; font: inherit; cursor: none; }
+ul, ol { list-style: none; }
+input, select, textarea { font: inherit; }
+[hidden] { display: none !important; }
+
+/* Visually hidden (accessible) */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+}
+
+/* Skip link */
+.bf-skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  background: var(--bf-off-white);
+  color: var(--bf-black);
+  padding: 0.5rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  z-index: 99999;
+}
+.bf-skip-link:focus { top: 1rem; }
+
+/* ---------------------------------------------------------
+   3. TYPOGRAPHY SYSTEM
+   --------------------------------------------------------- */
+.bf-display {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 0.9;
+}
+
+.bf-display-xl { font-size: clamp(4rem, 10vw, 10rem); }
+.bf-display-lg { font-size: clamp(3rem, 6vw, 6rem); }
+.bf-display-md { font-size: clamp(2rem, 4vw, 4rem); }
+.bf-display-sm { font-size: clamp(1.5rem, 2.5vw, 2.5rem); }
+
+.bf-label {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+.bf-body-text {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+}
+
+/* ---------------------------------------------------------
+   4. CUSTOM CURSOR (desktop only)
+   --------------------------------------------------------- */
+.bf-cursor {
+  position: fixed;
+  top: 0; left: 0;
+  width: 14px; height: 14px;
+  background: var(--bf-off-white);
+  pointer-events: none;
+  z-index: 99998;
+  mix-blend-mode: difference;
+  transform: translate(-50%, -50%);
+  /* Irregular block shape */
+  clip-path: polygon(0% 0%, 85% 0%, 100% 15%, 100% 100%, 15% 100%, 0% 85%);
+  transition:
+    width  var(--t-fast) ease,
+    height var(--t-fast) ease,
+    clip-path var(--t-mid) ease;
+  will-change: left, top;
+}
+
+.bf-cursor.is-hovering {
+  width: 26px;
+  height: 26px;
+  clip-path: polygon(0% 10%, 90% 0%, 100% 10%, 100% 90%, 90% 100%, 0% 90%);
+}
+
+.bf-cursor.is-pressing {
+  width: 10px;
+  height: 10px;
+}
+
+/* ---------------------------------------------------------
+   5. GRAIN TEXTURE OVERLAY
+   --------------------------------------------------------- */
+.bf-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 900;
+  opacity: 0.55;
+  mix-blend-mode: overlay;
+  /* SVG data-URI grain filter */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75 0.65' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23g)' opacity='0.12'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+}
+
+/* ---------------------------------------------------------
+   6. PAGE TRANSITION OVERLAY
+   --------------------------------------------------------- */
+.bf-transition-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bf-black);
+  z-index: 9990;
+  pointer-events: none;
+  transform: scaleY(0);
+  transform-origin: top center;
+  will-change: transform;
+}
+
+.bf-transition-overlay.is-entering {
+  pointer-events: all;
+  animation: bf-curtain-in var(--t-slow) var(--ease-block) forwards;
+}
+
+.bf-transition-overlay.is-exiting {
+  transform: scaleY(1);
+  transform-origin: bottom center;
+  animation: bf-curtain-out var(--t-slow) var(--ease-block) forwards;
+}
+
+@keyframes bf-curtain-in {
+  from { transform: scaleY(0); transform-origin: top center; }
+  to   { transform: scaleY(1); transform-origin: top center; }
+}
+
+@keyframes bf-curtain-out {
+  from { transform: scaleY(1); transform-origin: bottom center; }
+  to   { transform: scaleY(0); transform-origin: bottom center; }
+}
+
+/* ---------------------------------------------------------
+   7. SHARED OVERLAY BACKDROP
+   --------------------------------------------------------- */
+.bf-overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 5, 5, 0.75);
+  z-index: 490;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--t-mid) ease;
+}
+
+.bf-overlay-backdrop.is-active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ---------------------------------------------------------
+   8. BLOCK BUTTON (reusable)
+   --------------------------------------------------------- */
+.bf-block-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.8rem 1rem 1.4rem;
+  background: var(--bf-off-white);
+  color: var(--bf-black);
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1;
+  cursor: none;
+  /* Irregular geometric clip */
+  clip-path: polygon(0% 0%, 94% 0%, 100% 28%, 100% 100%, 6% 100%, 0% 72%);
+  transition:
+    clip-path  var(--t-mid) var(--ease-block),
+    background var(--t-fast) ease,
+    color      var(--t-fast) ease,
+    transform  var(--t-mid) var(--ease-snap);
+  will-change: clip-path, transform;
+}
+
+.bf-block-btn:hover {
+  clip-path: polygon(0% 8%, 96% 0%, 100% 22%, 100% 100%, 4% 100%, 0% 78%);
+  transform: translate(3px, -3px);
+}
+
+.bf-block-btn--large {
+  font-size: 2.4rem;
+  padding: 1.4rem 2.4rem 1.4rem 1.8rem;
+}
+
+.bf-block-btn__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 0.9;
+}
+
+.bf-block-btn__arrow {
+  display: inline-block;
+  transition: transform var(--t-mid) var(--ease-snap);
+  font-family: var(--font-body);
+  font-size: 1.2rem;
+}
+
+.bf-block-btn:hover .bf-block-btn__arrow {
+  transform: translateX(5px);
+}
+
+/* Inverted variant */
+.bf-block-btn--inverted {
+  background: var(--bf-black);
+  color: var(--bf-off-white);
+  border: 2px solid var(--bf-off-white);
+}
+
+.bf-block-btn--inverted:hover {
+  background: var(--bf-off-white);
+  color: var(--bf-black);
+}
+
+/* Add to cart specifics */
+.bf-add-cart-btn {
+  display: block;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: var(--bf-black);
+  color: var(--bf-off-white);
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 2px solid var(--bf-off-white);
+  cursor: none;
+  clip-path: polygon(0% 0%, 96% 0%, 100% 50%, 96% 100%, 0% 100%);
+  transition:
+    background var(--t-fast) ease,
+    color      var(--t-fast) ease,
+    clip-path  var(--t-mid) var(--ease-block),
+    transform  var(--t-fast) ease;
+  margin-top: var(--sp-3);
+}
+
+.bf-add-cart-btn:hover:not(:disabled) {
+  background: var(--bf-off-white);
+  color: var(--bf-black);
+  clip-path: polygon(4% 0%, 96% 0%, 100% 50%, 96% 100%, 4% 100%);
+  transform: translateY(-2px);
+}
+
+.bf-add-cart-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ---------------------------------------------------------
+   9. SIZE SELECTOR
+   --------------------------------------------------------- */
+.bf-size-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: var(--sp-2);
+}
+
+.bf-size-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  padding: 0.4rem 0.7rem;
+  background: transparent;
+  color: var(--bf-off-white);
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid rgba(241, 238, 230, 0.3);
+  cursor: none;
+  transition:
+    background var(--t-fast) ease,
+    color      var(--t-fast) ease,
+    border-color var(--t-fast) ease;
+}
+
+.bf-size-option:hover:not(.bf-size-option--sold-out),
+.bf-size-option.selected {
+  background: var(--bf-off-white);
+  color: var(--bf-black);
+  border-color: var(--bf-off-white);
+}
+
+.bf-size-option--sold-out {
+  opacity: 0.3;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+/* ---------------------------------------------------------
+   10. SHARED HEADER ELEMENTS
+   --------------------------------------------------------- */
+.bf-logo-link {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  color: var(--bf-off-white);
+  transition: transform var(--t-fast) ease;
+}
+
+.bf-logo-link:hover {
+  transform: scale(1.02);
+}
+
+.bf-logo-img {
+  height: clamp(36px, 5vw, 52px);
+  width: auto;
+  max-width: 200px;
+  object-fit: contain;
+  display: block;
+}
+
+.bf-logo-link .bf-logo-line {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4.5vw, 4rem);
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  display: block;
+}
+
+.bf-nav-right {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.bf-cart-trigger {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.2rem;
+}
+
+.bf-cart-trigger-label {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.bf-cart-count-badge {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+}
+
+.bf-menu-trigger {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+  padding: 0.4rem;
+}
+
+.bf-menu-trigger-label {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.bf-hamburger {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 30px;
+}
+
+.bf-hamburger__line {
+  height: 2px;
+  background: var(--bf-off-white);
+  transition: transform var(--t-mid) var(--ease-block), opacity var(--t-fast) ease;
+}
+
+.bf-hamburger__line:nth-child(2) {
+  width: 66%;
+  margin-left: auto;
+}
+
+/* Hamburger → X transform */
+.bf-menu--open .bf-hamburger__line:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.bf-menu--open .bf-hamburger__line:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.bf-menu--open .bf-hamburger__line:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* =============================================================
+   LANDING PAGE
+   ============================================================= */
+
+/* ---------------------------------------------------------
+   11. LANDING — OUTER SHELL
+   --------------------------------------------------------- */
+.bf-landing {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  min-height: 600px;
+  overflow: hidden;
+  background: var(--bf-black);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------------------------------------------------------
+   12. LANDING — FLOATING HEADER
+   --------------------------------------------------------- */
+.bf-landing__header {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 2rem 2.5rem;
+  pointer-events: none;
+}
+
+.bf-landing__header > * { pointer-events: all; }
+
+/* ---------------------------------------------------------
+   13. LANDING — CITY ILLUSTRATION (parallax)
+   --------------------------------------------------------- */
+.bf-landing__city {
+  position: absolute;
+  bottom: -2%;
+  left: -2%;
+  width: 104%;
+  height: 82%;
+  z-index: 10;
+  will-change: transform;
+  transition: transform var(--t-mid) ease-out;
+  transform: translate(
+    calc(var(--px) * -6px),
+    calc(var(--py) * -3px)
+  );
+}
+
+.bf-landing__city svg {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+/* Parallax layers inside SVG */
+#bf-layer-bg {
+  transform: translate(
+    calc(var(--px) * -2px),
+    calc(var(--py) * -1px)
+  );
+  will-change: transform;
+}
+
+#bf-layer-mid {
+  transform: translate(
+    calc(var(--px) * -5px),
+    calc(var(--py) * -2.5px)
+  );
+  will-change: transform;
+}
+
+#bf-layer-fg {
+  transform: translate(
+    calc(var(--px) * -10px),
+    calc(var(--py) * -5px)
+  );
+  will-change: transform;
+}
+
+/* ---------------------------------------------------------
+   14. LANDING — MASCOT
+   --------------------------------------------------------- */
+.bf-landing__mascot {
+  position: absolute;
+  z-index: 30;
+  /* Placed in the city at street level — right of center */
+  bottom: 12%;
+  left: 52%;
+  width: clamp(72px, 10vw, 165px);
+  will-change: transform;
+  transition: transform 0.14s ease-out;
+  transform: translate(
+    calc(var(--px) * -9px),
+    calc(var(--py) * -5px)
+  );
+}
+
+.bf-landing__mascot svg {
+  width: 100%;
+  height: auto;
+}
+
+/* ---------------------------------------------------------
+   15. LANDING — BRAND STATEMENT (street poster text)
+   --------------------------------------------------------- */
+.bf-landing__statement {
+  position: absolute;
+  z-index: 50;
+  /* Asymmetric placement — lower left */
+  left: 4%;
+  bottom: 24%;
+  max-width: 520px;
+}
+
+.bf-statement__line {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2.4vw, 2.1rem);
+  color: var(--bf-off-white);
+  line-height: 1.05;
+  text-transform: uppercase;
+  letter-spacing: 0.015em;
+}
+
+/* Highlighted word / phrase — off-white block behind black text */
+.bf-statement__emphasis {
+  display: inline;
+  position: relative;
+  color: var(--bf-black);
+}
+
+.bf-statement__emphasis::before {
+  content: '';
+  position: absolute;
+  inset: -3px -6px;
+  background: var(--bf-off-white);
+  z-index: -1;
+  /* Slightly irregular rectangle */
+  clip-path: polygon(1% 0%, 100% 3%, 99% 97%, 0% 100%);
+}
+
+/* ---------------------------------------------------------
+   16. LANDING — ENTER CTA
+   --------------------------------------------------------- */
+.bf-landing__cta {
+  position: absolute;
+  z-index: 50;
+  /* Asymmetric — lower right offset from center */
+  right: 6%;
+  bottom: 16%;
+  display: inline-flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1.2rem 2rem 1.2rem 1.6rem;
+  background: var(--bf-off-white);
+  color: var(--bf-black);
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.8vw, 2.4rem);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 0.9;
+  /* Irregular cut-paper shape */
+  clip-path: polygon(0% 0%, 92% 0%, 100% 32%, 100% 100%, 8% 100%, 0% 68%);
+  transition:
+    clip-path var(--t-mid) var(--ease-block),
+    transform  var(--t-mid) var(--ease-snap),
+    background var(--t-fast) ease;
+  will-change: transform, clip-path;
+  cursor: none;
+}
+
+.bf-landing__cta:hover {
+  clip-path: polygon(0% 10%, 95% 0%, 100% 26%, 100% 92%, 5% 100%, 0% 74%);
+  transform: translate(3px, -4px);
+}
+
+.bf-landing__cta:active {
+  transform: translate(1px, -1px);
+  clip-path: polygon(2% 2%, 94% 0%, 100% 30%, 98% 98%, 6% 100%, 0% 70%);
+}
+
+.bf-cta__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 0.88;
+}
+
+.bf-cta__line { display: block; }
+
+.bf-cta__arrow {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  transition: transform var(--t-mid) var(--ease-snap);
+}
+
+.bf-landing__cta:hover .bf-cta__arrow {
+  transform: translateX(6px);
+}
+
+/* ---------------------------------------------------------
+   17. LANDING — BACKGROUND GEOMETRIC SHAPES
+   --------------------------------------------------------- */
+.bf-landing__shapes {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bf-shape {
+  position: absolute;
+  background: var(--bf-off-white);
+}
+
+/* Large off-center background rectangle */
+.bf-shape--1 {
+  width: 42%;
+  height: 55%;
+  top: -8%;
+  right: -5%;
+  opacity: 0.025;
+  clip-path: polygon(5% 0%, 100% 2%, 98% 100%, 0% 96%);
+}
+
+/* Small accent block */
+.bf-shape--2 {
+  width: 8%;
+  height: 18%;
+  bottom: 18%;
+  right: 24%;
+  opacity: 0.04;
+  clip-path: polygon(0% 5%, 100% 0%, 95% 100%, 5% 100%);
+}
+
+/* =============================================================
+   STORE PAGE
+   ============================================================= */
+
+/* ---------------------------------------------------------
+   18. STORE — OUTER SHELL
+   --------------------------------------------------------- */
+.bf-store {
+  position: relative;
+  width: 100%;
+  min-height: 100svh;
+  background: var(--bf-black);
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------
+   19. STORE — FLOATING HEADER
+   --------------------------------------------------------- */
+.bf-store__header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.5rem 2.5rem;
+  /* Subtle gradient fade so header reads on top of artwork */
+  background: linear-gradient(to bottom, rgba(5,5,5,0.9) 0%, rgba(5,5,5,0) 100%);
+  pointer-events: none;
+}
+
+.bf-store__header > * { pointer-events: all; }
+
+/* ---------------------------------------------------------
+   20. STORE — PRODUCT COUNTER (top-left info)
+   --------------------------------------------------------- */
+.bf-store__counter {
+  position: absolute;
+  top: 5.5rem;
+  left: 2.5rem;
+  z-index: 30;
+  pointer-events: none;
+  user-select: none;
+}
+
+.bf-counter__num {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 7rem;
+  color: var(--bf-off-white);
+  opacity: 0.06;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.bf-counter__name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.5vw, 4rem);
+  color: var(--bf-off-white);
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  margin-top: -1rem;
+}
+
+/* ---------------------------------------------------------
+   21. STORE — PRODUCT AREA (center viewport)
+   --------------------------------------------------------- */
+.bf-store__product-area {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100svh;
+  padding: 7rem 5rem 4rem;
+}
+
+/* ---------------------------------------------------------
+   22. STORE — PRODUCT DISPLAY on irregular paper shape
+   --------------------------------------------------------- */
+.bf-product-display {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: flex-end;
+  gap: 2rem;
+  transition: opacity var(--t-mid) ease, transform var(--t-mid) var(--ease-block);
+}
+
+.bf-product-display.is-changing {
+  opacity: 0;
+  transform: translateX(-18px);
+}
+
+.bf-product-shape {
+  position: relative;
+  background: var(--bf-off-white);
+  /* Irregular off-white paper block - refined proportional cut */
+  clip-path: polygon(2% 0%, 98% 1%, 100% 98%, 2% 100%, 0% 60%);
+  padding: 1.2rem 1.2rem 1.6rem;
+  width: clamp(220px, 22vw, 320px);
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6);
+}
+
+.bf-product-image-wrap {
+  position: relative;
+  overflow: hidden;
+  background: var(--bf-dark-2);
+}
+
+.bf-product-image {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  display: block;
+}
+
+.bf-product-image-placeholder {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  background: var(--bf-dark-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Badge */
+.bf-product-badge {
+  position: absolute;
+  top: 0.4rem;
+  right: -0.4rem;
+  background: var(--bf-black);
+  color: var(--bf-off-white);
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  padding: 0.2rem 0.5rem;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 70% 100%, 0% 100%);
+}
+
+/* Product info panel (price, sizes, ATC) */
+.bf-product-info-panel {
+  position: static;
+  width: clamp(180px, 16vw, 240px);
+  margin-bottom: 0.5rem;
+}
+
+.bf-product-price {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3vw, 2.6rem);
+  color: var(--bf-off-white);
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+.bf-product-price--compare {
+  display: block;
+  font-size: 1.1rem;
+  opacity: 0.4;
+  text-decoration: line-through;
+  margin-top: 0.2rem;
+}
+
+/* ---------------------------------------------------------
+   23. STORE — NAV ARROWS (prev/next product)
+   --------------------------------------------------------- */
+.bf-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: none;
+  color: var(--bf-off-white);
+  transition: transform var(--t-mid) var(--ease-snap);
+}
+
+.bf-arrow--prev { left: 2rem; }
+.bf-arrow--next { right: 7rem; } /* offset from rail */
+
+.bf-arrow__icon {
+  width: 58px;
+  height: 72px;
+  background: var(--bf-off-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: var(--bf-black);
+  /* Irregular hexagon-ish */
+  clip-path: polygon(18% 0%, 82% 0%, 100% 50%, 82% 100%, 18% 100%, 0% 50%);
+  transition: clip-path var(--t-mid) var(--ease-block), transform var(--t-mid) var(--ease-snap);
+  will-change: clip-path, transform;
+}
+
+.bf-arrow--prev:hover .bf-arrow__icon {
+  clip-path: polygon(12% 12%, 78% 0%, 100% 50%, 78% 100%, 12% 88%, 0% 50%);
+  transform: translateX(-4px);
+}
+
+.bf-arrow--next:hover .bf-arrow__icon {
+  clip-path: polygon(18% 0%, 88% 12%, 100% 50%, 88% 88%, 18% 100%, 0% 50%);
+  transform: translateX(4px);
+}
+
+.bf-arrow__label {
+  font-family: var(--font-body);
+  font-size: 0.55rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+/* ---------------------------------------------------------
+   24. STORE — CATEGORY RAIL (right side)
+   --------------------------------------------------------- */
+.bf-category-rail {
+  position: fixed;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  pointer-events: all;
+}
+
+.bf-rail-item {
+  display: block;
+  background: var(--bf-off-white);
+  color: var(--bf-black);
+  font-family: var(--font-body);
+  font-size: 0.55rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 0.55rem 1.6rem 0.55rem 0.7rem;
+  /* Arrow-right chip shape */
+  clip-path: polygon(0% 0%, 88% 0%, 100% 50%, 88% 100%, 0% 100%);
+  opacity: 0.45;
+  transition:
+    opacity   var(--t-fast) ease,
+    transform var(--t-mid) var(--ease-snap),
+    clip-path var(--t-mid) var(--ease-block);
+  cursor: none;
+  white-space: nowrap;
+}
+
+.bf-rail-item:hover,
+.bf-rail-item.is-active {
+  opacity: 1;
+  transform: translateX(-5px);
+  clip-path: polygon(0% 5%, 90% 0%, 100% 50%, 90% 100%, 0% 95%);
+}
+
+/* =============================================================
+   MENU OVERLAY
+   ============================================================= */
+
+/* ---------------------------------------------------------
+   25. MENU — FULLSCREEN OVERLAY
+   --------------------------------------------------------- */
+.bf-menu {
+  position: fixed;
+  inset: 0;
+  background: var(--bf-black);
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4rem 4rem 4rem 5%;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity      var(--t-mid) ease,
+    visibility   0ms          linear var(--t-mid);
+}
+
+.bf-menu.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+  transition:
+    opacity    var(--t-mid) ease,
+    visibility 0ms          linear 0ms;
+}
+
+/* Grain in menu */
+.bf-menu .bf-grain { z-index: 1; }
+
+/* Menu header row */
+.bf-menu__header {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 2rem 2.5rem;
+  z-index: 10;
+}
+
+/* Close button */
+.bf-menu__close {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+  cursor: none;
+  padding: 0.4rem;
+}
+
+.bf-menu__close-label {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+/* Nav list */
+.bf-menu__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  position: relative;
+  z-index: 5;
+}
+
+/* Each nav item — horizontal paper strip */
+.bf-menu__item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 1rem 0;
+  position: relative;
+  overflow: hidden;
+  cursor: none;
+  /* Paper strip clip */
+  clip-path: polygon(0% 0%, 99% 0%, 100% 50%, 99% 100%, 0% 100%);
+  border-bottom: 1px solid rgba(241, 238, 230, 0.07);
+  transition:
+    transform   var(--t-mid) var(--ease-snap),
+    color       var(--t-fast) ease;
+}
+
+/* Fill bg on hover */
+.bf-menu__item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--bf-off-white);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--t-mid) var(--ease-block);
+  z-index: 0;
+}
+
+.bf-menu__item:hover::before {
+  transform: scaleX(1);
+}
+
+.bf-menu__item:hover {
+  color: var(--bf-black);
+  transform: translateX(12px);
+}
+
+.bf-menu__item:hover > * { position: relative; z-index: 1; }
+
+.bf-menu__item-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 6.5rem);
+  text-transform: uppercase;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  transition: transform var(--t-fast) ease;
+}
+
+.bf-menu__item:hover .bf-menu__item-title {
+  letter-spacing: 0.01em;
+}
+
+.bf-menu__item-num {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  letter-spacing: 0.1em;
+  opacity: 0.3;
+}
+
+/* Menu footer bar */
+.bf-menu__footer {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 5%;
+  right: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  z-index: 10;
+}
+
+.bf-menu__tagline {
+  font-family: var(--font-display);
+  font-size: clamp(0.9rem, 1.5vw, 1.3rem);
+  color: var(--bf-off-white);
+  opacity: 0.25;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+}
+
+/* =============================================================
+   CART DRAWER
+   ============================================================= */
+
+/* ---------------------------------------------------------
+   26. CART DRAWER
+   --------------------------------------------------------- */
+.bf-cart-drawer {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: min(460px, 100vw);
+  background: var(--bf-dark);
+  z-index: 510;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform var(--t-slow) var(--ease-block);
+  border-left: 1px solid rgba(241, 238, 230, 0.08);
+  will-change: transform;
+}
+
+.bf-cart-drawer.is-open {
+  transform: translateX(0);
+}
+
+.bf-cart-drawer__header {
+  padding: 2rem 2rem 1.5rem;
+  border-bottom: 1px solid rgba(241, 238, 230, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+
+.bf-cart-drawer__title {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.bf-cart-drawer__count {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0.5;
+  margin-top: 0.3rem;
+}
+
+.bf-cart-drawer__close {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  cursor: none;
+  padding: 0.3rem 0;
+  transition: opacity var(--t-fast) ease;
+}
+
+.bf-cart-drawer__close:hover { opacity: 1; }
+
+/* Cart body — scrollable items */
+.bf-cart-drawer__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(241,238,230,0.2) transparent;
+}
+
+.bf-cart-drawer__body::-webkit-scrollbar { width: 3px; }
+.bf-cart-drawer__body::-webkit-scrollbar-track { background: transparent; }
+.bf-cart-drawer__body::-webkit-scrollbar-thumb { background: rgba(241,238,230,0.2); }
+
+.bf-cart-empty {
+  padding: 3rem 0;
+  text-align: center;
+}
+
+/* Cart item block */
+.bf-cart-item {
+  display: flex;
+  gap: 1rem;
+  background: var(--bf-off-white);
+  color: var(--bf-black);
+  margin-bottom: 0.8rem;
+  padding: 1rem 1.4rem 1rem 0.8rem;
+  /* Off-white paper block — arrow-right shape */
+  clip-path: polygon(0% 0%, 97% 0%, 100% 50%, 97% 100%, 0% 100%);
+  transition: clip-path var(--t-mid) var(--ease-block);
+}
+
+.bf-cart-item:hover {
+  clip-path: polygon(0% 5%, 97% 0%, 100% 50%, 97% 100%, 0% 95%);
+}
+
+.bf-cart-item__img {
+  width: 68px;
+  height: 82px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--bf-dark-2);
+}
+
+.bf-cart-item__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.bf-cart-item__title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  line-height: 1;
+  color: var(--bf-black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bf-cart-item__variant {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.5;
+  margin-top: 0.25rem;
+  color: var(--bf-black);
+}
+
+.bf-cart-item__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.6rem;
+}
+
+.bf-cart-item__price {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--bf-black);
+}
+
+.bf-qty-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bf-qty-btn {
+  width: 22px;
+  height: 22px;
+  background: var(--bf-black);
+  color: var(--bf-off-white);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: none;
+  clip-path: polygon(0% 0%, 90% 0%, 100% 50%, 90% 100%, 0% 100%);
+  transition: background var(--t-fast) ease;
+}
+
+.bf-qty-btn:hover { background: var(--bf-mid); }
+
+.bf-qty-num {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--bf-black);
+  min-width: 1.5rem;
+  text-align: center;
+}
+
+/* Cart footer — totals + checkout */
+.bf-cart-drawer__footer {
+  flex-shrink: 0;
+  padding: 1.5rem 2rem;
+  border-top: 1px solid rgba(241, 238, 230, 0.08);
+}
+
+.bf-cart-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 1.2rem;
+}
+
+.bf-cart-total__label {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+.bf-cart-total__price {
+  font-family: var(--font-display);
+  font-size: 2.8rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.bf-checkout-btn {
+  display: block;
+  width: 100%;
+  padding: 1.1rem 1.5rem;
+  background: var(--bf-off-white);
+  color: var(--bf-black);
+  font-family: var(--font-display);
+  font-size: 2rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-align: center;
+  border: none;
+  cursor: none;
+  clip-path: polygon(0% 0%, 96% 0%, 100% 50%, 96% 100%, 0% 100%);
+  transition:
+    clip-path var(--t-mid) var(--ease-block),
+    transform var(--t-fast) ease;
+}
+
+.bf-checkout-btn:hover {
+  clip-path: polygon(0% 8%, 96% 0%, 100% 50%, 96% 100%, 0% 92%);
+  transform: translateY(-2px);
+}
+
+/* =============================================================
+   PRODUCT PAGE (standalone /products/handle)
+   ============================================================= */
+.bf-product-page {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8rem 2rem 4rem;
+  background: var(--bf-black);
+}
+
+/* =============================================================
+   RESPONSIVE — MOBILE (≤767px)
+   ============================================================= */
+@media (max-width: 767px) {
+  /* No custom cursor on touch devices */
+  body  { cursor: auto; }
+  a     { cursor: auto; }
+  button { cursor: pointer; }
+  .bf-cursor { display: none !important; }
+
+  /* --- Landing mobile --- */
+  .bf-landing__header { padding: 1.4rem 1.2rem; }
+
+  .bf-logo-link .bf-logo-line { font-size: 1.8rem; }
+
+  .bf-landing__city {
+    height: 60%;
+    bottom: 22%;
+    left: -4%;
+    width: 108%;
+  }
+
+  .bf-landing__mascot {
+    left: auto;
+    right: 8%;
+    bottom: 24%;
+    width: 70px;
+  }
+
+  .bf-landing__statement {
+    left: 1.2rem;
+    right: 1.2rem;
+    bottom: 13%;
+    max-width: none;
+  }
+
+  .bf-statement__line {
+    font-size: clamp(1rem, 5vw, 1.5rem);
+  }
+
+  .bf-landing__cta {
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 5%;
+    font-size: 1.3rem;
+    white-space: nowrap;
+  }
+
+  .bf-landing__cta:hover { transform: translateX(-50%) translate(2px, -2px); }
+
+  /* --- Store mobile --- */
+  .bf-store__header { padding: 1.2rem 1.2rem; }
+
+  .bf-store__counter {
+    top: 4.5rem;
+    left: 1.2rem;
+  }
+
+  .bf-counter__num { font-size: 4rem; }
+  .bf-counter__name { font-size: 1.8rem; }
+
+  .bf-store__product-area {
+    flex-direction: column;
+    align-items: center;
+    padding: 6rem 1rem 8rem;
+    gap: 1.5rem;
+  }
+
+  .bf-product-shape {
+    width: min(280px, 80vw);
+    padding: 1.5rem;
+  }
+
+  .bf-product-info-panel {
+    position: static;
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .bf-product-price { font-size: 2.2rem; }
+
+  /* Arrow buttons on mobile */
+  .bf-arrow--prev { left: 0.5rem; }
+  .bf-arrow--next { right: 0.5rem; }
+
+  .bf-arrow__icon { width: 44px; height: 56px; font-size: 1.5rem; }
+
+  /* Category rail becomes horizontal scroll on mobile */
+  .bf-category-rail {
+    position: fixed;
+    right: auto;
+    top: auto;
+    bottom: 0.8rem;
+    left: 0; right: 0;
+    transform: none;
+    flex-direction: row;
+    justify-content: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 0.35rem;
+    padding: 0.5rem 1rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .bf-category-rail::-webkit-scrollbar { display: none; }
+
+  .bf-rail-item {
+    flex-shrink: 0;
+    clip-path: polygon(0% 0%, 90% 0%, 100% 50%, 90% 100%, 0% 100%);
+  }
+
+  /* Menu */
+  .bf-menu { padding: 2rem 1.2rem 2rem; }
+
+  .bf-menu__header { padding: 1.4rem 1.2rem; }
+
+  .bf-menu__item-title { font-size: clamp(2.2rem, 11vw, 4rem); }
+
+  .bf-menu__footer { left: 1.2rem; right: 1.2rem; }
+
+  /* Cart */
+  .bf-cart-drawer { width: 100vw; }
+}
+
+/* =============================================================
+   REDUCED MOTION
+   ============================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Disable parallax transforms */
+  .bf-landing__city,
+  .bf-landing__mascot,
+  #bf-layer-bg,
+  #bf-layer-mid,
+  #bf-layer-fg {
+    transform: none !important;
+  }
+}

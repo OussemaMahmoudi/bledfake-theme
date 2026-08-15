@@ -1,0 +1,63 @@
+{% comment %}
+  BLED FAKE — Cart Drawer (bled-cart.liquid)
+  AJAX cart drawer — persistent on all pages.
+  Populated and updated by bled.js fetchAndRenderCart().
+{% endcomment %}
+
+<aside
+  class="bf-cart-drawer"
+  id="bf-cart-drawer"
+  role="complementary"
+  aria-label="Shopping cart"
+  aria-modal="true"
+>
+
+  <!-- Drawer header -->
+  <div class="bf-cart-drawer__header">
+    <div>
+      <h2 class="bf-cart-drawer__title">CART</h2>
+      <p class="bf-cart-drawer__count" aria-live="polite">0 ITEMS</p>
+    </div>
+    <button
+      class="bf-cart-drawer__close"
+      data-cart-close
+      aria-label="Close cart"
+    >
+      CLOSE ✕
+    </button>
+  </div>
+
+  <!-- Cart item list — rendered by JS -->
+  <div class="bf-cart-drawer__body" id="bf-cart-body" aria-live="polite">
+    <div class="bf-cart-empty">
+      <p class="bf-display bf-display-sm" style="opacity:0.3;text-align:center;padding-top:2rem">
+        CART IS EMPTY
+      </p>
+    </div>
+  </div>
+
+  <!-- Drawer footer -->
+  <div class="bf-cart-drawer__footer">
+    <div class="bf-cart-total">
+      <span class="bf-cart-total__label">TOTAL</span>
+      <span class="bf-cart-total__price bf-display" id="bf-cart-total">0.00 TND</span>
+    </div>
+
+    <a
+      href="/checkout"
+      class="bf-checkout-btn bf-display"
+      aria-label="Proceed to checkout"
+    >
+      CHECKOUT →
+    </a>
+  </div>
+
+</aside>
+
+{% schema %}
+{
+  "name": "BLED Cart",
+  "settings": [],
+  "limit": 1
+}
+{% endschema %}

@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "bled-landing": {
+      "type": "bled-landing",
+      "settings": {}
+    }
+  },
+  "order": ["bled-landing"]
+}

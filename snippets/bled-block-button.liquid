@@ -1,0 +1,33 @@
+{% comment %}
+  BLED BLOCKS Geometric Button
+  Variables:
+    button_text  - Button label text
+    button_url   - URL (for link type)
+    button_type  - "link" | "submit" (default: link)
+    button_size  - "default" | "large" (default: default)
+    button_id    - Optional HTML id
+    button_extra_class - Additional CSS classes
+{% endcomment %}
+
+{% assign btn_type = button_type | default: 'link' %}
+{% assign btn_size = button_size | default: 'default' %}
+
+{% if btn_type == 'submit' %}
+  <button
+    type="submit"
+    class="bf-block-btn bf-block-btn--{{ btn_size }} {{ button_extra_class }}"
+    {% if button_id %}id="{{ button_id }}"{% endif %}
+  >
+    <span class="bf-block-btn__text">{{ button_text }}</span>
+    <span class="bf-block-btn__arrow" aria-hidden="true">→</span>
+  </button>
+{% else %}
+  <a
+    href="{{ button_url | default: '#' }}"
+    class="bf-block-btn bf-block-btn--{{ btn_size }} {{ button_extra_class }}"
+    {% if button_id %}id="{{ button_id }}"{% endif %}
+  >
+    <span class="bf-block-btn__text">{{ button_text }}</span>
+    <span class="bf-block-btn__arrow" aria-hidden="true">→</span>
+  </a>
+{% endif %}

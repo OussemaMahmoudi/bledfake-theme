@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="{{ request.locale.iso_code | default: 'en' }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050505">
+
+  <title>
+    {%- if template == 'index' -%}
+      BLED FAKE — Tunisian Streetwear
+    {%- elsif page_title -%}
+      {{ page_title }} — BLED FAKE
+    {%- else -%}
+      BLED FAKE
+    {%- endif -%}
+  </title>
+
+  <meta name="description" content="{{ page_description | default: "BLED FAKE — Tunisian underground streetwear. We don't hate Tunisia. We hate the illusion." | escape }}">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="{{ page_title | default: 'BLED FAKE' }} — BLED FAKE">
+  <meta property="og:description" content="{{ page_description | default: 'Tunisian underground streetwear.' | escape }}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ canonical_url }}">
+  <meta property="og:site_name" content="BLED FAKE">
+  {%- if page_image -%}
+    <meta property="og:image" content="{{ page_image | image_url: width: 1200 }}">
+  {%- endif -%}
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ page_title | default: 'BLED FAKE' }}">
+  <meta name="twitter:description" content="{{ page_description | default: 'Tunisian underground streetwear.' | escape }}">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="{{ canonical_url }}">
+
+  <!-- Google Fonts: Bebas Neue (display) + Space Grotesk (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- BLED FAKE Stylesheet -->
+  {{ 'bled.css' | asset_url | stylesheet_tag }}
+
+  {{ content_for_header }}
+</head>
+<body class="bf-body">
+
+  <!-- Custom cursor (desktop only) -->
+  <div class="bf-cursor" aria-hidden="true" id="bf-cursor"></div>
+
+  <!-- Full-page cinematic transition overlay -->
+  <div class="bf-transition-overlay" aria-hidden="true" id="bf-transition-overlay"></div>
+
+  <!-- Shared backdrop for overlays -->
+  <div class="bf-overlay-backdrop" aria-hidden="true" id="bf-overlay-backdrop"></div>
+
+  <!-- Global: Menu overlay (rendered on every page) -->
+  {% section 'bled-menu' %}
+
+  <!-- Global: Cart drawer (rendered on every page) -->
+  {% section 'bled-cart' %}
+
+  <!-- Main page content -->
+  <main id="main-content" tabindex="-1">
+    {{ content_for_layout }}
+  </main>
+
+  <!-- Pass Shopify globals to JS -->
+  <script>
+    window.BF = {
+      shopCurrency:   {{ shop.currency | json }},
+      moneyFormat:    {{ shop.money_format | json }},
+      cartUrl:        '/cart',
+      cartAddUrl:     '/cart/add.js',
+      cartChangeUrl:  '/cart/change.js',
+      cartClearUrl:   '/cart/clear.js',
+      cartJsonUrl:    '/cart.js',
+      collectionsUrl: '/collections/all'
+    };
+  </script>
+
+  <!-- BLED FAKE JavaScript -->
+  {{ 'bled.js' | asset_url | script_tag }}
+
+</body>
+</html>

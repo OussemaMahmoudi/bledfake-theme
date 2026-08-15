@@ -1,0 +1,61 @@
+[
+  {
+    "name": "BLED FAKE Theme",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Brand Colors"
+      },
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Background",
+        "default": "#050505"
+      },
+      {
+        "type": "color",
+        "id": "color_foreground",
+        "label": "Foreground",
+        "default": "#F1EEE6"
+      },
+      {
+        "type": "header",
+        "content": "Landing Page"
+      },
+      {
+        "type": "text",
+        "id": "statement_line1",
+        "label": "Statement Line 1",
+        "default": "WE DON'T HATE TUNISIA."
+      },
+      {
+        "type": "text",
+        "id": "statement_line2",
+        "label": "Statement Line 2 (before emphasis)",
+        "default": "WE HATE"
+      },
+      {
+        "type": "text",
+        "id": "statement_emphasis",
+        "label": "Statement Emphasis",
+        "default": "THE ILLUSION."
+      },
+      {
+        "type": "url",
+        "id": "cta_url",
+        "label": "CTA Link",
+        "default": "/collections/all"
+      },
+      {
+        "type": "header",
+        "content": "Navigation"
+      },
+      {
+        "type": "link_list",
+        "id": "main_menu",
+        "label": "Main Menu",
+        "default": "main-menu"
+      }
+    ]
+  }
+]

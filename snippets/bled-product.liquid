@@ -1,0 +1,102 @@
+{% comment %}
+  BLED FAKE — Single Product Display Snippet
+  Renders one product's image, title, price, variant selector, and add-to-cart.
+  Variables:
+    render_product — the Shopify product object
+    show_full      — if true, shows full info + ATC; if false, minimal
+{% endcomment %}
+
+{% assign rp = render_product %}
+{% if rp == blank %}{% assign rp = product %}{% endif %}
+
+{% if rp.available %}
+  {% assign is_available = true %}
+{% else %}
+  {% assign is_available = false %}
+{% endif %}
+
+{% assign featured_img = rp.featured_image %}
+{% assign current_variant = rp.selected_or_first_available_variant %}
+
+<article class="bf-product-block" data-product-id="{{ rp.id }}" itemscope itemtype="https://schema.org/Product">
+
+  <!-- Product image on irregular paper shape -->
+  <div class="bf-product-shape">
+    <div class="bf-product-image-wrap">
+      {% if featured_img %}
+        <img
+          class="bf-product-image"
+          src="{{ featured_img | image_url: width: 800 }}"
+          srcset="{{ featured_img | image_url: width: 400 }} 400w,
+                  {{ featured_img | image_url: width: 800 }} 800w,
+                  {{ featured_img | image_url: width: 1200 }} 1200w"
+          sizes="(max-width: 767px) 80vw, 40vw"
+          alt="{{ featured_img.alt | default: rp.title | escape }}"
+          loading="lazy"
+          width="{{ featured_img.width }}"
+          height="{{ featured_img.height }}"
+          itemprop="image"
+        >
+      {% else %}
+        <div class="bf-product-image-placeholder" aria-label="No image for {{ rp.title | escape }}">
+          <svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg" fill="#1a1a18" width="80">
+            <rect x="20" y="10" width="160" height="240" fill="#1a1a18"/>
+            <rect x="60" y="30" width="80" height="100" fill="#252522"/>
+            <rect x="50" y="145" width="100" height="8" fill="#252522"/>
+            <rect x="70" y="162" width="60" height="6" fill="#252522"/>
+          </svg>
+        </div>
+      {% endif %}
+
+      {% if rp.compare_at_price > rp.price %}
+        <span class="bf-product-badge">SALE</span>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if show_full %}
+    <!-- Full product info (for product page or store section) -->
+    <div class="bf-product-info-panel" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+      <meta itemprop="price" content="{{ current_variant.price | divided_by: 100.0 }}">
+      <meta itemprop="priceCurrency" content="{{ shop.currency }}">
+
+      <p class="bf-product-price">
+        {{ current_variant.price | money }}
+        {% if rp.compare_at_price > rp.price %}
+          <span class="bf-product-price--compare">{{ rp.compare_at_price | money }}</span>
+        {% endif %}
+      </p>
+
+      {% if rp.variants.size > 1 %}
+        <!-- Variant / Size selector -->
+        <form class="bf-add-cart-form" action="/cart/add" method="post">
+          <div class="bf-size-selector" role="group" aria-label="Select size">
+            {% for variant in rp.variants %}
+              <label class="bf-size-option {% if variant == current_variant %}selected{% endif %} {% unless variant.available %}bf-size-option--sold-out{% endunless %}">
+                <input type="radio" name="id" value="{{ variant.id }}"
+                  {% if variant == current_variant %}checked{% endif %}
+                  {% unless variant.available %}disabled{% endunless %}
+                  class="visually-hidden"
+                  aria-label="{{ variant.title }}">
+                {{ variant.title }}
+              </label>
+            {% endfor %}
+          </div>
+
+          <button type="submit" class="bf-add-cart-btn" {% unless is_available %}disabled{% endunless %}>
+            {% if is_available %}ADD TO CART{% else %}SOLD OUT{% endif %}
+          </button>
+        </form>
+      {% else %}
+        <form class="bf-add-cart-form" action="/cart/add" method="post">
+          <input type="hidden" name="id" value="{{ rp.variants.first.id }}">
+          <button type="submit" class="bf-add-cart-btn" {% unless is_available %}disabled{% endunless %}>
+            {% if is_available %}ADD TO CART{% else %}SOLD OUT{% endif %}
+          </button>
+        </form>
+      {% endif %}
+
+    </div><!-- /bf-product-info-panel -->
+  {% endif %}
+
+</article>
