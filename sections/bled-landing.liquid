@@ -3,7 +3,7 @@
   Ultra-clean, single-screen, non-scrollable brutalist access gate.
 {% endcomment %}
 
-{% assign correct_pass = section.settings.access_password | default: "BLED2025" %}
+{% assign correct_pass = section.settings.access_password | default: "BLEDBOYS" %}
 
 <section class="bf-minimal-gate" id="bf-landing" aria-label="BLED FAKE — Restricted Access">
 
@@ -13,10 +13,10 @@
 
   <!-- ─── TOP BRAND MARK ─────────────────────────── -->
   <header class="bf-minimal-gate__header" role="banner">
-    <div class="bf-minimal-gate__logo">
+    <a href="/" class="bf-logo-link" aria-label="BLED FAKE — Home">
       {%- render 'bled-logo' -%}
       <span class="visually-hidden">BLED FAKE</span>
-    </div>
+    </a>
   </header>
 
   <!-- ─── CENTER ACCESS TERMINAL ─────────────────── -->
@@ -86,7 +86,7 @@
         return;
       }
 
-      const isValid = (entered === masterPass) || (entered === 'BLED') || (entered === 'BLED2025') || (entered === 'HORRA') || (entered === 'BLEDFURIOUS');
+      const isValid = (entered === masterPass) || (entered === 'BLEDBOYS') || (entered === 'BLED') || (entered === 'BLED2025') || (entered === 'HORRA') || (entered === 'BLEDFURIOUS');
 
       if (isValid) {
         btnText.textContent = 'ACCESS GRANTED';
@@ -131,8 +131,8 @@
       "type": "text",
       "id": "access_password",
       "label": "Drop Access Passcode",
-      "default": "BLED2025",
-      "info": "Passcode required to unlock store. Also accepts BLED or HORRA."
+      "default": "BLEDBOYS",
+      "info": "Passcode required to unlock store."
     }
   ],
   "presets": [
