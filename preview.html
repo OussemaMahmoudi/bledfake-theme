@@ -492,88 +492,60 @@ ul, ol { list-style: none; }
 </aside>
 
 <!-- ================================================================
-     PASSWORD GATE / MINIMALIST BLACK LANDING
+     ULTRA-MINIMAL NON-SCROLLABLE GATE LANDING
      ================================================================ -->
-<section class="bf-page bf-gate-page" id="bf-landing" aria-label="BLED FAKE — Restricted Access">
-  <div class="bf-gate-ambient-glow" aria-hidden="true"></div>
+<section class="bf-minimal-gate" id="bf-landing" aria-label="BLED FAKE — Restricted Access">
+  <div class="bf-minimal-glow" aria-hidden="true"></div>
 
-  <!-- Top Gate Header -->
-  <header class="bf-header bf-gate-header" role="banner">
-    <a href="#" class="bf-logo-link" onclick="window.showLanding(event)">
+  <!-- Top Brand Mark -->
+  <header class="bf-minimal-gate__header" role="banner">
+    <div class="bf-minimal-gate__logo">
       <img src="img/Fichier 21.png" alt="BLED FAKE" class="bf-logo-img">
-    </a>
-
-    <div class="bf-gate-status-pill">
-      <span class="bf-status-dot"></span>
-      <span>SYSTEM // RESTRICTED ACCESS</span>
     </div>
   </header>
 
-  <!-- Center Terminal Card -->
-  <div class="bf-gate-terminal">
-    <div class="bf-gate-card">
-      <div class="bf-gate-eyebrow">
-        <span class="bf-gate-code">GATE // DROP 01</span>
-        <span class="bf-gate-divider">/</span>
-        <span>ACCESS REQUIRED</span>
+  <!-- Center Access Terminal -->
+  <main class="bf-minimal-gate__center" role="main">
+    <div class="bf-minimal-gate__box">
+
+      <div class="bf-minimal-gate__tag">
+        <span class="bf-status-dot"></span>
+        <span>RESTRICTED ACCESS // ENTER PASSCODE</span>
       </div>
 
-      <h1 class="bf-gate-title">ENTER THE REALITY</h1>
-      <p class="bf-gate-subtitle">WE DON'T HATE TUNISIA. WE HATE THE ILLUSION.</p>
-      <div class="bf-gate-notice">RESTRICTED ACCESS // ENTER PASSCODE TO UNLOCK THE DROP</div>
-
-      <form class="bf-gate-form" id="bf-gate-form-preview" autocomplete="off">
-        <div class="bf-gate-input-wrap" id="pv-gate-input-wrap">
+      <form class="bf-minimal-gate__form" id="bf-gate-form-preview" autocomplete="off">
+        <div class="bf-minimal-gate__input-row" id="pv-gate-input-wrap">
           <input
             type="password"
             id="pv-gate-password"
-            class="bf-gate-input"
-            placeholder="ENTER PASSCODE..."
+            class="bf-minimal-gate__input"
+            placeholder="PASSCODE"
             autocomplete="current-password"
             required
             aria-label="Enter drop access code"
           >
-          <button
-            type="button"
-            class="bf-gate-toggle-pwd"
-            id="pv-toggle-pwd"
-            aria-label="Toggle password visibility"
-          >
-            SHOW
+          <button type="submit" class="bf-minimal-gate__submit-btn" id="pv-gate-btn" aria-label="Unlock store">
+            <span id="pv-gate-btn-text">ENTER</span>
+            <span class="bf-minimal-gate__arrow" aria-hidden="true">➔</span>
           </button>
         </div>
 
-        <button type="submit" class="bf-gate-submit-btn" id="pv-gate-btn">
-          <span id="pv-gate-btn-text">UNLOCK ACCESS</span>
-          <span class="bf-gate-btn-arrow" aria-hidden="true">➔</span>
-        </button>
-
-        <div class="bf-gate-error" id="pv-gate-error" role="alert" style="display:none;">
-          <span>[ ACCESS DENIED // INVALID PASSCODE ]</span>
+        <div class="bf-minimal-gate__error" id="pv-gate-error" role="alert" style="display:none;">
+          <span>[ ACCESS DENIED // INVALID CODE ]</span>
         </div>
       </form>
 
-      <div class="bf-gate-footer-hint">
-        <span>NO PASSCODE?</span>
-        <a href="https://instagram.com/bledfake" target="_blank" rel="noopener" class="bf-gate-hint-link">
-          GET KEY ON INSTAGRAM @BLEDFAKE ↗
-        </a>
-      </div>
-    </div>
-  </div>
+      <a href="https://instagram.com/bledfake" target="_blank" rel="noopener" class="bf-minimal-gate__hint">
+        GET ACCESS ON INSTAGRAM @BLEDFAKE ↗
+      </a>
 
-  <!-- Bottom Ticker / Status Bar -->
-  <footer class="bf-gate-footer">
-    <div class="bf-gate-footer__item">
-      <span class="bf-gate-footer__dim">STATUS:</span>
-      <span>LOCKED (AUTHENTICATION REQUIRED)</span>
     </div>
-    <div class="bf-gate-footer__item">
-      <span>BLED FAKE // BLED BLOCKS DESIGN SYSTEM</span>
-    </div>
-    <div class="bf-gate-footer__item">
-      <span>© 2025 TUNIS, TN</span>
-    </div>
+  </main>
+
+  <!-- Bottom Status Footer -->
+  <footer class="bf-minimal-gate__footer">
+    <span>BLED FAKE // BLED BLOCKS DESIGN SYSTEM</span>
+    <span>TUNIS © 2025</span>
   </footer>
 </section>
 
