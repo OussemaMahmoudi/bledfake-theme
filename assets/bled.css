@@ -2465,7 +2465,7 @@ input, select, textarea { font: inherit; }
 
 .bf-product-card__title {
   font-family: var(--font-display);
-  font-size: 1.35rem;
+  font-size: 1.55rem;
   line-height: 0.95;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -2475,7 +2475,7 @@ input, select, textarea { font: inherit; }
 
 @media (max-width: 768px) {
   .bf-product-card__title {
-    font-size: 1.05rem;
+    font-size: 1.15rem;
   }
 }
 
