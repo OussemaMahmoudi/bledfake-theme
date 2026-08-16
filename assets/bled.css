@@ -61,8 +61,8 @@ body {
   min-height: 100vh;
 }
 
-a { color: inherit; text-decoration: none; cursor: none; }
-button { background: none; border: none; color: inherit; font: inherit; cursor: none; }
+a { color: inherit; text-decoration: none; cursor: pointer; }
+button { background: none; border: none; color: inherit; font: inherit; cursor: pointer; }
 img, svg { display: block; max-width: 100%; }
 ul, ol { list-style: none; }
 input, select, textarea { font: inherit; }
@@ -994,7 +994,7 @@ input, select, textarea { font: inherit; }
   letter-spacing: 0.12em;
   border: 1px solid var(--bf-off-white-15);
   clip-path: polygon(0% 0%, 88% 0%, 100% 30%, 100% 100%, 12% 100%, 0% 70%);
-  cursor: none;
+  cursor: pointer;
   transition: all var(--t-fast) ease;
 }
 
@@ -1213,7 +1213,7 @@ input, select, textarea { font: inherit; }
   padding: 1.2rem;
   background: var(--bf-dark-2);
   border: 1px solid var(--bf-off-white-15);
-  cursor: none;
+  cursor: pointer;
   clip-path: polygon(0% 0%, 98% 0%, 100% 30%, 100% 100%, 2% 100%, 0% 70%);
   transition: all var(--t-fast) ease;
 }
@@ -1258,7 +1258,7 @@ input, select, textarea { font: inherit; }
   justify-content: center;
   gap: 1rem;
   clip-path: polygon(0% 0%, 96% 0%, 100% 35%, 100% 100%, 4% 100%, 0% 65%);
-  cursor: none;
+  cursor: pointer;
   transition: transform var(--t-fast) ease;
 }
 
@@ -1435,7 +1435,7 @@ input, select, textarea { font: inherit; }
   justify-content: space-between;
   padding: 0.8rem 0;
   border-bottom: 1px solid var(--bf-off-white-08);
-  cursor: none;
+  cursor: pointer;
   transition: transform var(--t-mid) var(--ease-snap), color var(--t-fast) ease;
 }
 

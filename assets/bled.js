@@ -311,7 +311,7 @@ function initMediaNavigation() {
   document.addEventListener('click', (e) => {
     const dot = e.target.closest('.bf-media-dot');
     if (!dot) return;
-    const track = $('#product-media-track, .bf-garment-scroll-track');
+    const track = $('#product-media-track') || $('.bf-garment-scroll-track');
     const allDots = $$('#bf-media-dots .bf-media-dot');
     const dotIdx = allDots.indexOf(dot);
     if (track && dotIdx !== -1) {
@@ -406,7 +406,7 @@ function initProductNavigation() {
       currentMediaIndex = 0;
 
       // Rebuild media track slides
-      const track = $('#product-media-track, .bf-garment-scroll-track');
+      const track = $('#product-media-track') || $('.bf-garment-scroll-track');
       if (track && product.images && product.images.length > 0) {
         track.innerHTML = product.images.map((src, i) => `
           <div class="bf-garment-slide" data-media-index="${i}">
@@ -428,13 +428,6 @@ function initProductNavigation() {
         if (product.images && product.images.length > 1) {
           dotsEl.innerHTML = product.images.map((_, i) =>
             `<button type="button" class="bf-media-dot${i === 0 ? ' is-active' : ''}" data-slide-index="${i}" aria-label="View slide ${i + 1}"></button>`
-          ).join('');
-          dotsEl.style.display = '';
-        } else {
-          dotsEl.style.display = 'none';
-        }
-      }
-            `<span class="bf-media-dot${i === 0 ? ' is-active' : ''}"></span>`
           ).join('');
           dotsEl.style.display = '';
         } else {
