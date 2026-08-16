@@ -1,0 +1,153 @@
+{% comment %}
+  BLED FAKE — Brutalist Checkout Section (bled-checkout.liquid)
+  Underground aesthetic order review & delivery collection
+{% endcomment %}
+
+<section class="bf-checkout-page" id="bf-checkout-page" aria-label="BLED FAKE Checkout">
+
+  <div class="bf-grain" aria-hidden="true"></div>
+
+  <!-- Header -->
+  <header class="bf-header" role="banner">
+    <a href="/" class="bf-logo-link" aria-label="BLED FAKE — Home">
+      {%- render 'bled-logo' -%}
+      <span class="visually-hidden">BLED FAKE</span>
+    </a>
+    <div class="bf-nav-right">
+      <a href="/collections/all" class="bf-nav-btn">
+        <span>RETURN TO DROPS</span>
+        <span>←</span>
+      </a>
+    </div>
+  </header>
+
+  <div class="bf-checkout-container">
+
+    <!-- Left Column: Checkout Form (Shipping & Payment) -->
+    <div class="bf-checkout-main">
+      <div class="bf-checkout-step">
+        <h2 class="bf-checkout-step__title">01 // CONTACT & DELIVERY</h2>
+        
+        <form class="bf-checkout-form" id="checkout-order-form" onsubmit="event.preventDefault();">
+          <div class="bf-form-row">
+            <div class="bf-form-group">
+              <label class="bf-form-label" for="co-name">FULL NAME *</label>
+              <input type="text" id="co-name" class="bf-form-input" placeholder="e.g. Aziz Ben Salem" required>
+            </div>
+            <div class="bf-form-group">
+              <label class="bf-form-label" for="co-phone">PHONE NUMBER (TUNISIA) *</label>
+              <input type="tel" id="co-phone" class="bf-form-input" placeholder="+216 -- --- ---" required>
+            </div>
+          </div>
+
+          <div class="bf-form-group">
+            <label class="bf-form-label" for="co-email">EMAIL ADDRESS *</label>
+            <input type="email" id="co-email" class="bf-form-input" placeholder="aziz@example.com" required>
+          </div>
+
+          <div class="bf-form-group">
+            <label class="bf-form-label" for="co-address">STREET ADDRESS & APARTMENT *</label>
+            <input type="text" id="co-address" class="bf-form-input" placeholder="Street name, building, apartment..." required>
+          </div>
+
+          <div class="bf-form-row">
+            <div class="bf-form-group">
+              <label class="bf-form-label" for="co-city">CITY / GOVERNORATE *</label>
+              <select id="co-city" class="bf-form-select" required>
+                <option value="">SELECT GOVERNORATE</option>
+                <option value="Tunis">Tunis</option>
+                <option value="Ariana">Ariana</option>
+                <option value="Ben Arous">Ben Arous</option>
+                <option value="Manouba">Manouba</option>
+                <option value="Nabeul">Nabeul</option>
+                <option value="Sousse">Sousse</option>
+                <option value="Monastir">Monastir</option>
+                <option value="Sfax">Sfax</option>
+                <option value="Bizerte">Bizerte</option>
+                <option value="Other">Other Region</option>
+              </select>
+            </div>
+            <div class="bf-form-group">
+              <label class="bf-form-label" for="co-zip">POSTAL CODE</label>
+              <input type="text" id="co-zip" class="bf-form-input" placeholder="1000">
+            </div>
+          </div>
+
+          <!-- Step 2: Payment -->
+          <div class="bf-checkout-step" style="margin-top: 2.5rem;">
+            <h2 class="bf-checkout-step__title">02 // PAYMENT METHOD</h2>
+            <div class="bf-payment-methods">
+              <label class="bf-payment-option is-selected">
+                <input type="radio" name="payment" value="cod" checked>
+                <span class="bf-payment-box">
+                  <strong>CASH ON DELIVERY (PAIEMENT À LA LIVRAISON)</strong>
+                  <small>Pay cash to courier when receiving your package in Tunisia</small>
+                </span>
+              </label>
+
+              <label class="bf-payment-option">
+                <input type="radio" name="payment" value="flouci">
+                <span class="bf-payment-box">
+                  <strong>FLOUCI / D17 / BANK CARD</strong>
+                  <small>Instant digital payment with Tunisian cards & wallets</small>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <button type="submit" class="bf-checkout-submit-btn" id="confirm-order-btn">
+            <span>CONFIRM & PLACE ORDER</span>
+            <span>➔</span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Right Column: Order Summary -->
+    <aside class="bf-checkout-sidebar">
+      <div class="bf-summary-card">
+        <h2 class="bf-summary-title">BAG SUMMARY</h2>
+        
+        <div class="bf-summary-items" id="co-summary-items">
+          <!-- Dynamically filled with cart items -->
+          {% for item in cart.items %}
+            <div class="bf-summary-item">
+              <img src="{{ item.image | image_url: width: 120 }}" alt="{{ item.title }}" class="bf-summary-item__img">
+              <div class="bf-summary-item__info">
+                <p class="bf-summary-item__title">{{ item.product.title }}</p>
+                <p class="bf-summary-item__variant">SIZE: {{ item.variant.title }} × {{ item.quantity }}</p>
+                <p class="bf-summary-item__price">{{ item.final_line_price | money }}</p>
+              </div>
+            </div>
+          {% else %}
+            <p style="font-family: var(--font-display); font-size: 1.2rem; opacity: 0.5;">NO ITEMS IN CART</p>
+          {% endfor %}
+        </div>
+
+        <div class="bf-summary-totals">
+          <div class="bf-summary-row">
+            <span>SUBTOTAL</span>
+            <span id="co-subtotal">{{ cart.total_price | money }}</span>
+          </div>
+          <div class="bf-summary-row">
+            <span>SHIPPING (TUNISIA EXPRESS)</span>
+            <span>7.00 TND</span>
+          </div>
+          <div class="bf-summary-row bf-summary-row--total">
+            <span>TOTAL AMOUNT</span>
+            <span id="co-grand-total">{{ cart.total_price | plus: 700 | money }}</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+</section>
+
+{% schema %}
+{
+  "name": "BLED Checkout Page",
+  "settings": []
+}
+{% endschema %}

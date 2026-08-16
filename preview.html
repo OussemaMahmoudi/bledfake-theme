@@ -669,10 +669,16 @@ ul, ol { list-style: none; }
           </div>
         </div>
 
-        <button class="bf-cart-submit-btn" id="add-to-cart-btn" type="button">
-          <span>ADD TO CART</span>
-          <span>➔</span>
-        </button>
+        <div class="bf-product-actions">
+          <button class="bf-cart-submit-btn" id="add-to-cart-btn" type="button">
+            <span>ADD TO CART</span>
+            <span>➔</span>
+          </button>
+          <button class="bf-buy-now-btn" id="buy-now-btn" type="button">
+            <span>BUY IT NOW</span>
+            <span>⚡</span>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -687,6 +693,130 @@ ul, ol { list-style: none; }
     <span>TUNISIAN UNDERGROUND STREET CULTURE</span>
     <span>AUTHENTIC LIMITED GARMENTS</span>
     <span>WORLDWIDE SHIPPING</span>
+  </div>
+</section>
+
+<!-- ================================================================
+     CHECKOUT VIEW (Functional Brutalist Order Page)
+     ================================================================ -->
+<section class="bf-checkout-page" id="checkout" style="display: none;">
+  <!-- Top Bar -->
+  <header class="bf-header" role="banner">
+    <a href="#" class="bf-logo-link" onclick="showLanding(event)">
+      <img src="img/Fichier 21.png" alt="BLED FAKE" class="bf-logo-img">
+    </a>
+    <div class="bf-nav-right">
+      <button class="bf-nav-btn" onclick="showStore(event)">
+        <span>RETURN TO DROPS</span>
+        <span>←</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="bf-checkout-container">
+    <!-- Left Column: Delivery & Payment Details -->
+    <div class="bf-checkout-main">
+      <div class="bf-checkout-step">
+        <h2 class="bf-checkout-step__title">01 // CONTACT & DELIVERY</h2>
+        
+        <form class="bf-checkout-form" id="preview-checkout-form">
+          <div class="bf-form-row">
+            <div class="bf-form-group">
+              <label class="bf-form-label" for="pv-name">FULL NAME *</label>
+              <input type="text" id="pv-name" class="bf-form-input" placeholder="e.g. Youssef Mahmoudi" required>
+            </div>
+            <div class="bf-form-group">
+              <label class="bf-form-label" for="pv-phone">PHONE NUMBER (TUNISIA) *</label>
+              <input type="tel" id="pv-phone" class="bf-form-input" placeholder="+216 -- --- ---" required>
+            </div>
+          </div>
+
+          <div class="bf-form-group">
+            <label class="bf-form-label" for="pv-email">EMAIL ADDRESS *</label>
+            <input type="email" id="pv-email" class="bf-form-input" placeholder="youssef@example.com" required>
+          </div>
+
+          <div class="bf-form-group">
+            <label class="bf-form-label" for="pv-address">DELIVERY ADDRESS & APARTMENT *</label>
+            <input type="text" id="pv-address" class="bf-form-input" placeholder="Rue de la Liberté, Immeuble B, Appt 4" required>
+          </div>
+
+          <div class="bf-form-row">
+            <div class="bf-form-group">
+              <label class="bf-form-label" for="pv-city">GOVERNORATE *</label>
+              <select id="pv-city" class="bf-form-select" required>
+                <option value="Tunis">Tunis</option>
+                <option value="Ariana">Ariana</option>
+                <option value="Ben Arous">Ben Arous</option>
+                <option value="Manouba">Manouba</option>
+                <option value="Nabeul">Nabeul</option>
+                <option value="Sousse">Sousse</option>
+                <option value="Monastir">Monastir</option>
+                <option value="Sfax">Sfax</option>
+                <option value="Bizerte">Bizerte</option>
+                <option value="Other">Other Region</option>
+              </select>
+            </div>
+            <div class="bf-form-group">
+              <label class="bf-form-label" for="pv-zip">POSTAL CODE</label>
+              <input type="text" id="pv-zip" class="bf-form-input" placeholder="1000">
+            </div>
+          </div>
+
+          <!-- Step 2: Payment Method -->
+          <div class="bf-checkout-step" style="margin-top: 2rem;">
+            <h2 class="bf-checkout-step__title">02 // PAYMENT METHOD</h2>
+            <div class="bf-payment-methods">
+              <label class="bf-payment-option is-selected">
+                <input type="radio" name="payment_method" value="cod" checked>
+                <span class="bf-payment-box">
+                  <strong>CASH ON DELIVERY (PAIEMENT À LA LIVRAISON)</strong>
+                  <small>Pay cash in Tunisian Dinars when your parcel arrives</small>
+                </span>
+              </label>
+
+              <label class="bf-payment-option">
+                <input type="radio" name="payment_method" value="flouci">
+                <span class="bf-payment-box">
+                  <strong>FLOUCI / D17 / BANK CARD</strong>
+                  <small>Pay with Tunisian digital wallet or domestic bank card</small>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <button type="submit" class="bf-checkout-submit-btn" id="pv-confirm-btn">
+            <span>CONFIRM & PLACE ORDER</span>
+            <span>➔</span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Right Column: Live Bag Summary -->
+    <aside class="bf-checkout-sidebar">
+      <div class="bf-summary-card">
+        <h2 class="bf-summary-title">BAG SUMMARY</h2>
+        <div class="bf-summary-items" id="pv-summary-items">
+          <!-- Populated dynamically -->
+        </div>
+
+        <div class="bf-summary-totals">
+          <div class="bf-summary-row">
+            <span>SUBTOTAL</span>
+            <span id="pv-co-subtotal">0.00 TND</span>
+          </div>
+          <div class="bf-summary-row">
+            <span>EXPRESS COURIER (TUNISIA)</span>
+            <span>7.00 TND</span>
+          </div>
+          <div class="bf-summary-row bf-summary-row--total">
+            <span>TOTAL AMOUNT</span>
+            <span id="pv-co-total">7.00 TND</span>
+          </div>
+        </div>
+      </div>
+    </aside>
   </div>
 </section>
 
@@ -1060,6 +1190,115 @@ document.getElementById('add-to-cart-btn').addEventListener('click', () => {
   openCart();
 });
 
+// ── Buy It Now → Checkout ──
+document.getElementById('buy-now-btn').addEventListener('click', () => {
+  const p = demoProducts[currentIdx];
+  const existing = cartItems.find(i => i.title === p.title && i.size === selectedSize);
+  if (existing) {
+    existing.qty++;
+  } else {
+    cartItems.push({ title: p.title, price: p.price, qty: 1, size: selectedSize });
+  }
+  showCheckout();
+});
+
+// ── Checkout View Navigation ──
+function showCheckout() {
+  transitionTo(() => {
+    document.getElementById('bf-landing').style.display = 'none';
+    document.getElementById('store').classList.remove('is-active');
+    document.getElementById('checkout').style.display = '';
+    window.scrollTo(0, 0);
+    renderCheckoutSummary();
+  });
+}
+
+// Patch showStore to also hide checkout
+const _origShowStore = showStore;
+window.showStore = function(e) {
+  document.getElementById('checkout').style.display = 'none';
+  _origShowStore(e);
+};
+
+// Patch showLanding to also hide checkout
+const _origShowLanding = showLanding;
+window.showLanding = function(e) {
+  document.getElementById('checkout').style.display = 'none';
+  _origShowLanding(e);
+};
+
+function renderCheckoutSummary() {
+  const itemsEl   = document.getElementById('pv-summary-items');
+  const subtotalEl = document.getElementById('pv-co-subtotal');
+  const totalEl   = document.getElementById('pv-co-total');
+  const SHIPPING  = 7;
+
+  if (!itemsEl) return;
+
+  if (cartItems.length === 0) {
+    itemsEl.innerHTML = '<p style="color:var(--bf-off-white-40);font-size:0.8rem;text-align:center;padding:1rem 0;">YOUR BAG IS EMPTY</p>';
+    if (subtotalEl) subtotalEl.textContent = '0.00 TND';
+    if (totalEl)   totalEl.textContent = SHIPPING.toFixed(2) + ' TND';
+    return;
+  }
+
+  const subtotal = cartItems.reduce((s, i) => s + i.price * i.qty, 0);
+  itemsEl.innerHTML = cartItems.map(item => `
+    <div class="bf-summary-item">
+      <div class="bf-summary-item__img" style="display:flex;align-items:center;justify-content:center;background:var(--bf-dark-3);">
+        <svg viewBox="0 0 40 50" width="28"><polygon points="12,5 16,12 24,12 28,5 34,5 34,20 28,20 28,45 12,45 12,20 6,20 6,5" fill="#2a2a28"/></svg>
+      </div>
+      <div class="bf-summary-item__info">
+        <div class="bf-summary-item__title">${item.title}</div>
+        <div class="bf-summary-item__variant">SIZE: ${item.size} · QTY: ${item.qty}</div>
+        <div class="bf-summary-item__price">${(item.price * item.qty).toFixed(2)} TND</div>
+      </div>
+    </div>
+  `).join('');
+
+  if (subtotalEl) subtotalEl.textContent = subtotal.toFixed(2) + ' TND';
+  if (totalEl)   totalEl.textContent = (subtotal + SHIPPING).toFixed(2) + ' TND';
+}
+
+// ── Payment Option Selection ──
+document.querySelectorAll('.bf-payment-option').forEach(opt => {
+  opt.addEventListener('click', () => {
+    document.querySelectorAll('.bf-payment-option').forEach(o => o.classList.remove('is-selected'));
+    opt.classList.add('is-selected');
+  });
+});
+
+// ── Checkout Form Submit ──
+const checkoutForm = document.getElementById('preview-checkout-form');
+if (checkoutForm) {
+  checkoutForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('pv-confirm-btn');
+    if (btn) { btn.innerHTML = '<span>PLACING ORDER...</span>'; btn.disabled = true; }
+
+    // Simulate order processing
+    setTimeout(() => {
+      document.getElementById('checkout').innerHTML = `
+        <header class="bf-header" role="banner">
+          <a href="#" class="bf-logo-link" onclick="window.showLanding(event)">
+            <img src="img/Fichier 21.png" alt="BLED FAKE" class="bf-logo-img">
+          </a>
+        </header>
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80svh;gap:2rem;text-align:center;padding:2rem;">
+          <div style="font-family:var(--font-display);font-size:clamp(4rem,10vw,9rem);line-height:0.9;color:var(--bf-off-white);">ORDER<br>PLACED</div>
+          <p style="font-family:var(--font-body);font-size:0.85rem;letter-spacing:0.15em;color:var(--bf-off-white-70);max-width:420px;">
+            YOUR PACKAGE WILL SHIP WITHIN 2–4 BUSINESS DAYS. CHECK YOUR EMAIL FOR TRACKING DETAILS.
+          </p>
+          <button class="bf-checkout-submit-btn" onclick="window.showLanding(event)" style="max-width:320px;">
+            <span>BACK TO HOME</span><span>→</span>
+          </button>
+        </div>
+      `;
+      cartItems = [];
+    }, 1200);
+  });
+}
+
 // ── Carousel Navigation ──
 document.getElementById('prev-btn').addEventListener('click', () => navigateProduct(-1));
 document.getElementById('next-btn').addEventListener('click', () => navigateProduct(1));
@@ -1077,6 +1316,7 @@ function navigateProduct(dir) {
   stage.classList.add('is-changing');
   setTimeout(() => {
     currentIdx = (currentIdx + dir + demoProducts.length) % demoProducts.length;
+    currentAngle = 'front';
     updateProductDisplay();
     stage.classList.remove('is-changing');
   }, 220);

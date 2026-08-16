@@ -492,9 +492,6 @@ window.addEventListener('DOMContentLoaded', () => {
   // Cart triggers
   $$('[data-cart-open]').forEach(btn => btn.addEventListener('click', openCart));
   $$('[data-cart-close]').forEach(btn => btn.addEventListener('click', closeCart));
-  if (backdrop) backdrop.addEventListener('click', () => { closeMenu(); closeCart(); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeMenu(); closeCart(); } });
-
   // Add to Cart Form
   document.addEventListener('submit', async (e) => {
     const form = e.target.closest('.bf-add-cart-form');
@@ -515,10 +512,42 @@ window.addEventListener('DOMContentLoaded', () => {
     if (btn) btn.disabled = false;
   });
 
+  // Buy It Now Handler
+  document.addEventListener('click', async (e) => {
+    const buyBtn = e.target.closest('#buy-now-btn, .bf-buy-now-btn');
+    if (!buyBtn) return;
+    e.preventDefault();
+
+    const form = buyBtn.closest('form') || $('#bf-add-form');
+    const idInput = form ? form.querySelector('[name="id"]') : $('#selected-variant-id');
+    if (!idInput || !idInput.value) return;
+
+    buyBtn.innerHTML = '<span>PROCEEDING...</span>';
+    buyBtn.disabled = true;
+
+    try {
+      await fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+        body: JSON.stringify({ id: idInput.value, quantity: 1 })
+      });
+      window.location.href = '/checkout';
+    } catch (err) {
+      console.error('[BLED Checkout] Error:', err);
+      window.location.href = '/checkout';
+    }
+  });
+
   // Feature initializers
   initMediaNavigation();
   initVariantSelection();
   initProductNavigation();
+
+  // Initial media arrows check on current product
+  const products = (window.bfProducts || []);
+  if (products.length > 0 && products[0]) {
+    updateMediaArrows(products[0].images);
+  }
 
   // Initial cart fetch
   fetchCart().then(cart => {
