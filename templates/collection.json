@@ -1,9 +1,9 @@
 {
   "sections": {
-    "bled-store": {
-      "type": "bled-store",
+    "main": {
+      "type": "bled-collection",
       "settings": {}
     }
   },
-  "order": ["bled-store"]
+  "order": ["main"]
 }

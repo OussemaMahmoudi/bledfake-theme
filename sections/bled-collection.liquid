@@ -1,0 +1,222 @@
+{% comment %}
+  BLED FAKE — Collection & Catalog Grid Section (bled-collection.liquid)
+  Shows all products in the active drop/collection in a stunning brutalist grid.
+  Clicking any product takes the customer to that product's detailed page.
+{% endcomment %}
+
+{% if collection %}
+  {% assign product_list = collection.products %}
+  {% assign current_col_title = collection.title %}
+  {% assign current_col_handle = collection.handle %}
+{% else %}
+  {% assign product_list = collections.all.products %}
+  {% assign current_col_title = 'ALL DROPS' %}
+  {% assign current_col_handle = 'all' %}
+{% endif %}
+
+{% assign product_count = product_list.size %}
+
+<section class="bf-page bf-catalog-page" id="bf-catalog-page" aria-label="BLED FAKE Catalog">
+
+  <div class="bf-grain" aria-hidden="true"></div>
+
+  <!-- ─── TOP HEADER ─────────────────────────────── -->
+  <header class="bf-header" role="banner">
+    <a href="/" class="bf-logo-link" aria-label="BLED FAKE — Home">
+      {%- render 'bled-logo' -%}
+      <span class="visually-hidden">BLED FAKE</span>
+    </a>
+
+    <div class="bf-nav-right">
+      <button class="bf-nav-btn" data-cart-open aria-label="Open bag">
+        <span>BAG</span>
+        <span class="bf-cart-badge-count bf-cart-count" aria-live="polite">{{ cart.item_count }}</span>
+      </button>
+
+      <button class="bf-nav-btn" data-menu-open aria-label="Open menu">
+        <span>MENU</span>
+        <div class="bf-hamburger" aria-hidden="true">
+          <div class="bf-hamburger__line"></div>
+          <div class="bf-hamburger__line"></div>
+        </div>
+      </button>
+    </div>
+  </header>
+
+  <!-- ─── COLLECTION FILTER TABS ─────────────────── -->
+  <nav class="bf-collection-bar" aria-label="Collection filter">
+    <a
+      href="/collections/all"
+      class="bf-collection-tab{% if current_col_handle == 'all' or collection == blank %} is-active{% endif %}"
+    >
+      ALL DROPS
+    </a>
+
+    {% for col in collections %}
+      {% unless col.handle == 'frontpage' or col.handle == 'all' %}
+        {% if col.all_products_count > 0 or col.products_count > 0 %}
+          <a
+            href="{{ col.url }}"
+            class="bf-collection-tab{% if current_col_handle == col.handle %} is-active{% endif %}"
+          >
+            {{ col.title | upcase }}
+          </a>
+        {% endif %}
+      {% endunless %}
+    {% endfor %}
+  </nav>
+
+  <!-- ─── CATALOG HEADER BANNER ──────────────────── -->
+  <div class="bf-catalog-header">
+    <div class="bf-catalog-header__left">
+      <div class="bf-catalog-eyebrow">CATALOG // DROP ARCHIVE</div>
+      <h1 class="bf-catalog-title">{{ current_col_title | upcase }}</h1>
+    </div>
+    <div class="bf-catalog-count-badge">
+      <span class="bf-catalog-count-num">{{ product_count | prepend: '0' | slice: -2, 2 }}</span>
+      <span class="bf-catalog-count-label">PIECES AVAILABLE</span>
+    </div>
+  </div>
+
+  <!-- ─── PRODUCTS GRID ──────────────────────────── -->
+  <div class="bf-catalog-container">
+    {% if product_count > 0 %}
+      <div class="bf-catalog-grid" role="list">
+        {% for prod in product_list %}
+          {% assign featured_img = prod.featured_image %}
+          {% assign secondary_img = prod.images[1] %}
+          {% assign current_v = prod.selected_or_first_available_variant %}
+
+          <article class="bf-product-card" role="listitem" itemscope itemtype="https://schema.org/Product">
+            <a href="{{ prod.url }}" class="bf-product-card__link" aria-label="{{ prod.title | escape }}">
+
+              <!-- Floating Garment Image Stage -->
+              <div class="bf-product-card__stage">
+                <div class="bf-product-card__glow" aria-hidden="true"></div>
+
+                <div class="bf-product-card__img-wrap">
+                  {% if featured_img %}
+                    <img
+                      class="bf-product-card__img bf-product-card__img--front"
+                      src="{{ featured_img | image_url: width: 600 }}"
+                      srcset="{{ featured_img | image_url: width: 350 }} 350w,
+                              {{ featured_img | image_url: width: 600 }} 600w,
+                              {{ featured_img | image_url: width: 900 }} 900w"
+                      sizes="(max-width: 768px) 90vw, (max-width: 1200px) 45vw, 30vw"
+                      alt="{{ featured_img.alt | default: prod.title | escape }}"
+                      loading="{% if forloop.index <= 4 %}eager{% else %}lazy{% endif %}"
+                      decoding="async"
+                    >
+                    {% if secondary_img %}
+                      <img
+                        class="bf-product-card__img bf-product-card__img--back"
+                        src="{{ secondary_img | image_url: width: 600 }}"
+                        srcset="{{ secondary_img | image_url: width: 350 }} 350w,
+                                {{ secondary_img | image_url: width: 600 }} 600w"
+                        sizes="(max-width: 768px) 90vw, (max-width: 1200px) 45vw, 30vw"
+                        alt="{{ secondary_img.alt | default: prod.title | escape }} (alternate view)"
+                        loading="lazy"
+                        decoding="async"
+                      >
+                    {% endif %}
+                  {% else %}
+                    <!-- Vector SVG Fallback -->
+                    <div class="bf-product-card__placeholder">
+                      <svg viewBox="0 0 320 380" xmlns="http://www.w3.org/2000/svg" width="220">
+                        <polygon points="95,45 130,70 190,70 225,45 305,100 275,175 240,155 240,360 80,360 80,155 45,175 15,100" fill="#121210" stroke="#2a2a26" stroke-width="2"/>
+                        <rect x="110" y="140" width="100" height="14" fill="#F1EEE6" opacity="0.85"/>
+                      </svg>
+                    </div>
+                  {% endif %}
+                </div>
+
+                <!-- Card Stock / Discount Badges -->
+                <div class="bf-product-card__badges">
+                  {% unless prod.available %}
+                    <span class="bf-badge bf-badge--soldout">SOLD OUT</span>
+                  {% else %}
+                    {% if prod.compare_at_price > prod.price %}
+                      <span class="bf-badge bf-badge--sale">SALE</span>
+                    {% else %}
+                      <span class="bf-badge bf-badge--drop">DROP {{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+                    {% endif %}
+                  {% endunless %}
+                </div>
+              </div>
+
+              <!-- Product Info Bar -->
+              <div class="bf-product-card__info">
+                <div class="bf-product-card__meta">
+                  <span class="bf-product-card__collection">
+                    {{ prod.collections.first.title | default: 'BLED FAKE' | upcase }}
+                  </span>
+                  <!-- Size Pills Preview -->
+                  <div class="bf-product-card__sizes">
+                    {% for v in prod.variants limit: 5 %}
+                      {% unless v.title == 'Default Title' %}
+                        <span class="bf-card-size-tag{% unless v.available %} is-out{% endunless %}">{{ v.title }}</span>
+                      {% endunless %}
+                    {% endfor %}
+                  </div>
+                </div>
+
+                <h2 class="bf-product-card__title" itemprop="name">
+                  {{ prod.title | upcase }}
+                </h2>
+
+                <div class="bf-product-card__price-row" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+                  <span class="bf-product-card__price" itemprop="price" content="{{ current_v.price | divided_by: 100.0 }}">
+                    {{ current_v.price | money }}
+                  </span>
+                  {% if current_v.compare_at_price > current_v.price %}
+                    <span class="bf-product-card__compare">
+                      {{ current_v.compare_at_price | money }}
+                    </span>
+                  {% endif %}
+                  <meta itemprop="priceCurrency" content="{{ shop.currency }}">
+                </div>
+
+                <!-- CTA Action Button -->
+                <div class="bf-product-card__cta">
+                  <span>VIEW PIECE</span>
+                  <span class="bf-product-card__arrow" aria-hidden="true">→</span>
+                </div>
+              </div>
+
+            </a>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="bf-catalog-empty">
+        <p class="bf-catalog-empty__title">NO PIECES IN THIS DROP</p>
+        <p class="bf-catalog-empty__text">Check back soon or explore all our drops.</p>
+        <a href="/collections/all" class="bf-page-cta-btn" style="margin-top:2rem;">
+          <span>VIEW ALL DROPS</span>
+          <span>→</span>
+        </a>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- ─── BOTTOM TICKER ──────────────────────────── -->
+  <footer class="bf-gallery-status-bar" aria-hidden="true">
+    <span>TUNISIAN UNDERGROUND STREET CULTURE</span>
+    <span>AUTHENTIC LIMITED GARMENTS</span>
+    <span>WORLDWIDE SHIPPING</span>
+  </footer>
+
+</section>
+
+{% schema %}
+{
+  "name": "BLED Collection Grid",
+  "tag": "section",
+  "settings": [],
+  "presets": [
+    {
+      "name": "BLED Collection Grid"
+    }
+  ]
+}
+{% endschema %}

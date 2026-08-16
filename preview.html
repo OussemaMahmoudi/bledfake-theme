@@ -595,17 +595,64 @@ ul, ol { list-style: none; }
 </section>
 
 <!-- ================================================================
-     STORE & COLLECTION VIEW
+     CATALOG / ALL PRODUCTS GRID VIEW
+     ================================================================ -->
+<section class="bf-page bf-catalog-page" id="catalog-view" style="display:none;" aria-label="BLED FAKE Catalog">
+  <header class="bf-header" role="banner">
+    <a href="#" class="bf-logo-link" onclick="window.showLanding(event)">
+      <img src="img/Fichier 21.png" alt="BLED FAKE" class="bf-logo-img">
+    </a>
+    <div class="bf-nav-right">
+      <button class="bf-nav-btn" onclick="openCart()" aria-label="Open cart">
+        <span>BAG</span>
+        <span class="bf-cart-badge-count bf-cart-count" id="catalog-cart-badge">0</span>
+      </button>
+      <button class="bf-nav-btn" onclick="openMenu()" aria-label="Open menu">
+        <span>MENU</span>
+        <div class="bf-hamburger" aria-hidden="true">
+          <div class="bf-hamburger__line"></div>
+          <div class="bf-hamburger__line"></div>
+        </div>
+      </button>
+    </div>
+  </header>
+
+  <div class="bf-catalog-header">
+    <div class="bf-catalog-header__left">
+      <div class="bf-catalog-eyebrow">CATALOG // DROP ARCHIVE</div>
+      <h1 class="bf-catalog-title" id="catalog-title">ALL DROPS</h1>
+    </div>
+    <div class="bf-catalog-count-badge">
+      <span class="bf-catalog-count-num" id="catalog-count">06</span>
+      <span class="bf-catalog-count-label">PIECES AVAILABLE</span>
+    </div>
+  </div>
+
+  <div class="bf-catalog-container">
+    <div class="bf-catalog-grid" id="catalog-grid-cards">
+      <!-- Generated dynamically in JS -->
+    </div>
+  </div>
+
+  <footer class="bf-gallery-status-bar" aria-hidden="true">
+    <span>TUNISIAN UNDERGROUND STREET CULTURE</span>
+    <span>AUTHENTIC LIMITED GARMENTS</span>
+    <span>WORLDWIDE SHIPPING</span>
+  </footer>
+</section>
+
+<!-- ================================================================
+     STORE & COLLECTION VIEW (PDP)
      ================================================================ -->
 <section class="bf-store" id="store">
   <!-- Top Bar -->
   <header class="bf-header" role="banner">
-    <a href="#" class="bf-logo-link" onclick="showLanding(event)">
+    <a href="#" class="bf-logo-link" onclick="window.showLanding(event)">
       <img src="img/Fichier 21.png" alt="BLED FAKE" class="bf-logo-img">
     </a>
     <div class="bf-nav-right">
       <button class="bf-nav-btn" id="cart-open-btn" aria-label="Open cart">
-        <span>CART</span>
+        <span>BAG</span>
         <span class="bf-cart-badge-count" id="cart-badge">0</span>
       </button>
       <button class="bf-nav-btn" id="menu-open-btn-store" aria-label="Open menu">
@@ -617,6 +664,14 @@ ul, ol { list-style: none; }
       </button>
     </div>
   </header>
+
+  <!-- PDP Breadcrumb Bar -->
+  <div class="bf-pdp-breadcrumb-bar">
+    <button class="bf-pdp-back-link" onclick="window.showStore(event)" style="background:none;border:none;cursor:pointer;">
+      <span>← ALL DROPS / CATALOG</span>
+    </button>
+    <span class="bf-pdp-col-label" id="pdp-col-label">BLED FAKE</span>
+  </div>
 
   <!-- Collection Tabs Bar -->
   <nav class="bf-collection-bar" aria-label="Product collections">
@@ -1428,9 +1483,10 @@ document.getElementById('buy-now-btn').addEventListener('click', () => {
   showCheckout();
 });
 
-// ── Master View Switcher (Landing, Store, Checkout, About, Manifesto, Contact) ──
+// ── Master View Switcher (Landing, Catalog, Product Detail, Checkout, About, Manifesto, Contact) ──
 function hideAllViews() {
   document.getElementById('bf-landing').style.display = 'none';
+  document.getElementById('catalog-view').style.display = 'none';
   document.getElementById('store').classList.remove('is-active');
   document.getElementById('checkout').style.display = 'none';
   document.getElementById('about-view').style.display = 'none';
@@ -1447,11 +1503,27 @@ function showCheckout() {
   });
 }
 
-window.showStore = function(e) {
+window.showCatalog = function(e, col = 'all') {
   if (e) e.preventDefault();
   transitionTo(() => {
     hideAllViews();
+    document.getElementById('catalog-view').style.display = '';
+    renderCatalogGrid(col);
+    window.scrollTo(0, 0);
+  });
+};
+
+window.showStore = function(e) {
+  window.showCatalog(e, 'all');
+};
+
+window.showProductDetail = function(idx) {
+  currentIdx = idx;
+  currentAngle = 'front';
+  transitionTo(() => {
+    hideAllViews();
     document.getElementById('store').classList.add('is-active');
+    updateProductDisplay();
     window.scrollTo(0, 0);
   });
 };
@@ -1497,6 +1569,66 @@ document.getElementById('menu-about-link')?.addEventListener('click', e => { e.p
 document.getElementById('menu-manifesto-link')?.addEventListener('click', e => { e.preventDefault(); closeMenu(); showManifesto(); });
 document.getElementById('menu-contact-link')?.addEventListener('click', e => { e.preventDefault(); closeMenu(); showContact(); });
 
+// ── Catalog Grid Renderer ──
+function renderCatalogGrid(colFilter = 'all') {
+  const container = document.getElementById('catalog-grid-cards');
+  const titleEl   = document.getElementById('catalog-title');
+  const countEl   = document.getElementById('catalog-count');
+  if (!container) return;
+
+  let filtered = allProducts;
+  if (colFilter !== 'all') {
+    filtered = allProducts.filter(p => p.collection.toLowerCase() === colFilter.toLowerCase());
+    if (filtered.length === 0) filtered = allProducts;
+  }
+
+  if (titleEl) titleEl.textContent = colFilter === 'all' ? 'ALL DROPS' : colFilter.toUpperCase();
+  if (countEl) countEl.textContent = String(filtered.length).padStart(2, '0');
+
+  // Update active state on catalog collection tabs
+  document.querySelectorAll('#catalog-view .bf-collection-tab').forEach(tab => {
+    tab.classList.toggle('is-active', tab.dataset.collection.toLowerCase() === colFilter.toLowerCase());
+  });
+
+  container.innerHTML = filtered.map((p, i) => {
+    const globalIdx = allProducts.findIndex(item => item.title === p.title);
+    const svgCode = productSVGs[p.type] ? productSVGs[p.type].front : '';
+    return `
+      <article class="bf-product-card" onclick="showProductDetail(${globalIdx})">
+        <a href="#product" class="bf-product-card__link" onclick="event.preventDefault(); showProductDetail(${globalIdx});">
+          <div class="bf-product-card__stage">
+            <div class="bf-product-card__glow" aria-hidden="true"></div>
+            <div class="bf-product-card__img-wrap">
+              <div class="bf-product-card__img">${svgCode}</div>
+            </div>
+            <div class="bf-product-card__badges">
+              <span class="bf-badge bf-badge--drop">DROP 0${i + 1}</span>
+            </div>
+          </div>
+          <div class="bf-product-card__info">
+            <div class="bf-product-card__meta">
+              <span class="bf-product-card__collection">${p.collection.toUpperCase()}</span>
+              <div class="bf-product-card__sizes">
+                <span class="bf-card-size-tag">S</span>
+                <span class="bf-card-size-tag">M</span>
+                <span class="bf-card-size-tag">L</span>
+                <span class="bf-card-size-tag">XL</span>
+              </div>
+            </div>
+            <h2 class="bf-product-card__title">${p.title}</h2>
+            <div class="bf-product-card__price-row">
+              <span class="bf-product-card__price">${p.price.toFixed(2)} TND</span>
+            </div>
+            <div class="bf-product-card__cta">
+              <span>VIEW PIECE</span>
+              <span class="bf-product-card__arrow">→</span>
+            </div>
+          </div>
+        </a>
+      </article>
+    `;
+  }).join('');
+}
 
 function renderCheckoutSummary() {
   const itemsEl   = document.getElementById('pv-summary-items');
@@ -1547,7 +1679,6 @@ if (checkoutForm) {
     const btn = document.getElementById('pv-confirm-btn');
     if (btn) { btn.innerHTML = '<span>PLACING ORDER...</span>'; btn.disabled = true; }
 
-    // Simulate order processing
     setTimeout(() => {
       document.getElementById('checkout').innerHTML = `
         <header class="bf-header" role="banner">
@@ -1570,9 +1701,9 @@ if (checkoutForm) {
   });
 }
 
-// ── Carousel Navigation ──
-document.getElementById('prev-btn').addEventListener('click', () => navigateProduct(-1));
-document.getElementById('next-btn').addEventListener('click', () => navigateProduct(1));
+// ── Product Carousel Navigation (Adjacent Products) ──
+document.getElementById('prev-btn')?.addEventListener('click', () => navigateProduct(-1));
+document.getElementById('next-btn')?.addEventListener('click', () => navigateProduct(1));
 
 document.addEventListener('keydown', e => {
   if (document.getElementById('store').classList.contains('is-active')) {
@@ -1582,42 +1713,31 @@ document.addEventListener('keydown', e => {
 });
 
 function navigateProduct(dir) {
-  if (demoProducts.length <= 1) return;
+  if (allProducts.length <= 1) return;
   const stage = document.getElementById('product-display');
   stage.classList.add('is-changing');
   setTimeout(() => {
-    currentIdx = (currentIdx + dir + demoProducts.length) % demoProducts.length;
+    currentIdx = (currentIdx + dir + allProducts.length) % allProducts.length;
     currentAngle = 'front';
     updateProductDisplay();
     stage.classList.remove('is-changing');
   }, 220);
 }
 
-// ── Collection Tab Filter ──
+// ── Collection Tab Filters on Catalog and Store ──
 document.querySelectorAll('.bf-collection-tab').forEach(tab => {
   tab.addEventListener('click', () => {
-    document.querySelectorAll('.bf-collection-tab').forEach(t => t.classList.remove('is-active'));
-    tab.classList.add('is-active');
-
     const col = tab.dataset.collection;
-    if (col === 'all') {
-      demoProducts = [...allProducts];
+    if (document.getElementById('catalog-view').style.display !== 'none') {
+      renderCatalogGrid(col);
     } else {
-      demoProducts = allProducts.filter(p => p.collection.toLowerCase() === col.toLowerCase());
-      if (demoProducts.length === 0) demoProducts = [...allProducts];
+      window.showCatalog(null, col);
     }
-
-    currentIdx = 0;
-    const stage = document.getElementById('product-display');
-    stage.classList.add('is-changing');
-    setTimeout(() => {
-      updateProductDisplay();
-      stage.classList.remove('is-changing');
-    }, 200);
   });
 });
 
 window.addEventListener('DOMContentLoaded', () => {
+  renderCatalogGrid('all');
   updateProductDisplay();
 });
 </script>
