@@ -8,8 +8,7 @@
   <meta name="description" content="BLED FAKE — Tunisian underground streetwear. We don't hate Tunisia. We hate the illusion.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
-
+  <link rel="stylesheet" href="assets/bled.css">
 <style>
 /* =============================================================
    BLED FAKE — BLED BLOCKS DESIGN SYSTEM
@@ -458,10 +457,10 @@ ul, ol { list-style: none; }
     </button>
   </div>
   <ul class="bf-menu__nav" role="list">
-    <li><a href="#store" class="bf-menu__item" id="menu-store-link"><span class="bf-menu__item-title">STORE / DROPS</span><span class="bf-menu__item-num">01</span></a></li>
-    <li><a href="#" class="bf-menu__item"><span class="bf-menu__item-title">ABOUT BRAND</span><span class="bf-menu__item-num">02</span></a></li>
-    <li><a href="#" class="bf-menu__item"><span class="bf-menu__item-title">MANIFESTO</span><span class="bf-menu__item-num">03</span></a></li>
-    <li><a href="#" class="bf-menu__item"><span class="bf-menu__item-title">CONTACT / STORES</span><span class="bf-menu__item-num">04</span></a></li>
+    <li><a href="#store" class="bf-menu__item" id="menu-store-link"><span class="bf-menu__item-title">STORE / DROPS</span><span class="bf-menu__item-num">01</span><span class="bf-menu__item-arrow">→</span></a></li>
+    <li><a href="#about" class="bf-menu__item" id="menu-about-link"><span class="bf-menu__item-title">ABOUT BRAND</span><span class="bf-menu__item-num">02</span><span class="bf-menu__item-arrow">→</span></a></li>
+    <li><a href="#manifesto" class="bf-menu__item" id="menu-manifesto-link"><span class="bf-menu__item-title">MANIFESTO</span><span class="bf-menu__item-num">03</span><span class="bf-menu__item-arrow">→</span></a></li>
+    <li><a href="#contact" class="bf-menu__item" id="menu-contact-link"><span class="bf-menu__item-title">CONTACT / STORES</span><span class="bf-menu__item-num">04</span><span class="bf-menu__item-arrow">→</span></a></li>
   </ul>
   <div class="bf-menu__footer">
     <span>BLED FAKE // BLED BLOCKS // TUNISIA</span>
@@ -818,6 +817,233 @@ ul, ol { list-style: none; }
       </div>
     </aside>
   </div>
+</section>
+
+<!-- ================================================================
+     ABOUT PAGE VIEW
+     ================================================================ -->
+<section class="bf-page bf-about-page" id="about-view" style="display:none;" aria-label="About BLED FAKE">
+  <header class="bf-header" role="banner">
+    <a href="#" class="bf-logo-link" onclick="window.showLanding(event)" aria-label="BLED FAKE — Home">
+      <img src="img/Fichier 21.png" alt="BLED FAKE" class="bf-logo-img">
+    </a>
+    <div class="bf-nav-right">
+      <button class="bf-nav-btn" onclick="openCart()" aria-label="Open cart">
+        <span>BAG</span>
+        <span class="bf-cart-badge-count bf-cart-count" id="about-cart-badge">0</span>
+      </button>
+      <button class="bf-nav-btn" onclick="openMenu()" aria-label="Open menu">
+        <span>MENU</span>
+        <div class="bf-hamburger" aria-hidden="true">
+          <div class="bf-hamburger__line"></div>
+          <div class="bf-hamburger__line"></div>
+        </div>
+      </button>
+    </div>
+  </header>
+
+  <div class="bf-page-hero">
+    <div class="bf-page-hero__eyebrow">IDENTITY // 2025</div>
+    <h1 class="bf-page-hero__title">ABOUT<br>BLED FAKE</h1>
+    <div class="bf-page-hero__rule"></div>
+  </div>
+
+  <div class="bf-about-grid">
+    <div class="bf-about-statement">
+      <p class="bf-about-statement__text">We don't hate Tunisia.<br>We hate the illusion.</p>
+      <p class="bf-about-statement__sub">
+        BLED FAKE is an underground streetwear label born in the streets of Tunis.
+        Not a brand. A document. Every garment is evidence.
+      </p>
+    </div>
+
+    <div class="bf-about-story">
+      <div class="bf-about-block">
+        <span class="bf-about-block__num">01</span>
+        <h2 class="bf-about-block__title">THE NAME</h2>
+        <p class="bf-about-block__body">
+          <em>Bled</em> means homeland in Tunisian Arabic. <em>Fake</em> is the mirror we hold up to it.
+          Not as an insult — as a diagnosis. We exist in the space between what Tunisia is
+          and what it pretends to be. That gap is where underground culture is born.
+        </p>
+      </div>
+
+      <div class="bf-about-block">
+        <span class="bf-about-block__num">02</span>
+        <h2 class="bf-about-block__title">THE GARMENTS</h2>
+        <p class="bf-about-block__body">
+          Each piece is designed in Tunis and produced in limited quantities.
+          We use heavyweight organic cottons, technical ripstop, and screen-printed
+          graphics with puff ink. Every drop tells a chapter of the same story.
+        </p>
+      </div>
+
+      <div class="bf-about-block">
+        <span class="bf-about-block__num">03</span>
+        <h2 class="bf-about-block__title">THE COLLECTIONS</h2>
+        <p class="bf-about-block__body">
+          <strong>BLED FAKE</strong> — Confrontational graphics, oversized silhouettes.<br><br>
+          <strong>BLED HORRA</strong> — Free Tunisia. Experimental cuts, raw fabrication.<br><br>
+          <strong>COMEBACK TOMORROW</strong> — Tactical utility garments and accessories.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bf-page-cta-band">
+    <button class="bf-page-cta-btn" onclick="window.showStore(event)">
+      <span>SHOP THE DROPS</span><span>→</span>
+    </button>
+    <button class="bf-page-cta-btn bf-page-cta-btn--outline" onclick="window.showManifesto(event)">
+      <span>READ MANIFESTO</span><span>→</span>
+    </button>
+  </div>
+
+  <footer class="bf-page-footer">
+    <span>BLED FAKE // TUNIS // 2025</span>
+    <span>AUTHENTIC LIMITED GARMENTS</span>
+  </footer>
+</section>
+
+<!-- ================================================================
+     MANIFESTO PAGE VIEW
+     ================================================================ -->
+<section class="bf-page bf-manifesto-page" id="manifesto-view" style="display:none;" aria-label="BLED FAKE Manifesto">
+  <header class="bf-header" role="banner">
+    <a href="#" class="bf-logo-link" onclick="window.showLanding(event)" aria-label="BLED FAKE — Home">
+      <img src="img/Fichier 21.png" alt="BLED FAKE" class="bf-logo-img">
+    </a>
+    <div class="bf-nav-right">
+      <button class="bf-nav-btn" onclick="openCart()" aria-label="Open cart">
+        <span>BAG</span>
+        <span class="bf-cart-badge-count bf-cart-count" id="manifesto-cart-badge">0</span>
+      </button>
+      <button class="bf-nav-btn" onclick="openMenu()" aria-label="Open menu">
+        <span>MENU</span>
+        <div class="bf-hamburger" aria-hidden="true">
+          <div class="bf-hamburger__line"></div>
+          <div class="bf-hamburger__line"></div>
+        </div>
+      </button>
+    </div>
+  </header>
+
+  <article class="bf-manifesto-content">
+    <div class="bf-manifesto-opening">
+      <span class="bf-manifesto-overline">TUNIS // 2025 // UNDERGROUND</span>
+    </div>
+    <h1 class="bf-manifesto-headline">WE DON'T<br>HATE TUNISIA.</h1>
+    <h2 class="bf-manifesto-sub-headline">WE HATE <span class="bf-manifesto-em">THE ILLUSION.</span></h2>
+
+    <div class="bf-manifesto-body">
+      <div class="bf-manifesto-para bf-manifesto-para--large">
+        This is not a brand story. This is a police report. A document of what happens when a generation refuses to pretend.
+      </div>
+      <div class="bf-manifesto-divider"><span>I</span></div>
+      <div class="bf-manifesto-para">
+        We grew up watching Tunisia sell itself to tourism and a narrative of stability, while the streets told a completely different story.
+        <em>Bled</em> was supposed to mean home. It started to feel like a stage set.
+      </div>
+      <div class="bf-manifesto-divider"><span>II</span></div>
+      <div class="bf-manifesto-para bf-manifesto-para--pullquote">
+        "The garment is the argument.<br>The wearer is the proof."
+      </div>
+      <div class="bf-manifesto-divider"><span>III</span></div>
+      <div class="bf-manifesto-para">
+        We ship from Tunis. We pay Tunisian creatives, photographers, and seamstresses. The money stays. The culture stays. The illusion gets exposed.
+      </div>
+      <div class="bf-manifesto-para bf-manifesto-para--closing">
+        This is the reality.<br>Enter it.
+      </div>
+    </div>
+  </article>
+
+  <div class="bf-page-cta-band">
+    <button class="bf-page-cta-btn" onclick="window.showStore(event)">
+      <span>ENTER THE DROPS</span><span>→</span>
+    </button>
+  </div>
+
+  <footer class="bf-page-footer">
+    <span>BLED FAKE // TUNIS // 2025</span>
+    <span>AUTHENTIC LIMITED GARMENTS</span>
+  </footer>
+</section>
+
+<!-- ================================================================
+     CONTACT PAGE VIEW
+     ================================================================ -->
+<section class="bf-page bf-contact-page" id="contact-view" style="display:none;" aria-label="Contact BLED FAKE">
+  <header class="bf-header" role="banner">
+    <a href="#" class="bf-logo-link" onclick="window.showLanding(event)" aria-label="BLED FAKE — Home">
+      <img src="img/Fichier 21.png" alt="BLED FAKE" class="bf-logo-img">
+    </a>
+    <div class="bf-nav-right">
+      <button class="bf-nav-btn" onclick="openCart()" aria-label="Open cart">
+        <span>BAG</span>
+        <span class="bf-cart-badge-count bf-cart-count" id="contact-cart-badge">0</span>
+      </button>
+      <button class="bf-nav-btn" onclick="openMenu()" aria-label="Open menu">
+        <span>MENU</span>
+        <div class="bf-hamburger" aria-hidden="true">
+          <div class="bf-hamburger__line"></div>
+          <div class="bf-hamburger__line"></div>
+        </div>
+      </button>
+    </div>
+  </header>
+
+  <div class="bf-page-hero">
+    <div class="bf-page-hero__eyebrow">GET IN TOUCH</div>
+    <h1 class="bf-page-hero__title">CONTACT</h1>
+    <div class="bf-page-hero__rule"></div>
+  </div>
+
+  <div class="bf-contact-grid">
+    <div class="bf-contact-info">
+      <div class="bf-contact-block">
+        <h2 class="bf-contact-block__label">ORDERS & SUPPORT</h2>
+        <p class="bf-contact-block__val">For tracking and delivery inquiries, reach out below.</p>
+        <a href="mailto:orders@bledfake.com" class="bf-contact-link">orders@bledfake.com</a>
+      </div>
+      <div class="bf-contact-block">
+        <h2 class="bf-contact-block__label">COLLABORATIONS</h2>
+        <p class="bf-contact-block__val">We work with underground artists, musicians, and stockists.</p>
+        <a href="mailto:collabs@bledfake.com" class="bf-contact-link">collabs@bledfake.com</a>
+      </div>
+      <div class="bf-contact-block">
+        <h2 class="bf-contact-block__label">BASE</h2>
+        <p class="bf-contact-block__val">TUNIS, TUNISIA — Shipping worldwide</p>
+      </div>
+    </div>
+
+    <div class="bf-contact-form-wrap">
+      <form class="bf-checkout-form" onsubmit="event.preventDefault(); alert('Message received! We will reply within 24h.'); this.reset();">
+        <div class="bf-form-row">
+          <div class="bf-form-group">
+            <label class="bf-form-label">FULL NAME *</label>
+            <input type="text" class="bf-form-input" placeholder="Aziz Ben Salem" required>
+          </div>
+          <div class="bf-form-group">
+            <label class="bf-form-label">EMAIL ADDRESS *</label>
+            <input type="email" class="bf-form-input" placeholder="you@example.com" required>
+          </div>
+        </div>
+        <div class="bf-form-group">
+          <label class="bf-form-label">MESSAGE *</label>
+          <textarea class="bf-form-input bf-form-textarea" placeholder="Write your message here..." rows="5" required></textarea>
+        </div>
+        <button type="submit" class="bf-checkout-submit-btn">
+          <span>SEND MESSAGE</span><span>→</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <footer class="bf-page-footer">
+    <span>BLED FAKE // TUNIS // 2025</span>
+    <span>WE READ EVERY MESSAGE</span>
+  </footer>
 </section>
 
 <script>
@@ -1202,30 +1428,75 @@ document.getElementById('buy-now-btn').addEventListener('click', () => {
   showCheckout();
 });
 
-// ── Checkout View Navigation ──
+// ── Master View Switcher (Landing, Store, Checkout, About, Manifesto, Contact) ──
+function hideAllViews() {
+  document.getElementById('bf-landing').style.display = 'none';
+  document.getElementById('store').classList.remove('is-active');
+  document.getElementById('checkout').style.display = 'none';
+  document.getElementById('about-view').style.display = 'none';
+  document.getElementById('manifesto-view').style.display = 'none';
+  document.getElementById('contact-view').style.display = 'none';
+}
+
 function showCheckout() {
   transitionTo(() => {
-    document.getElementById('bf-landing').style.display = 'none';
-    document.getElementById('store').classList.remove('is-active');
+    hideAllViews();
     document.getElementById('checkout').style.display = '';
     window.scrollTo(0, 0);
     renderCheckoutSummary();
   });
 }
 
-// Patch showStore to also hide checkout
-const _origShowStore = showStore;
 window.showStore = function(e) {
-  document.getElementById('checkout').style.display = 'none';
-  _origShowStore(e);
+  if (e) e.preventDefault();
+  transitionTo(() => {
+    hideAllViews();
+    document.getElementById('store').classList.add('is-active');
+    window.scrollTo(0, 0);
+  });
 };
 
-// Patch showLanding to also hide checkout
-const _origShowLanding = showLanding;
 window.showLanding = function(e) {
-  document.getElementById('checkout').style.display = 'none';
-  _origShowLanding(e);
+  if (e) e.preventDefault();
+  transitionTo(() => {
+    hideAllViews();
+    document.getElementById('bf-landing').style.display = '';
+    window.scrollTo(0, 0);
+  });
 };
+
+window.showAbout = function(e) {
+  if (e) e.preventDefault();
+  transitionTo(() => {
+    hideAllViews();
+    document.getElementById('about-view').style.display = '';
+    window.scrollTo(0, 0);
+  });
+};
+
+window.showManifesto = function(e) {
+  if (e) e.preventDefault();
+  transitionTo(() => {
+    hideAllViews();
+    document.getElementById('manifesto-view').style.display = '';
+    window.scrollTo(0, 0);
+  });
+};
+
+window.showContact = function(e) {
+  if (e) e.preventDefault();
+  transitionTo(() => {
+    hideAllViews();
+    document.getElementById('contact-view').style.display = '';
+    window.scrollTo(0, 0);
+  });
+};
+
+// Menu link bindings
+document.getElementById('menu-about-link')?.addEventListener('click', e => { e.preventDefault(); closeMenu(); showAbout(); });
+document.getElementById('menu-manifesto-link')?.addEventListener('click', e => { e.preventDefault(); closeMenu(); showManifesto(); });
+document.getElementById('menu-contact-link')?.addEventListener('click', e => { e.preventDefault(); closeMenu(); showContact(); });
+
 
 function renderCheckoutSummary() {
   const itemsEl   = document.getElementById('pv-summary-items');
