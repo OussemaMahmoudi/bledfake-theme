@@ -639,18 +639,22 @@ ul, ol { list-style: none; }
     </button>
 
     <div class="bf-product-stage-grid" id="product-display">
-      <!-- Left: Floating Garment Stage with White Ambient Glow & Image Navigation Arrows -->
+      <!-- Left: Floating Garment Stage with White Ambient Glow & Smooth Scroll Track -->
       <div class="bf-garment-stage">
         <div class="bf-garment-glow" aria-hidden="true"></div>
-        <button type="button" class="bf-media-arrow bf-media-arrow--prev" id="media-prev-btn" aria-label="Previous view">‹</button>
-        <div class="bf-garment-artwork" id="product-art-container">
-          <!-- Dynamic Vector Apparel Silhouette -->
+
+        <div class="bf-garment-scroll-track" id="preview-media-track" role="region" aria-label="Product media gallery">
+          <div class="bf-garment-slide" data-slide-index="0">
+            <div class="bf-garment-artwork" id="product-art-front"></div>
+          </div>
+          <div class="bf-garment-slide" data-slide-index="1">
+            <div class="bf-garment-artwork" id="product-art-back"></div>
+          </div>
         </div>
-        <button type="button" class="bf-media-arrow bf-media-arrow--next" id="media-next-btn" aria-label="Next view">›</button>
 
         <div class="bf-media-dots" aria-hidden="true" id="preview-media-dots">
-          <span class="bf-media-dot is-active" id="dot-front" title="Front view"></span>
-          <span class="bf-media-dot" id="dot-back" title="Back view"></span>
+          <button type="button" class="bf-media-dot is-active" id="dot-front" data-slide-index="0" aria-label="Front view"></button>
+          <button type="button" class="bf-media-dot" id="dot-back" data-slide-index="1" aria-label="Back view"></button>
         </div>
       </div>
 
@@ -1278,11 +1282,11 @@ function changeQty(idx, delta) {
   renderCart();
 }
 
-// ── Vector Apparel Silhouettes (Front & Back Views) ──
+// ── Vector Apparel Silhouettes (Front & Back Views - High-Definition / Big Appearance) ──
 const productSVGs = {
   hoodie: {
     front: `
-      <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="300">
+      <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="420">
         <polygon points="100,55 170,15 240,55 315,115 285,190 245,160 245,355 95,355 95,160 55,190 25,115" fill="#121210" stroke="#2c2c28" stroke-width="2"/>
         <path d="M 125,50 C 125,10 215,10 215,50 C 215,85 125,85 125,50 Z" fill="#090908" stroke="#333330" stroke-width="2"/>
         <line x1="150" y1="80" x2="148" y2="135" stroke="#F1EEE6" stroke-width="2.5" opacity="0.85"/>
@@ -1293,7 +1297,7 @@ const productSVGs = {
         <text x="170" y="172" font-family="'Space Grotesk', monospace" font-size="9" fill="#F1EEE6" text-anchor="middle" letter-spacing="4" opacity="0.7">TUNISIAN REBELLION</text>
       </svg>`,
     back: `
-      <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="300">
+      <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="420">
         <polygon points="100,55 170,15 240,55 315,115 285,190 245,160 245,355 95,355 95,160 55,190 25,115" fill="#121210" stroke="#2c2c28" stroke-width="2"/>
         <path d="M 115,35 C 115,5 225,5 225,35 C 225,95 115,95 115,35 Z" fill="#090908" stroke="#333330" stroke-width="2"/>
         <rect x="95" y="340" width="150" height="15" fill="#151513" stroke="#2c2c28" stroke-width="1"/>
@@ -1309,7 +1313,7 @@ const productSVGs = {
 
   oversizedTee: {
     front: `
-      <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="300">
+      <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="420">
         <polygon points="105,45 135,70 205,70 235,45 325,100 290,175 250,155 250,360 90,360 90,155 50,175 15,100" fill="#0e0e0c" stroke="#282824" stroke-width="2"/>
         <path d="M 135,70 Q 170,95 205,70" fill="none" stroke="#F1EEE6" stroke-width="2" opacity="0.6"/>
         <rect x="110" y="140" width="120" height="42" fill="#1a1a16" stroke="#F1EEE6" stroke-width="1.5"/>
@@ -1317,7 +1321,7 @@ const productSVGs = {
         <rect x="115" y="195" width="110" height="12" fill="#F1EEE6" opacity="0.85"/>
       </svg>`,
     back: `
-      <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="300">
+      <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="420">
         <polygon points="105,45 135,70 205,70 235,45 325,100 290,175 250,155 250,360 90,360 90,155 50,175 15,100" fill="#0e0e0c" stroke="#282824" stroke-width="2"/>
         <path d="M 135,60 Q 170,75 205,60" fill="none" stroke="#333330" stroke-width="2"/>
         <!-- Huge Back Stencil Print -->
@@ -1329,7 +1333,7 @@ const productSVGs = {
 
   cargoVest: {
     front: `
-      <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="300">
+      <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="420">
         <polygon points="110,40 170,90 230,40 280,85 260,165 245,150 245,355 95,355 95,150 80,165 60,85" fill="#161613" stroke="#33332c" stroke-width="2"/>
         <line x1="170" y1="90" x2="170" y2="355" stroke="#F1EEE6" stroke-width="3" opacity="0.8"/>
         <rect x="110" y="125" width="45" height="50" fill="#1f1f1a" stroke="#F1EEE6" stroke-width="1.2"/>
@@ -1340,7 +1344,7 @@ const productSVGs = {
         <text x="170" y="301" font-family="'Space Grotesk', monospace" font-size="8" fill="#F1EEE6" text-anchor="middle" letter-spacing="2">COMEBACK TOMORROW</text>
       </svg>`,
     back: `
-      <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="300">
+      <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="420">
         <polygon points="110,40 170,90 230,40 280,85 260,165 245,150 245,355 95,355 95,150 80,165 60,85" fill="#161613" stroke="#33332c" stroke-width="2"/>
         <!-- Tactical back harness & holster lines -->
         <rect x="105" y="120" width="130" height="150" fill="#11110e" stroke="#33332c" stroke-width="2"/>
@@ -1352,7 +1356,7 @@ const productSVGs = {
 
   cap: {
     front: `
-      <svg viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" width="290">
+      <svg viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" width="390">
         <path d="M 70,210 C 70,80 270,80 270,210 Z" fill="#121210" stroke="#2d2d28" stroke-width="2"/>
         <path d="M 50,210 Q 170,255 290,210 Q 170,230 50,210 Z" fill="#181815" stroke="#F1EEE6" stroke-width="1.5"/>
         <path d="M 170,85 L 170,210" stroke="#252520" stroke-width="2"/>
@@ -1361,7 +1365,7 @@ const productSVGs = {
         <text x="170" y="158" font-family="'Bebas Neue', Impact" font-size="28" fill="#050505" text-anchor="middle" letter-spacing="2">BF</text>
       </svg>`,
     back: `
-      <svg viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" width="290">
+      <svg viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" width="390">
         <path d="M 70,210 C 70,80 270,80 270,210 Z" fill="#121210" stroke="#2d2d28" stroke-width="2"/>
         <ellipse cx="170" cy="85" rx="8" ry="5" fill="#F1EEE6"/>
         <!-- Arch strap & metal buckle -->
@@ -1373,7 +1377,7 @@ const productSVGs = {
 
   heavyweightTee: {
     front: `
-      <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="300">
+      <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="420">
         <polygon points="105,45 135,70 205,70 235,45 325,100 290,175 250,155 250,360 90,360 90,155 50,175 15,100" fill="#141412" stroke="#33332e" stroke-width="2"/>
         <path d="M 135,70 Q 170,95 205,70" fill="none" stroke="#3a3a34" stroke-width="3"/>
         <polygon points="120,130 220,130 205,240 135,240" fill="#090908" stroke="#F1EEE6" stroke-width="1.5"/>
@@ -1381,7 +1385,7 @@ const productSVGs = {
         <text x="170" y="198" font-family="'Space Grotesk', monospace" font-size="8" fill="#F1EEE6" text-anchor="middle" letter-spacing="3" opacity="0.8">EDITION 005</text>
       </svg>`,
     back: `
-      <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="300">
+      <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="420">
         <polygon points="105,45 135,70 205,70 235,45 325,100 290,175 250,155 250,360 90,360 90,155 50,175 15,100" fill="#141412" stroke="#33332e" stroke-width="2"/>
         <path d="M 135,60 Q 170,75 205,60" fill="none" stroke="#333330" stroke-width="2"/>
         <text x="170" y="180" font-family="'Bebas Neue', Impact" font-size="46" fill="#F1EEE6" text-anchor="middle" letter-spacing="4">HEAVYWEIGHT</text>
@@ -1390,7 +1394,7 @@ const productSVGs = {
 
   bag: {
     front: `
-      <svg viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" width="280">
+      <svg viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" width="390">
         <rect x="75" y="110" width="190" height="150" rx="12" fill="#131310" stroke="#33332c" stroke-width="2"/>
         <rect x="90" y="150" width="160" height="90" rx="6" fill="#1c1c18" stroke="#F1EEE6" stroke-width="1.5"/>
         <line x1="90" y1="170" x2="250" y2="170" stroke="#F1EEE6" stroke-width="2" opacity="0.6"/>
@@ -1400,7 +1404,7 @@ const productSVGs = {
         <text x="170" y="215" font-family="'Bebas Neue', Impact" font-size="20" fill="#F1EEE6" text-anchor="middle" letter-spacing="3">COMEBACK</text>
       </svg>`,
     back: `
-      <svg viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" width="280">
+      <svg viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" width="390">
         <rect x="75" y="110" width="190" height="150" rx="12" fill="#131310" stroke="#33332c" stroke-width="2"/>
         <!-- Breathable mesh padding -->
         <rect x="90" y="125" width="160" height="120" rx="8" fill="#1b1b16" stroke="#252520" stroke-dasharray="4,4"/>
@@ -1458,7 +1462,6 @@ const allProducts = [
 let demoProducts = [...allProducts];
 let currentIdx = 0;
 let selectedSize = 'S';
-let currentAngle = 'front';
 
 function updateProductDisplay() {
   const p = demoProducts[currentIdx];
@@ -1476,44 +1479,51 @@ function updateProductDisplay() {
   const colLabel = document.getElementById('pdp-col-label');
   if (colLabel) colLabel.textContent = (p.collection || 'BLED FAKE').toUpperCase();
 
-  const container = document.getElementById('product-art-container');
-  if (container && productSVGs[p.type]) {
-    container.innerHTML = productSVGs[p.type][currentAngle] || productSVGs[p.type].front;
+  const frontContainer = document.getElementById('product-art-front');
+  const backContainer = document.getElementById('product-art-back');
+  if (frontContainer && productSVGs[p.type]) {
+    frontContainer.innerHTML = productSVGs[p.type].front;
+  }
+  if (backContainer && productSVGs[p.type]) {
+    backContainer.innerHTML = productSVGs[p.type].back || productSVGs[p.type].front;
   }
 
-  // Update media dots
-  const dotFront = document.getElementById('dot-front');
-  const dotBack = document.getElementById('dot-back');
-  if (dotFront && dotBack) {
-    dotFront.classList.toggle('is-active', currentAngle === 'front');
-    dotBack.classList.toggle('is-active', currentAngle === 'back');
-  }
+  // Reset scroll to first slide on product load
+  const track = document.getElementById('preview-media-track');
+  if (track) track.scrollTo({ left: 0, behavior: 'instant' });
+
+  // Reset active dot
+  document.getElementById('dot-front')?.classList.add('is-active');
+  document.getElementById('dot-back')?.classList.remove('is-active');
 }
 
-// ── Media Arrow Navigation (Flip Angle Front <-> Back) ──
-document.addEventListener('click', (e) => {
-  const arrow = e.target.closest('#media-prev-btn, #media-next-btn, .bf-media-arrow');
-  if (arrow) {
-    e.preventDefault();
-    e.stopPropagation();
-    currentAngle = currentAngle === 'front' ? 'back' : 'front';
-    updateProductDisplay();
-    return;
-  }
+// ── Media Track Scroll & Wheel Listeners ──
+const previewTrack = document.getElementById('preview-media-track');
+if (previewTrack) {
+  previewTrack.addEventListener('scroll', () => {
+    const isBack = previewTrack.scrollLeft > previewTrack.clientWidth * 0.45;
+    document.getElementById('dot-front')?.classList.toggle('is-active', !isBack);
+    document.getElementById('dot-back')?.classList.toggle('is-active', isBack);
+  }, { passive: true });
 
-  const dotFront = e.target.closest('#dot-front');
-  if (dotFront) {
-    currentAngle = 'front';
-    updateProductDisplay();
-    return;
-  }
+  // Mouse wheel scroll horizontally over garment
+  previewTrack.addEventListener('wheel', (e) => {
+    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+      e.preventDefault();
+      previewTrack.scrollBy({ left: e.deltaY * 1.5, behavior: 'smooth' });
+    }
+  }, { passive: false });
+}
 
-  const dotBack = e.target.closest('#dot-back');
-  if (dotBack) {
-    currentAngle = 'back';
-    updateProductDisplay();
-    return;
-  }
+// Dot click jumps to slide
+document.querySelectorAll('#preview-media-dots .bf-media-dot').forEach(dot => {
+  dot.addEventListener('click', () => {
+    const idx = parseInt(dot.dataset.slideIndex || '0', 10);
+    const track = document.getElementById('preview-media-track');
+    if (track) {
+      track.scrollTo({ left: idx * track.clientWidth, behavior: 'smooth' });
+    }
+  });
 });
 
 // ── Size Pills ──

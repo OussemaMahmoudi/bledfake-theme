@@ -56,62 +56,62 @@
   <div class="bf-pdp-container">
     <div class="bf-product-stage-grid" id="product-display" data-product-id="{{ current_product.id }}">
 
-      <!-- Left: Garment Stage with White Ambient Glow & Image Arrows -->
+      <!-- Left: Garment Stage with White Ambient Glow & Smooth Scrollable Media Track -->
       <div class="bf-garment-stage">
         <div class="bf-garment-glow" aria-hidden="true"></div>
 
-        <!-- Left Image Arrow -->
-        <button
-          type="button"
-          class="bf-media-arrow bf-media-arrow--prev"
-          id="media-prev-btn"
-          aria-label="Previous image"
-          {% if prod_media.size <= 1 %}style="display:none;"{% endif %}
-        >‹</button>
-
-        <!-- Garment Artwork Image -->
-        <div class="bf-garment-artwork" id="product-art-container">
-          {% if current_product.featured_image %}
-            <img
-              class="bf-product-image"
-              id="main-product-img"
-              src="{{ current_product.featured_image | image_url: width: 800 }}"
-              srcset="{{ current_product.featured_image | image_url: width: 400 }} 400w,
-                      {{ current_product.featured_image | image_url: width: 800 }} 800w,
-                      {{ current_product.featured_image | image_url: width: 1200 }} 1200w"
-              sizes="(max-width: 768px) 90vw, 45vw"
-              alt="{{ current_product.featured_image.alt | default: current_product.title | escape }}"
-              loading="eager"
-              decoding="async"
-              data-images="{{ prod_images_json | escape }}"
-              data-media-index="0"
-            >
+        <!-- Scrollable Garment Artwork Track -->
+        <div class="bf-garment-scroll-track" id="product-media-track" role="region" aria-label="Product media gallery">
+          {% if prod_media.size > 0 %}
+            {% for m in prod_media %}
+              {% assign img = m.preview_image | default: m %}
+              <div class="bf-garment-slide" data-media-index="{{ forloop.index0 }}">
+                <img
+                  class="bf-product-image"
+                  src="{{ img | image_url: width: 1000 }}"
+                  srcset="{{ img | image_url: width: 500 }} 500w,
+                          {{ img | image_url: width: 1000 }} 1000w,
+                          {{ img | image_url: width: 1600 }} 1600w"
+                  sizes="(max-width: 768px) 95vw, 55vw"
+                  alt="{{ img.alt | default: current_product.title | escape }}"
+                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                  decoding="async"
+                >
+              </div>
+            {% endfor %}
+          {% elsif current_product.featured_image %}
+            <div class="bf-garment-slide" data-media-index="0">
+              <img
+                class="bf-product-image"
+                src="{{ current_product.featured_image | image_url: width: 1000 }}"
+                alt="{{ current_product.title | escape }}"
+                loading="eager"
+              >
+            </div>
           {% else %}
-            <div class="bf-product-image-placeholder" id="main-product-img" data-images="[]" data-media-index="0" aria-label="{{ current_product.title | escape }}">
-              <svg viewBox="0 0 320 380" xmlns="http://www.w3.org/2000/svg" width="280">
-                <polygon points="95,45 130,70 190,70 225,45 305,100 275,175 240,155 240,360 80,360 80,155 45,175 15,100" fill="#121210" stroke="#2a2a26" stroke-width="2"/>
-                <path d="M 130,70 Q 160,95 190,70" fill="none" stroke="#3a3a34" stroke-width="2.5"/>
-                <rect x="110" y="140" width="100" height="14" fill="#F1EEE6" opacity="0.85"/>
-                <rect x="125" y="162" width="70" height="8" fill="#F1EEE6" opacity="0.6"/>
-              </svg>
+            <div class="bf-garment-slide" data-media-index="0">
+              <div class="bf-product-image-placeholder" aria-label="{{ current_product.title | escape }}">
+                <svg viewBox="0 0 320 380" xmlns="http://www.w3.org/2000/svg" width="320">
+                  <polygon points="95,45 130,70 190,70 225,45 305,100 275,175 240,155 240,360 80,360 80,155 45,175 15,100" fill="#121210" stroke="#2a2a26" stroke-width="2"/>
+                  <path d="M 130,70 Q 160,95 190,70" fill="none" stroke="#3a3a34" stroke-width="2.5"/>
+                  <rect x="110" y="140" width="100" height="14" fill="#F1EEE6" opacity="0.85"/>
+                  <rect x="125" y="162" width="70" height="8" fill="#F1EEE6" opacity="0.6"/>
+                </svg>
+              </div>
             </div>
           {% endif %}
         </div>
-
-        <!-- Right Image Arrow -->
-        <button
-          type="button"
-          class="bf-media-arrow bf-media-arrow--next"
-          id="media-next-btn"
-          aria-label="Next image"
-          {% if prod_media.size <= 1 %}style="display:none;"{% endif %}
-        >›</button>
 
         <!-- Media Dot Indicators -->
         {% if prod_media.size > 1 %}
           <div class="bf-media-dots" aria-hidden="true" id="bf-media-dots">
             {% for m in prod_media %}
-              <span class="bf-media-dot{% if forloop.first %} is-active{% endif %}"></span>
+              <button
+                type="button"
+                class="bf-media-dot{% if forloop.first %} is-active{% endif %}"
+                data-slide-index="{{ forloop.index0 }}"
+                aria-label="View slide {{ forloop.index }}"
+              ></button>
             {% endfor %}
           </div>
         {% endif %}

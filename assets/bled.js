@@ -259,87 +259,48 @@ async function cartChange(key, quantity) {
 }
 
 /* ================================================================
-   5. PRODUCT MEDIA NAVIGATION
-   Reads images from data-images attribute on #main-product-img
-   No fragile URL matching needed.
+   5. PRODUCT MEDIA NAVIGATION (Smooth Scroll & Wheel Snap)
    ================================================================ */
 
 let currentMediaIndex = 0;
 
-function getMediaImages() {
-  const imgEl = $('#main-product-img');
-  if (!imgEl) return [];
-  try {
-    const raw = imgEl.getAttribute('data-images') || '[]';
-    if (!raw || raw === '[]') return [];
-    const decoded = raw
-      .replace(/&quot;/g, '"')
-      .replace(/&#39;/g, "'")
-      .replace(/&#x27;/g, "'")
-      .replace(/&amp;/g, '&');
-    const parsed = JSON.parse(decoded);
-    return Array.isArray(parsed) ? parsed.filter(Boolean) : [];
-  } catch (e) {
-    console.error('[BLED] Error parsing media images:', e);
-    return [];
-  }
-}
-
-function setMediaImage(index) {
-  const images = getMediaImages();
-  if (!images.length) return;
-  currentMediaIndex = (index + images.length) % images.length;
-  const imgEl = $('#main-product-img');
-  if (imgEl && imgEl.tagName === 'IMG') {
-    imgEl.classList.add('is-loading');
-    imgEl.removeAttribute('srcset');
-    imgEl.src = images[currentMediaIndex];
-    imgEl.onload = () => imgEl.classList.remove('is-loading');
-    imgEl.onerror = () => imgEl.classList.remove('is-loading');
-  }
-  if (imgEl) imgEl.dataset.mediaIndex = currentMediaIndex;
-  updateMediaDots(currentMediaIndex);
-}
-
 function updateMediaDots(activeIndex) {
+  currentMediaIndex = activeIndex;
   $$('#bf-media-dots .bf-media-dot').forEach((dot, i) => {
     dot.classList.toggle('is-active', i === activeIndex);
   });
 }
 
-function updateMediaArrows(images) {
-  const prev = $('#media-prev-btn');
-  const next = $('#media-next-btn');
-  const dotsEl = $('#bf-media-dots');
-  const show = images && images.length > 1;
-  if (prev) prev.style.display = show ? '' : 'none';
-  if (next) next.style.display = show ? '' : 'none';
-  if (dotsEl) dotsEl.style.display = show ? '' : 'none';
-}
-
 function initMediaNavigation() {
-  document.addEventListener('click', (e) => {
-    const prevBtn = e.target.closest('#media-prev-btn, .bf-media-arrow--prev');
-    const nextBtn = e.target.closest('#media-next-btn, .bf-media-arrow--next');
-    if (!prevBtn && !nextBtn) return;
+  // Sync dots when user scrolls horizontally on the garment track
+  document.addEventListener('scroll', (e) => {
+    const track = e.target.closest('#product-media-track, .bf-garment-scroll-track');
+    if (!track) return;
+    const scrollLeft = track.scrollLeft;
+    const slideWidth = track.clientWidth || 1;
+    const activeIndex = Math.round(scrollLeft / slideWidth);
+    updateMediaDots(activeIndex);
+  }, true);
 
-    e.preventDefault();
-    e.stopPropagation();
+  // Allow standard mouse wheel to scroll horizontally across garment images
+  document.addEventListener('wheel', (e) => {
+    const track = e.target.closest('#product-media-track, .bf-garment-scroll-track');
+    if (!track) return;
+    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+      e.preventDefault();
+      track.scrollBy({ left: e.deltaY * 1.5, behavior: 'smooth' });
+    }
+  }, { passive: false });
 
-    const images = getMediaImages();
-    if (!images || images.length <= 1) return;
-
-    setMediaImage(prevBtn ? currentMediaIndex - 1 : currentMediaIndex + 1);
-  });
-
-  // Direct dot click support
+  // Direct dot click support: smooth scroll to slide
   document.addEventListener('click', (e) => {
     const dot = e.target.closest('.bf-media-dot');
     if (!dot) return;
+    const track = $('#product-media-track, .bf-garment-scroll-track');
     const allDots = $$('#bf-media-dots .bf-media-dot');
     const dotIdx = allDots.indexOf(dot);
-    if (dotIdx !== -1) {
-      setMediaImage(dotIdx);
+    if (track && dotIdx !== -1) {
+      track.scrollTo({ left: dotIdx * track.clientWidth, behavior: 'smooth' });
     }
   });
 }
@@ -429,30 +390,35 @@ function initProductNavigation() {
       // Reset media index
       currentMediaIndex = 0;
 
-      // Update main product image + data-images attribute
-      const imgEl = $('#main-product-img');
-      if (imgEl) {
-        const firstSrc = (product.images && product.images[0]) ? product.images[0] : product.featured_image;
-        const imagesJSON = JSON.stringify(product.images || []);
-        imgEl.setAttribute('data-images', imagesJSON);
-        imgEl.dataset.mediaIndex = '0';
-
-        if (imgEl.tagName === 'IMG' && firstSrc) {
-          imgEl.classList.add('is-loading');
-          imgEl.src = firstSrc;
-          imgEl.alt = product.title || '';
-          imgEl.onload = () => imgEl.classList.remove('is-loading');
-        }
+      // Rebuild media track slides
+      const track = $('#product-media-track, .bf-garment-scroll-track');
+      if (track && product.images && product.images.length > 0) {
+        track.innerHTML = product.images.map((src, i) => `
+          <div class="bf-garment-slide" data-media-index="${i}">
+            <img
+              class="bf-product-image"
+              src="${src}"
+              alt="${product.title || ''}"
+              loading="${i === 0 ? 'eager' : 'lazy'}"
+              decoding="async"
+            >
+          </div>
+        `).join('');
+        track.scrollTo({ left: 0, behavior: 'instant' });
       }
-
-      // Media arrow visibility
-      updateMediaArrows(product.images);
 
       // Update media dots
       const dotsEl = $('#bf-media-dots');
       if (dotsEl) {
         if (product.images && product.images.length > 1) {
           dotsEl.innerHTML = product.images.map((_, i) =>
+            `<button type="button" class="bf-media-dot${i === 0 ? ' is-active' : ''}" data-slide-index="${i}" aria-label="View slide ${i + 1}"></button>`
+          ).join('');
+          dotsEl.style.display = '';
+        } else {
+          dotsEl.style.display = 'none';
+        }
+      }
             `<span class="bf-media-dot${i === 0 ? ' is-active' : ''}"></span>`
           ).join('');
           dotsEl.style.display = '';
@@ -649,10 +615,6 @@ window.addEventListener('DOMContentLoaded', () => {
   initMediaNavigation();
   initVariantSelection();
   initProductNavigation();
-
-  // ── Initialize media arrows for first product ──
-  const initImages = getMediaImages();
-  updateMediaArrows(initImages);
 
   // ── Sync cart badge via API (background, no flicker) ──
   fetchCart().then(cart => {
