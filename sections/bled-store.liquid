@@ -130,8 +130,9 @@ window.bfProducts = [
     >
       {% if current_product %}
 
-        <!-- Irregular off-white paper shape containing the product image -->
-        <div class="bf-product-shape">
+        <!-- Floating product stage with ambient white glow (no box frame) -->
+        <div class="bf-product-stage">
+          <div class="bf-product-glow" aria-hidden="true"></div>
           <div class="bf-product-image-wrap">
             {% if current_product.featured_image %}
               <img
@@ -139,20 +140,24 @@ window.bfProducts = [
                 src="{{ current_product.featured_image | image_url: width: 800 }}"
                 srcset="{{ current_product.featured_image | image_url: width: 400 }} 400w,
                         {{ current_product.featured_image | image_url: width: 800 }} 800w"
-                sizes="(max-width: 767px) 70vw, 35vw"
+                sizes="(max-width: 767px) 80vw, 35vw"
                 alt="{{ current_product.featured_image.alt | default: current_product.title | escape }}"
                 loading="eager"
                 width="{{ current_product.featured_image.width }}"
                 height="{{ current_product.featured_image.height }}"
               >
             {% else %}
-              <!-- Placeholder when no product image -->
+              <!-- Transparent streetwear silhouette placeholder -->
               <div class="bf-product-image-placeholder" aria-label="{{ current_product.title | escape }}">
-                <svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg" width="80" aria-hidden="true">
-                  <rect x="20"  y="10"  width="160" height="240" fill="#1a1a18"/>
-                  <rect x="60"  y="30"  width="80"  height="100" fill="#252522"/>
-                  <rect x="50"  y="145" width="100" height="8"   fill="#252522"/>
-                  <rect x="70"  y="162" width="60"  height="6"   fill="#252522"/>
+                <svg viewBox="0 0 300 360" xmlns="http://www.w3.org/2000/svg" width="240" aria-hidden="true">
+                  <!-- Oversized streetwear tee silhouette -->
+                  <polygon points="90,30 120,60 180,60 210,30 280,75 250,140 215,120 215,340 85,340 85,120 50,140 20,75" fill="#121210" stroke="#2a2a26" stroke-width="2"/>
+                  <!-- Collar rib -->
+                  <path d="M 120,60 Q 150,78 180,60" fill="none" stroke="#3a3a34" stroke-width="3"/>
+                  <!-- Chest graphic: BLED FAKE stencil -->
+                  <rect x="105" y="140" width="90" height="12" fill="#F1EEE6" opacity="0.85"/>
+                  <rect x="120" y="160" width="60" height="8" fill="#F1EEE6" opacity="0.6"/>
+                  <rect x="135" y="175" width="30" height="6" fill="#F1EEE6" opacity="0.4"/>
                 </svg>
               </div>
             {% endif %}
@@ -162,22 +167,24 @@ window.bfProducts = [
             {% endif %}
           </div>
         </div>
-        <!-- /bf-product-shape -->
+        <!-- /bf-product-stage -->
 
-        <!-- Product info panel (floats to the right of the shape) -->
+        <!-- Product info panel -->
         <div class="bf-product-info-panel" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
           <meta itemprop="priceCurrency" content="{{ shop.currency }}">
           <meta itemprop="price" content="{{ current_product.selected_or_first_available_variant.price | divided_by: 100.0 }}">
 
-          <span class="bf-product-price bf-display">
-            {{ current_product.selected_or_first_available_variant.price | money }}
-          </span>
-
-          {% if current_product.compare_at_price > current_product.price %}
-            <span class="bf-product-price--compare">
-              {{ current_product.compare_at_price | money }}
+          <div class="bf-product-price-wrap">
+            <span class="bf-product-price bf-display">
+              {{ current_product.selected_or_first_available_variant.price | money }}
             </span>
-          {% endif %}
+
+            {% if current_product.compare_at_price > current_product.price %}
+              <span class="bf-product-price--compare">
+                {{ current_product.compare_at_price | money }}
+              </span>
+            {% endif %}
+          </div>
 
           <!-- Variant / Size selector -->
           <form
@@ -186,26 +193,44 @@ window.bfProducts = [
             method="post"
             aria-label="Add {{ current_product.title | escape }} to cart"
           >
-            {% if current_product.variants.size > 1 %}
+            <div class="bf-size-section">
+              <span class="bf-size-label">SELECT SIZE</span>
               <div class="bf-size-selector" role="group" aria-label="Select size">
-                {% for variant in current_product.variants %}
-                  <label class="bf-size-option{% if variant == current_product.selected_or_first_available_variant %} selected{% endif %}{% unless variant.available %} bf-size-option--sold-out{% endunless %}">
-                    <input
-                      type="radio"
-                      name="id"
-                      value="{{ variant.id }}"
-                      class="visually-hidden"
-                      {% if variant == current_product.selected_or_first_available_variant %}checked{% endif %}
-                      {% unless variant.available %}disabled{% endunless %}
-                      aria-label="{{ variant.title }}"
-                    >
-                    {{ variant.title }}
-                  </label>
-                {% endfor %}
+                {% if current_product.variants.size > 1 %}
+                  {% for variant in current_product.variants %}
+                    <label class="bf-size-option{% if variant == current_product.selected_or_first_available_variant %} selected{% endif %}{% unless variant.available %} bf-size-option--sold-out{% endunless %}">
+                      <input
+                        type="radio"
+                        name="id"
+                        value="{{ variant.id }}"
+                        class="visually-hidden"
+                        {% if variant == current_product.selected_or_first_available_variant %}checked{% endif %}
+                        {% unless variant.available %}disabled{% endunless %}
+                        aria-label="{{ variant.title }}"
+                      >
+                      {{ variant.title }}
+                    </label>
+                  {% endfor %}
+                {% else %}
+                  <!-- Standard streetwear size options -->
+                  {% assign sizes = "S,M,L,XL" | split: "," %}
+                  {% for s in sizes %}
+                    <label class="bf-size-option{% if forloop.first %} selected{% endif %}">
+                      <input
+                        type="radio"
+                        name="size_display"
+                        value="{{ s }}"
+                        class="visually-hidden"
+                        {% if forloop.first %}checked{% endif %}
+                        aria-label="Size {{ s }}"
+                      >
+                      {{ s }}
+                    </label>
+                  {% endfor %}
+                  <input type="hidden" name="id" value="{{ current_product.variants.first.id }}">
+                {% endif %}
               </div>
-            {% else %}
-              <input type="hidden" name="id" value="{{ current_product.variants.first.id }}">
-            {% endif %}
+            </div>
 
             <button
               type="submit"
@@ -221,8 +246,8 @@ window.bfProducts = [
 
       {% else %}
         <!-- Empty collection state -->
-        <div class="bf-product-shape" style="opacity:0.3;">
-          <p class="bf-display bf-display-md" style="color:var(--bf-black);padding:2rem;text-align:center">
+        <div class="bf-product-stage" style="opacity:0.3;">
+          <p class="bf-display bf-display-md" style="color:var(--bf-off-white);padding:2rem;text-align:center">
             NO PRODUCTS<br>YET
           </p>
         </div>

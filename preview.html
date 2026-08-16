@@ -269,65 +269,114 @@ img, svg { display: block; max-width: 100%; }
   padding: 6rem 5rem 4rem;
 }
 
-/* Product shape */
+/* Product display — floating silhouette with glow */
 .bf-product-display {
   position: relative; z-index: 20;
-  display: flex; align-items: flex-end; gap: 2rem;
+  display: flex; align-items: center; justify-content: center;
+  gap: clamp(2rem, 5vw, 4.5rem);
   transition: opacity .23s ease, transform .23s var(--ease-block);
 }
-.bf-product-display.is-changing { opacity: 0; transform: translateX(-18px); }
+.bf-product-display.is-changing { opacity: 0; transform: translateX(-18px) scale(0.98); }
 
-.bf-product-shape {
-  background: var(--bf-off-white);
-  clip-path: polygon(2% 0%, 98% 1%, 100% 98%, 2% 100%, 0% 60%);
-  padding: 1.2rem 1.2rem 1.6rem;
-  width: clamp(220px, 22vw, 320px);
-  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6);
-}
-.bf-product-image-wrap { background: var(--bf-dark-2, #141412); position: relative; }
-.bf-product-image { width: 100%; aspect-ratio: 3/4; object-fit: cover; }
-.bf-product-image-placeholder {
-  width: 100%; aspect-ratio: 3/4;
-  background: #141412;
+/* Product stage with ambient white glow (no box frame) */
+.bf-product-stage {
+  position: relative;
   display: flex; align-items: center; justify-content: center;
+  width: clamp(260px, 28vw, 420px);
+  min-height: clamp(320px, 40vh, 480px);
 }
-.bf-product-badge {
-  position: absolute; top: .4rem; right: -.4rem;
-  background: var(--bf-black); color: var(--bf-off-white);
-  font-family: var(--font-display); font-size: .9rem; letter-spacing: .08em;
-  padding: .2rem .5rem;
-  clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 70% 100%, 0% 100%);
+
+/* White / Off-white ambient radial backglow */
+.bf-product-glow {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 100%; height: 100%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle at center,
+    rgba(241, 238, 230, 0.28) 0%,
+    rgba(241, 238, 230, 0.12) 35%,
+    rgba(241, 238, 230, 0.03) 60%,
+    transparent 75%
+  );
+  filter: blur(40px);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
 }
+
+.bf-product-image-wrap {
+  position: relative; z-index: 2;
+  width: 100%;
+  display: flex; align-items: center; justify-content: center;
+  filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.85));
+}
+.bf-product-image {
+  width: 100%; max-height: clamp(340px, 46vh, 520px);
+  object-fit: contain; display: block;
+  transition: transform .28s var(--ease-snap);
+}
+.bf-product-image:hover { transform: translateY(-4px) scale(1.02); }
 
 /* Product info */
 .bf-product-info-panel {
-  position: static; width: clamp(180px, 16vw, 240px);
+  position: relative; z-index: 10;
+  width: clamp(220px, 20vw, 290px);
+  display: flex; flex-direction: column; gap: 0.8rem;
+}
+.bf-product-price {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 3.5vw, 3.4rem);
+  color: var(--bf-off-white);
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+}
+
+/* Size section & selector */
+.bf-size-section { margin-top: 0.4rem; }
+.bf-size-label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bf-off-white);
+  opacity: 0.65;
   margin-bottom: 0.5rem;
 }
-.bf-product-price { display: block; font-family: var(--font-display); font-size: clamp(2rem, 3vw, 2.6rem); line-height: 1; }
-
-/* Size selector */
-.bf-size-selector { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .8rem; }
+.bf-size-selector { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .bf-size-option {
-  display: flex; align-items: center; justify-content: center;
-  min-width: 48px; padding: .4rem .7rem;
-  background: transparent; color: var(--bf-off-white);
-  font-family: var(--font-body); font-size: .65rem; letter-spacing: .12em; text-transform: uppercase;
-  border: 1px solid rgba(241,238,230,.3);
-  cursor: none;
-  transition: background .12s, color .12s, border-color .12s;
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 44px; height: 38px; padding: 0 0.8rem;
+  background: rgba(241, 238, 230, 0.05); color: var(--bf-off-white);
+  font-family: var(--font-body); font-size: 0.75rem; font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  border: 1px solid rgba(241, 238, 230, 0.35); cursor: none;
+  clip-path: polygon(0% 0%, 92% 0%, 100% 30%, 100% 100%, 8% 100%, 0% 70%);
+  transition: background .12s, color .12s, border-color .12s, transform .12s;
 }
-.bf-size-option:hover, .bf-size-option.selected {
-  background: var(--bf-off-white); color: var(--bf-black); border-color: var(--bf-off-white);
+.bf-size-option:hover {
+  border-color: var(--bf-off-white);
+  background: rgba(241, 238, 230, 0.2);
+  transform: translateY(-2px);
+}
+.bf-size-option.selected {
+  background: var(--bf-off-white) !important;
+  color: var(--bf-black) !important;
+  border-color: var(--bf-off-white) !important;
+  font-weight: 600;
+  transform: translateY(-2px);
 }
 .bf-add-cart-btn {
-  display: block; width: 100%; padding: 1rem 1.5rem; margin-top: 1.2rem;
+  display: block; width: 100%; padding: 1rem 1.5rem; margin-top: 0.8rem;
   background: var(--bf-black); color: var(--bf-off-white);
   font-family: var(--font-display); font-size: 1.6rem; letter-spacing: .04em; text-transform: uppercase;
   border: 2px solid var(--bf-off-white); cursor: none;
   clip-path: polygon(0% 0%, 96% 0%, 100% 50%, 96% 100%, 0% 100%);
   transition: background .12s, color .12s, clip-path .28s var(--ease-block);
 }
+.bf-add-cart-btn:hover { background: var(--bf-off-white); color: var(--bf-black); }
 .bf-add-cart-btn:hover { background: var(--bf-off-white); color: var(--bf-black); }
 
 /* Arrows */
@@ -804,37 +853,27 @@ img, svg { display: block; max-width: 100%; }
     </button>
 
     <div class="bf-product-display" id="product-display">
-      <div class="bf-product-shape">
-        <div class="bf-product-image-wrap">
-          <!-- Demo product placeholder -->
-          <div class="bf-product-image-placeholder" style="aspect-ratio:3/4; background:#141412; display:flex; align-items:center; justify-content:center;">
-            <svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg" width="90" aria-hidden="true">
-              <rect x="20" y="10" width="160" height="240" fill="#222220"/>
-              <!-- T-shirt / Hoodie silhouette -->
-              <polygon points="60,10 80,40 120,40 140,10 160,10 160,70 140,70 140,250 60,250 60,70 40,70 40,10" fill="#2a2a28"/>
-              <rect x="70" y="120" width="60" height="8" fill="#F1EEE6" opacity="0.5"/>
-              <rect x="80" y="135" width="40" height="5" fill="#F1EEE6" opacity="0.35"/>
-              <!-- BF mark -->
-              <rect x="82" y="148" width="4"  height="20" fill="#F1EEE6" opacity="0.7"/>
-              <rect x="82" y="148" width="15" height="4"  fill="#F1EEE6" opacity="0.7"/>
-              <rect x="82" y="157" width="12" height="3"  fill="#F1EEE6" opacity="0.7"/>
-              <rect x="82" y="164" width="15" height="4"  fill="#F1EEE6" opacity="0.7"/>
-              <rect x="101" y="148" width="4"  height="20" fill="#F1EEE6" opacity="0.7"/>
-              <rect x="101" y="148" width="15" height="4"  fill="#F1EEE6" opacity="0.7"/>
-              <rect x="101" y="157" width="12" height="3"  fill="#F1EEE6" opacity="0.7"/>
-            </svg>
-          </div>
+      <!-- Floating product stage with ambient white glow (no box frame) -->
+      <div class="bf-product-stage">
+        <div class="bf-product-glow" aria-hidden="true"></div>
+        <div class="bf-product-image-wrap" id="product-art-container">
+          <!-- Dynamic vector streetwear silhouette rendered by JS -->
         </div>
       </div>
 
       <div class="bf-product-info-panel">
-        <span class="bf-product-price" id="product-price">169.00 TND</span>
-        <div class="bf-size-selector" role="group" aria-label="Select size">
-          <label class="bf-size-option"><input type="radio" name="size" value="XS" class="visually-hidden">XS</label>
-          <label class="bf-size-option selected"><input type="radio" name="size" value="S" class="visually-hidden" checked>S</label>
-          <label class="bf-size-option"><input type="radio" name="size" value="M" class="visually-hidden">M</label>
-          <label class="bf-size-option"><input type="radio" name="size" value="L" class="visually-hidden">L</label>
-          <label class="bf-size-option"><input type="radio" name="size" value="XL" class="visually-hidden">XL</label>
+        <div class="bf-product-price-wrap">
+          <span class="bf-product-price" id="product-price">169.00 TND</span>
+        </div>
+        <div class="bf-size-section">
+          <span class="bf-size-label">SELECT SIZE</span>
+          <div class="bf-size-selector" role="group" aria-label="Select size">
+            <label class="bf-size-option"><input type="radio" name="size" value="XS" class="visually-hidden">XS</label>
+            <label class="bf-size-option selected"><input type="radio" name="size" value="S" class="visually-hidden" checked>S</label>
+            <label class="bf-size-option"><input type="radio" name="size" value="M" class="visually-hidden">M</label>
+            <label class="bf-size-option"><input type="radio" name="size" value="L" class="visually-hidden">L</label>
+            <label class="bf-size-option"><input type="radio" name="size" value="XL" class="visually-hidden">XL</label>
+          </div>
         </div>
         <button class="bf-add-cart-btn" id="add-to-cart-btn" type="button">ADD TO CART</button>
       </div>
@@ -978,10 +1017,109 @@ function changeQty(idx, delta) {
 const allProducts = [
   { title:'BF BLOC HOODIE',       price: 169, num:'001', collection:'Bledfake' },
   { title:'HORRA OVERSIZED TEE',  price: 89,  num:'002', collection:'BledHorra' },
-  { title:'TOMORROW CARGO VEST',  price: 199, num:'003', collection:'Comeback Tommorow' },
-  { title:'BLED STENCIL CAP',     price: 59,  num:'004', collection:'Bledfake' },
-  { title:'HORRA HEAVYWEIGHT TEE',price: 95,  num:'005', collection:'BledHorra' },
-  { title:'TOMORROW TACTICAL BAG',price: 139, num:'006', collection:'Comeback Tommorow' },
+// ── Demo products with custom SVG silhouettes ──
+const productSVGs = {
+  hoodie: `
+    <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="280">
+      <!-- Outer Hoodie Silhouette -->
+      <polygon points="100,55 170,15 240,55 315,115 285,190 245,160 245,355 95,355 95,160 55,190 25,115" fill="#121210" stroke="#2c2c28" stroke-width="2"/>
+      <!-- Deep Hood Shape -->
+      <path d="M 125,50 C 125,10 215,10 215,50 C 215,85 125,85 125,50 Z" fill="#090908" stroke="#333330" stroke-width="2"/>
+      <!-- Drawstrings -->
+      <line x1="150" y1="80" x2="148" y2="135" stroke="#F1EEE6" stroke-width="2.5" opacity="0.85"/>
+      <line x1="190" y1="80" x2="192" y2="140" stroke="#F1EEE6" stroke-width="2.5" opacity="0.85"/>
+      <!-- Kangaroo Pocket -->
+      <polygon points="120,240 220,240 235,320 105,320" fill="#181816" stroke="#2c2c28" stroke-width="1.5"/>
+      <!-- Ribbed cuffs & waistband -->
+      <rect x="95" y="340" width="150" height="15" fill="#151513" stroke="#2c2c28" stroke-width="1"/>
+      <!-- Chest artwork: BLED FAKE Block Logo -->
+      <text x="170" y="150" font-family="'Bebas Neue', Impact" font-size="34" fill="#F1EEE6" text-anchor="middle" letter-spacing="2">BLED FAKE</text>
+      <text x="170" y="172" font-family="'Space Grotesk', monospace" font-size="9" fill="#F1EEE6" text-anchor="middle" letter-spacing="4" opacity="0.7">TUNISIAN REBELLION</text>
+      <rect x="135" y="185" width="70" height="2" fill="#F1EEE6" opacity="0.5"/>
+    </svg>`,
+
+  oversizedTee: `
+    <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="280">
+      <!-- Dropped Shoulder Tee Silhouette -->
+      <polygon points="105,45 135,70 205,70 235,45 325,100 290,175 250,155 250,360 90,360 90,155 50,175 15,100" fill="#0e0e0c" stroke="#282824" stroke-width="2"/>
+      <!-- Ribbed collar -->
+      <path d="M 135,70 Q 170,95 205,70" fill="none" stroke="#F1EEE6" stroke-width="2" opacity="0.6"/>
+      <!-- Large Back/Front Stencil Print: BLED HORRA -->
+      <rect x="110" y="140" width="120" height="42" fill="#1a1a16" stroke="#F1EEE6" stroke-width="1.5"/>
+      <text x="170" y="170" font-family="'Bebas Neue', Impact" font-size="30" fill="#F1EEE6" text-anchor="middle" letter-spacing="3">BLED HORRA</text>
+      <rect x="115" y="195" width="110" height="12" fill="#F1EEE6" opacity="0.85"/>
+      <rect x="130" y="215" width="80" height="4" fill="#F1EEE6" opacity="0.5"/>
+    </svg>`,
+
+  cargoVest: `
+    <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="280">
+      <!-- Technical Cargo Vest -->
+      <polygon points="110,40 170,90 230,40 280,85 260,165 245,150 245,355 95,355 95,150 80,165 60,85" fill="#161613" stroke="#33332c" stroke-width="2"/>
+      <!-- V-neck zipper line -->
+      <line x1="170" y1="90" x2="170" y2="355" stroke="#F1EEE6" stroke-width="3" opacity="0.8"/>
+      <!-- Upper chest modular pockets -->
+      <rect x="110" y="125" width="45" height="50" fill="#1f1f1a" stroke="#F1EEE6" stroke-width="1.2"/>
+      <rect x="185" y="125" width="45" height="50" fill="#1f1f1a" stroke="#F1EEE6" stroke-width="1.2"/>
+      <!-- Lower 3D cargo pockets -->
+      <rect x="105" y="200" width="55" height="75" fill="#1c1c18" stroke="#33332c" stroke-width="1.5"/>
+      <rect x="180" y="200" width="55" height="75" fill="#1c1c18" stroke="#33332c" stroke-width="1.5"/>
+      <!-- Webbing straps -->
+      <rect x="105" y="290" width="130" height="14" fill="#0a0a09" stroke="#F1EEE6" stroke-width="1"/>
+      <text x="170" y="301" font-family="'Space Grotesk', monospace" font-size="8" fill="#F1EEE6" text-anchor="middle" letter-spacing="2">COMEBACK TOMORROW</text>
+    </svg>`,
+
+  cap: `
+    <svg viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" width="280">
+      <!-- 6-Panel Cap Crown -->
+      <path d="M 70,210 C 70,80 270,80 270,210 Z" fill="#121210" stroke="#2d2d28" stroke-width="2"/>
+      <!-- Curved Visor -->
+      <path d="M 50,210 Q 170,255 290,210 Q 170,230 50,210 Z" fill="#181815" stroke="#F1EEE6" stroke-width="1.5"/>
+      <!-- Panel seam lines -->
+      <path d="M 170,85 L 170,210" stroke="#252520" stroke-width="2"/>
+      <path d="M 170,85 Q 110,135 90,210" stroke="#252520" stroke-width="1.5"/>
+      <path d="M 170,85 Q 230,135 250,210" stroke="#252520" stroke-width="1.5"/>
+      <!-- Top button -->
+      <ellipse cx="170" cy="85" rx="8" ry="5" fill="#F1EEE6"/>
+      <!-- Front Embroidered Graphic -->
+      <rect x="135" y="130" width="70" height="38" fill="#F1EEE6"/>
+      <text x="170" y="158" font-family="'Bebas Neue', Impact" font-size="28" fill="#050505" text-anchor="middle" letter-spacing="2">BF</text>
+    </svg>`,
+
+  heavyweightTee: `
+    <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="280">
+      <!-- Heavyweight Streetwear Tee -->
+      <polygon points="105,45 135,70 205,70 235,45 325,100 290,175 250,155 250,360 90,360 90,155 50,175 15,100" fill="#141412" stroke="#33332e" stroke-width="2"/>
+      <path d="M 135,70 Q 170,95 205,70" fill="none" stroke="#3a3a34" stroke-width="3"/>
+      <!-- Bold Center Screenprint -->
+      <polygon points="120,130 220,130 205,240 135,240" fill="#090908" stroke="#F1EEE6" stroke-width="1.5"/>
+      <text x="170" y="175" font-family="'Bebas Neue', Impact" font-size="34" fill="#F1EEE6" text-anchor="middle" letter-spacing="3">HORRA</text>
+      <text x="170" y="198" font-family="'Space Grotesk', monospace" font-size="8" fill="#F1EEE6" text-anchor="middle" letter-spacing="3" opacity="0.8">EDITION 005</text>
+    </svg>`,
+
+  bag: `
+    <svg viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" width="270">
+      <!-- Crossbody Bag Body -->
+      <rect x="75" y="110" width="190" height="150" rx="12" fill="#131310" stroke="#33332c" stroke-width="2"/>
+      <!-- Technical Front Zip Pocket -->
+      <rect x="90" y="150" width="160" height="90" rx="6" fill="#1c1c18" stroke="#F1EEE6" stroke-width="1.5"/>
+      <line x1="90" y1="170" x2="250" y2="170" stroke="#F1EEE6" stroke-width="2" opacity="0.6"/>
+      <!-- Crossbody Technical Strap -->
+      <path d="M 50,40 Q 170,110 290,40" fill="none" stroke="#252520" stroke-width="16"/>
+      <path d="M 50,40 Q 170,110 290,40" fill="none" stroke="#F1EEE6" stroke-width="2" opacity="0.7"/>
+      <!-- Heavy Duty Buckles -->
+      <rect x="145" y="130" width="50" height="16" fill="#050505" stroke="#F1EEE6" stroke-width="1.5"/>
+      <!-- Text Graphic -->
+      <text x="170" y="215" font-family="'Bebas Neue', Impact" font-size="20" fill="#F1EEE6" text-anchor="middle" letter-spacing="3">COMEBACK</text>
+    </svg>`
+};
+
+const allProducts = [
+  { title:'BF BLOC HOODIE',        price: 169, num:'001', collection:'Bledfake', type:'hoodie' },
+  { title:'HORRA OVERSIZED TEE',   price: 89,  num:'002', collection:'BledHorra', type:'oversizedTee' },
+  { title:'TOMORROW CARGO VEST',   price: 199, num:'003', collection:'Comeback Tommorow', type:'cargoVest' },
+  { title:'BLED STENCIL CAP',      price: 59,  num:'004', collection:'Bledfake', type:'cap' },
+  { title:'HORRA HEAVYWEIGHT TEE', price: 95,  num:'005', collection:'BledHorra', type:'heavyweightTee' },
+  { title:'TOMORROW TACTICAL BAG', price: 139, num:'006', collection:'Comeback Tommorow', type:'bag' },
 ];
 let activeCollection = 'all';
 let demoProducts = [...allProducts];
@@ -993,7 +1131,17 @@ function updateProductDisplay() {
   document.getElementById('product-num').textContent  = p.num;
   document.getElementById('product-name').textContent = p.title;
   document.getElementById('product-price').textContent = p.price.toFixed(2)+' TND';
+
+  const container = document.getElementById('product-art-container');
+  if (container && productSVGs[p.type]) {
+    container.innerHTML = productSVGs[p.type];
+  }
 }
+
+// Initial render of product art
+window.addEventListener('DOMContentLoaded', () => {
+  updateProductDisplay();
+});
 
 document.getElementById('add-to-cart-btn').addEventListener('click', () => {
   const selectedSize = document.querySelector('[name="size"]:checked');
