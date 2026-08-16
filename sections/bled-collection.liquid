@@ -43,39 +43,33 @@
     </div>
   </header>
 
-  <!-- ─── COLLECTION FILTER TABS ─────────────────── -->
-  <nav class="bf-collection-bar" aria-label="Collection filter">
-    <a
-      href="/collections/all"
-      class="bf-collection-tab{% if current_col_handle == 'all' or collection == blank %} is-active{% endif %}"
-    >
-      ALL DROPS
-    </a>
-
-    {% for col in collections %}
-      {% unless col.handle == 'frontpage' or col.handle == 'all' %}
-        {% if col.all_products_count > 0 or col.products_count > 0 %}
-          <a
-            href="{{ col.url }}"
-            class="bf-collection-tab{% if current_col_handle == col.handle %} is-active{% endif %}"
-          >
-            {{ col.title | upcase }}
-          </a>
-        {% endif %}
-      {% endunless %}
-    {% endfor %}
-  </nav>
-
-  <!-- ─── CATALOG HEADER BANNER ──────────────────── -->
+  <!-- ─── CATALOG HEADER + COLLECTION FILTERS ────── -->
   <div class="bf-catalog-header">
     <div class="bf-catalog-header__left">
       <div class="bf-catalog-eyebrow">CATALOG // DROP ARCHIVE</div>
       <h1 class="bf-catalog-title">{{ current_col_title | upcase }}</h1>
     </div>
-    <div class="bf-catalog-count-badge">
-      <span class="bf-catalog-count-num">{{ product_count | prepend: '0' | slice: -2, 2 }}</span>
-      <span class="bf-catalog-count-label">PIECES AVAILABLE</span>
-    </div>
+    <nav class="bf-collection-bar" aria-label="Collection filter">
+      <a
+        href="/collections/all"
+        class="bf-collection-tab{% if current_col_handle == 'all' or collection == blank %} is-active{% endif %}"
+      >
+        ALL DROPS
+      </a>
+
+      {% for col in collections %}
+        {% unless col.handle == 'frontpage' or col.handle == 'all' %}
+          {% if col.all_products_count > 0 or col.products_count > 0 %}
+            <a
+              href="{{ col.url }}"
+              class="bf-collection-tab{% if current_col_handle == col.handle %} is-active{% endif %}"
+            >
+              {{ col.title | upcase }}
+            </a>
+          {% endif %}
+        {% endunless %}
+      {% endfor %}
+    </nav>
   </div>
 
   <!-- ─── PRODUCTS GRID ──────────────────────────── -->
