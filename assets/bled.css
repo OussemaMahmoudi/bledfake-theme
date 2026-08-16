@@ -572,18 +572,19 @@ input, select, textarea { font: inherit; }
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 40;
+  z-index: 30;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
   padding: 1rem;
   color: var(--bf-off-white);
+  pointer-events: auto;
   transition: transform var(--t-mid) var(--ease-snap), opacity var(--t-fast) ease;
 }
 
-.bf-gallery-nav-btn--prev { left: 2.5rem; }
-.bf-gallery-nav-btn--next { right: 2.5rem; }
+.bf-gallery-nav-btn--prev { left: 0.5rem; }
+.bf-gallery-nav-btn--next { right: 0.5rem; }
 
 .bf-nav-box {
   width: 52px;
@@ -884,7 +885,7 @@ input, select, textarea { font: inherit; }
 /* Product Info Box */
 .bf-product-info-card {
   position: relative;
-  z-index: 10;
+  z-index: 60;
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
@@ -1023,6 +1024,8 @@ input, select, textarea { font: inherit; }
   flex-direction: column;
   gap: 0.6rem;
   margin-top: 0.5rem;
+  position: relative;
+  z-index: 50;
 }
 
 /* Add to Cart CTA */
@@ -1040,7 +1043,10 @@ input, select, textarea { font: inherit; }
   letter-spacing: 0.04em;
   text-transform: uppercase;
   clip-path: polygon(0% 0%, 95% 0%, 100% 40%, 100% 100%, 5% 100%, 0% 60%);
-  cursor: none;
+  cursor: pointer;
+  border: none;
+  position: relative;
+  z-index: 50;
   transition: transform var(--t-fast) ease, clip-path var(--t-mid) var(--ease-block);
 }
 
@@ -1070,7 +1076,9 @@ input, select, textarea { font: inherit; }
   letter-spacing: 0.04em;
   text-transform: uppercase;
   clip-path: polygon(0% 0%, 95% 0%, 100% 40%, 100% 100%, 5% 100%, 0% 60%);
-  cursor: none;
+  cursor: pointer;
+  position: relative;
+  z-index: 50;
   transition: all var(--t-fast) ease;
 }
 
