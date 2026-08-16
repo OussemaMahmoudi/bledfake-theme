@@ -132,15 +132,14 @@
 
                 <!-- Card Stock / Discount Badges -->
                 <div class="bf-product-card__badges">
-                  {% unless prod.available %}
-                    <span class="bf-badge bf-badge--soldout">SOLD OUT</span>
-                  {% else %}
+                  {% if prod.available %}
+                    <span class="bf-badge bf-badge--available">AVAILABLE</span>
                     {% if prod.compare_at_price > prod.price %}
                       <span class="bf-badge bf-badge--sale">SALE</span>
-                    {% else %}
-                      <span class="bf-badge bf-badge--drop">DROP {{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
                     {% endif %}
-                  {% endunless %}
+                  {% else %}
+                    <span class="bf-badge bf-badge--soldout">SOLD OUT</span>
+                  {% endif %}
                 </div>
               </div>
 

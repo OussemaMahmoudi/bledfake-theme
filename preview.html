@@ -1623,7 +1623,7 @@ function renderCatalogGrid(colFilter = 'all') {
               <div class="bf-product-card__img">${svgCode}</div>
             </div>
             <div class="bf-product-card__badges">
-              <span class="bf-badge bf-badge--drop">DROP 0${i + 1}</span>
+              <span class="bf-badge ${p.available !== false ? 'bf-badge--available' : 'bf-badge--soldout'}">${p.available !== false ? 'AVAILABLE' : 'SOLD OUT'}</span>
             </div>
           </div>
           <div class="bf-product-card__info">

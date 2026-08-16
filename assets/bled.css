@@ -2406,6 +2406,12 @@ input, select, textarea { font: inherit; }
   clip-path: polygon(0% 0%, 90% 0%, 100% 30%, 100% 100%, 10% 100%, 0% 70%);
 }
 
+.bf-badge--available {
+  background: rgba(241, 238, 230, 0.12);
+  color: var(--bf-off-white);
+  border: 1px solid var(--bf-off-white-40);
+}
+
 .bf-badge--drop {
   background: var(--bf-dark-3);
   color: var(--bf-off-white-70);
@@ -2418,8 +2424,9 @@ input, select, textarea { font: inherit; }
 }
 
 .bf-badge--soldout {
-  background: #ff3333;
-  color: #fff;
+  background: #ff2222;
+  color: #ffffff;
+  border: 1px solid #ff4444;
 }
 
 /* Info Bar inside Card */
