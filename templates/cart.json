@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": {
+      "type": "bled-checkout",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}

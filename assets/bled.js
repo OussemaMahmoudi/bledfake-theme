@@ -602,7 +602,7 @@ window.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify({ id: parseInt(idInput.value, 10), quantity: 1 })
       });
 
-      const checkoutUrl = (window.BF && window.BF.checkoutUrl) || '/pages/checkout';
+      const checkoutUrl = (window.BF && window.BF.checkoutUrl) || '/checkout';
       window.location.href = checkoutUrl;
 
     } catch (err) {
@@ -610,7 +610,7 @@ window.addEventListener('DOMContentLoaded', () => {
       if (textSpan) textSpan.textContent = 'BUY IT NOW';
       buyBtn.disabled = false;
       // Still navigate even on non-fatal errors
-      window.location.href = '/pages/checkout';
+      window.location.href = '/checkout';
     }
   });
 
