@@ -1,6 +1,5 @@
 {% comment %}
-  BLED FAKE — Landing Page Section (bled-landing.liquid)
-  Full 100svh poster composition — one viewport, no scroll.
+  BLED FAKE — Clean Brutalist Landing Hero (bled-landing.liquid)
 {% endcomment %}
 
 {% assign cta_href = section.settings.cta_url | default: '/collections/all' %}
@@ -10,34 +9,20 @@
 
 <section class="bf-landing" id="bf-landing" aria-label="BLED FAKE — Welcome">
 
-  <!-- Screenprint grain overlay -->
+  <!-- Grain overlay -->
   <div class="bf-grain" aria-hidden="true"></div>
 
-  <!-- Background geometric shapes -->
-  <div class="bf-landing__shapes" aria-hidden="true">
-    <div class="bf-shape bf-shape--1"></div>
-    <div class="bf-shape bf-shape--2"></div>
-  </div>
-
-  <!-- ─── FLOATING HEADER ─────────────────────────── -->
-  <header class="bf-landing__header" role="banner">
+  <!-- ─── TOP HEADER ─────────────────────────────── -->
+  <header class="bf-header" role="banner">
     <a href="/" class="bf-logo-link" aria-label="BLED FAKE — Home">
       {%- render 'bled-logo' -%}
       <span class="visually-hidden">BLED FAKE</span>
     </a>
 
     <div class="bf-nav-right">
-      <!-- Menu trigger -->
-      <button
-        class="bf-menu-trigger"
-        data-menu-open
-        aria-label="Open navigation menu"
-        aria-expanded="false"
-        aria-controls="bf-main-menu"
-      >
-        <span class="bf-menu-trigger-label" aria-hidden="true">MENU</span>
+      <button class="bf-nav-btn" data-menu-open aria-label="Open navigation menu">
+        <span>MENU</span>
         <div class="bf-hamburger" aria-hidden="true">
-          <div class="bf-hamburger__line"></div>
           <div class="bf-hamburger__line"></div>
           <div class="bf-hamburger__line"></div>
         </div>
@@ -45,37 +30,39 @@
     </div>
   </header>
 
-  <!-- ─── TUNISIAN CITY ILLUSTRATION (parallax) ───── -->
+  <!-- ─── TUNISIAN CITY PARALLAX BACKGROUND ──────── -->
   <div class="bf-landing__city" aria-hidden="true" role="presentation">
     {%- render 'bled-city' -%}
   </div>
 
-  <!-- ─── BF MASCOT (integrated into city scene) ──── -->
+  <!-- ─── MASCOT OVERLAY ──────────────────────────── -->
   <div class="bf-landing__mascot" aria-hidden="true" role="presentation">
     {%- render 'bled-mascot' -%}
   </div>
 
-  <!-- ─── BRAND STATEMENT (asymmetric, street poster) -->
-  <div class="bf-landing__statement" aria-label="{{ stmt1 }} {{ stmt2 }} {{ stmt_em }}">
-    <span class="bf-statement__line">{{ stmt1 }}</span>
-    <span class="bf-statement__line">
-      {{- stmt2 -}}&nbsp;<span class="bf-statement__emphasis">{{- stmt_em -}}</span>
-    </span>
+  <!-- ─── EDITORIAL HERO CONTENT ─────────────────── -->
+  <div class="bf-landing__content">
+    <div class="bf-landing__tag">UNDERGROUND STREETWEAR // TUNISIA</div>
+
+    <div class="bf-landing__statement">
+      <h1 class="bf-statement__line-1">{{ stmt1 }}</h1>
+      <div class="bf-statement__line-2">
+        {{ stmt2 }} <span class="bf-statement__emphasis">{{ stmt_em }}</span>
+      </div>
+    </div>
+
+    <a href="{{ cta_href }}" class="bf-landing__cta" id="bf-enter-cta" aria-label="Enter store">
+      <span>ENTER THE REALITY</span>
+      <span class="bf-cta__arrow" aria-hidden="true">→</span>
+    </a>
   </div>
 
-  <!-- ─── ENTER CTA (irregular geometric button) ───── -->
-  <a
-    href="{{ cta_href }}"
-    class="bf-landing__cta"
-    id="bf-enter-cta"
-    aria-label="Enter the BLED FAKE store — Enter the Reality"
-  >
-    <span class="bf-cta__text" aria-hidden="true">
-      <span class="bf-cta__line">ENTER</span>
-      <span class="bf-cta__line">THE REALITY</span>
-    </span>
-    <span class="bf-cta__arrow" aria-hidden="true">→</span>
-  </a>
+  <!-- ─── BOTTOM TICKER ──────────────────────────── -->
+  <footer class="bf-landing__footer">
+    <span>BLED FAKE // BLED BLOCKS DESIGN SYSTEM</span>
+    <span>LIMITED UNDERGROUND DROPS</span>
+    <span>© {{ 'now' | date: '%Y' }} TUNIS</span>
+  </footer>
 
 </section>
 
