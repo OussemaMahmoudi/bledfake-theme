@@ -30,14 +30,16 @@
     </div>
   </header>
 
-  <!-- ─── TUNISIAN CITY PARALLAX BACKGROUND ──────── -->
-  <div class="bf-landing__city" aria-hidden="true" role="presentation">
-    {%- render 'bled-city' -%}
-  </div>
-
-  <!-- ─── MASCOT OVERLAY ──────────────────────────── -->
-  <div class="bf-landing__mascot" aria-hidden="true" role="presentation">
-    {%- render 'bled-mascot' -%}
+  <!-- ─── BACKGROUND PICTURE WITH CINEMATIC OVERLAY ──────── -->
+  <div class="bf-landing__bg" aria-hidden="true" role="presentation">
+    <img
+      src="{{ 'landing-bg.png' | asset_url }}"
+      alt="BLED FAKE Background"
+      class="bf-landing__bg-img"
+      loading="eager"
+      decoding="async"
+    >
+    <div class="bf-landing__bg-overlay"></div>
   </div>
 
   <!-- ─── EDITORIAL HERO CONTENT ─────────────────── -->
