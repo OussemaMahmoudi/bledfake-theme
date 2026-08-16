@@ -7,7 +7,7 @@
 <aside
   class="bf-cart-drawer"
   id="bf-cart-drawer"
-  role="complementary"
+  role="dialog"
   aria-label="Shopping cart"
   aria-modal="true"
 >
@@ -15,8 +15,10 @@
   <!-- Drawer header -->
   <div class="bf-cart-drawer__header">
     <div>
-      <h2 class="bf-cart-drawer__title">CART</h2>
-      <p class="bf-cart-drawer__count" aria-live="polite">0 ITEMS</p>
+      <h2 class="bf-cart-drawer__title">BAG</h2>
+      <p class="bf-cart-drawer__count" id="bf-cart-count-label" aria-live="polite">
+        {{ cart.item_count }} ITEM{{ cart.item_count | pluralize: '', 'S' }}
+      </p>
     </div>
     <button
       class="bf-cart-drawer__close"
@@ -29,23 +31,50 @@
 
   <!-- Cart item list — rendered by JS -->
   <div class="bf-cart-drawer__body" id="bf-cart-body" aria-live="polite">
-    <div class="bf-cart-empty">
-      <p class="bf-display bf-display-sm" style="opacity:0.3;text-align:center;padding-top:2rem">
-        CART IS EMPTY
-      </p>
-    </div>
+    {% if cart.item_count > 0 %}
+      {% for item in cart.items %}
+        <div class="bf-cart-item" data-key="{{ item.key }}">
+          <img
+            class="bf-cart-item__img"
+            src="{{ item.image | image_url: width: 120 }}"
+            alt="{{ item.product_title | escape }}"
+            loading="lazy"
+            onerror="this.style.display='none'"
+          >
+          <div class="bf-cart-item__info">
+            <p class="bf-cart-item__title">{{ item.product_title | upcase }}</p>
+            {% unless item.variant_title == 'Default Title' or item.variant_title == blank %}
+              <p class="bf-cart-item__variant">SIZE: {{ item.variant_title | upcase }}</p>
+            {% endunless %}
+            <div class="bf-cart-item__row">
+              <div class="bf-qty-controls">
+                <button type="button" class="bf-qty-btn" aria-label="Decrease quantity"
+                        data-key="{{ item.key }}" data-action="decrease">−</button>
+                <span class="bf-qty-num">{{ item.quantity }}</span>
+                <button type="button" class="bf-qty-btn" aria-label="Increase quantity"
+                        data-key="{{ item.key }}" data-action="increase">+</button>
+              </div>
+              <span class="bf-cart-item__price">{{ item.final_price | money }}</span>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="bf-cart-empty">CART IS EMPTY</div>
+    {% endif %}
   </div>
 
   <!-- Drawer footer -->
   <div class="bf-cart-drawer__footer">
     <div class="bf-cart-total">
-      <span class="bf-cart-total__label">TOTAL</span>
-      <span class="bf-cart-total__price bf-display" id="bf-cart-total">0.00 TND</span>
+      <span class="bf-cart-total__label">SUBTOTAL</span>
+      <span class="bf-cart-total__price" id="bf-cart-total">{{ cart.total_price | money }}</span>
     </div>
 
     <a
-      href="/checkout"
-      class="bf-checkout-btn bf-display"
+      href="/pages/checkout"
+      class="bf-checkout-btn"
+      id="bf-checkout-link"
       aria-label="Proceed to checkout"
     >
       CHECKOUT →

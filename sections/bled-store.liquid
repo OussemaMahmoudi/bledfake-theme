@@ -1,6 +1,7 @@
 {% comment %}
   BLED FAKE — Store & Collection Section (bled-store.liquid)
-  Clean brutalist storefront with media navigation arrows, description, add to cart, and buy now.
+  Brutalist storefront — Shopify-connected product gallery.
+  Supports: collection filter tabs, multi-image arrows, variant selection, add to cart, buy now.
 {% endcomment %}
 
 {% if collection %}
@@ -10,6 +11,8 @@
 {% else %}
   {% assign product_list = collections.all.products %}
 {% endif %}
+
+{% assign product_count = product_list.size %}
 
 {% if product %}
   {% assign current_product = product %}
@@ -25,10 +28,15 @@
 {% endif %}
 
 {% assign current_variant = current_product.selected_or_first_available_variant %}
+
+{% comment %} Build the media/images list for the current product {% endcomment %}
 {% assign prod_media = current_product.media %}
 {% if prod_media == blank or prod_media.size == 0 %}
   {% assign prod_media = current_product.images %}
 {% endif %}
+
+{% comment %} Build JSON images array for inline data attribute {% endcomment %}
+{% capture prod_images_json %}[{% for m in prod_media %}{{ m.preview_image | default: m | image_url: width: 800 | json }}{% unless forloop.last %},{% endunless %}{% endfor %}]{% endcapture %}
 
 <script>
 window.bfProducts = [
@@ -37,13 +45,14 @@ window.bfProducts = [
   {%- if p_media == blank or p_media.size == 0 -%}{%- assign p_media = p.images -%}{%- endif -%}
   {
     "id":            {{ p.id }},
+    "handle":        {{ p.handle | json }},
     "title":         {{ p.title | json }},
     "url":           {{ p.url | json }},
-    "description":   {{ p.description | json }},
+    "description":   {{ p.description | strip_html | truncate: 300 | json }},
     "price":         {{ p.price }},
     "compare_at_price": {{ p.compare_at_price | default: 0 }},
     "available":     {{ p.available }},
-    "featured_image":{{ p.featured_image | image_url: width: 800 | json }},
+    "featured_image": {{ p.featured_image | image_url: width: 800 | json }},
     "images": [
       {%- for m in p_media -%}
       {{ m.preview_image | default: m | image_url: width: 800 | json }}{% unless forloop.last %},{% endunless %}
@@ -52,11 +61,11 @@ window.bfProducts = [
     "variants": [
       {%- for v in p.variants -%}
       {
-        "id":        {{ v.id }},
-        "title":     {{ v.title | json }},
-        "price":     {{ v.price }},
+        "id":              {{ v.id }},
+        "title":           {{ v.title | json }},
+        "price":           {{ v.price }},
         "compare_at_price": {{ v.compare_at_price | default: 0 }},
-        "available": {{ v.available }}
+        "available":       {{ v.available }}
       }{% unless forloop.last %},{% endunless %}
       {%- endfor -%}
     ]
@@ -67,7 +76,6 @@ window.bfProducts = [
 
 <section class="bf-store" id="bf-store" aria-label="BLED FAKE Store">
 
-  <!-- Grain overlay -->
   <div class="bf-grain" aria-hidden="true"></div>
 
   <!-- ─── TOP HEADER ─────────────────────────────── -->
@@ -78,9 +86,9 @@ window.bfProducts = [
     </a>
 
     <div class="bf-nav-right">
-      <button class="bf-nav-btn" data-cart-open aria-label="Open cart drawer">
-        <span>CART</span>
-        <span class="bf-cart-badge-count bf-cart-count">{{ cart.item_count }}</span>
+      <button class="bf-nav-btn" data-cart-open aria-label="Open cart">
+        <span>BAG</span>
+        <span class="bf-cart-badge-count bf-cart-count" aria-live="polite">{{ cart.item_count }}</span>
       </button>
 
       <button class="bf-nav-btn" data-menu-open aria-label="Open menu">
@@ -93,18 +101,23 @@ window.bfProducts = [
     </div>
   </header>
 
-  <!-- ─── REAL SHOPIFY COLLECTION TABS ───────────── -->
-  <nav class="bf-collection-bar" aria-label="Collections filter">
+  <!-- ─── COLLECTION TABS (Real Shopify Collections) ─ -->
+  <nav class="bf-collection-bar" aria-label="Collection filter">
     {% assign current_col_handle = collection.handle | default: 'all' %}
-    
-    <a href="/collections/all" class="bf-collection-tab{% if current_col_handle == 'all' or collection == blank %} is-active{% endif %}">
-      ALL DROPS
-    </a>
+
+    <a href="/collections/all"
+       class="bf-collection-tab{% if current_col_handle == 'all' or collection == blank %} is-active{% endif %}"
+       data-collection="all"
+    >ALL DROPS</a>
 
     {% for col in collections %}
       {% unless col.handle == 'frontpage' or col.handle == 'all' %}
         {% if col.all_products_count > 0 or col.products_count > 0 %}
-          <a href="{{ col.url }}" class="bf-collection-tab{% if current_col_handle == col.handle %} is-active{% endif %}">
+          <a
+            href="{{ col.url }}"
+            class="bf-collection-tab{% if current_col_handle == col.handle %} is-active{% endif %}"
+            data-collection="{{ col.handle }}"
+          >
             {{ col.title | upcase }}
           </a>
         {% endif %}
@@ -116,31 +129,40 @@ window.bfProducts = [
   <div class="bf-gallery-viewport">
 
     <!-- Previous Product Arrow -->
-    <button class="bf-gallery-nav-btn bf-gallery-nav-btn--prev" id="prev-btn" aria-label="Previous product" {% if product_list.size <= 1 %}disabled{% endif %}>
+    <button
+      class="bf-gallery-nav-btn bf-gallery-nav-btn--prev"
+      id="prev-btn"
+      aria-label="Previous product"
+      {% if product_count <= 1 %}disabled{% endif %}
+    >
       <div class="bf-nav-box">◄</div>
       <span class="bf-nav-label">PREV</span>
     </button>
 
     <!-- Product Stage Grid -->
-    <div class="bf-product-stage-grid" id="product-display" data-current-index="{{ current_index }}">
+    <div
+      class="bf-product-stage-grid"
+      id="product-display"
+      data-current-index="{{ current_index }}"
+      data-product-count="{{ product_count }}"
+    >
 
       {% if current_product %}
 
-        <!-- Left: Floating Garment Stage with White Ambient Glow & Image Navigation Arrows -->
+        <!-- Left: Garment Stage with Glow & Image Arrows -->
         <div class="bf-garment-stage">
           <div class="bf-garment-glow" aria-hidden="true"></div>
 
-          <!-- Product Media Image Nav Arrows -->
+          <!-- Media arrows — only show when product has >1 image -->
           <button
             type="button"
             class="bf-media-arrow bf-media-arrow--prev"
             id="media-prev-btn"
             aria-label="Previous image"
-            {% if prod_media.size <= 1 %}style="display: none;"{% endif %}
-          >
-            ‹
-          </button>
-          
+            {% if prod_media.size <= 1 %}style="display:none;"{% endif %}
+          >‹</button>
+
+          <!-- Main product image — data-images enables reliable JS navigation -->
           <div class="bf-garment-artwork" id="product-art-container">
             {% if current_product.featured_image %}
               <img
@@ -148,13 +170,17 @@ window.bfProducts = [
                 id="main-product-img"
                 src="{{ current_product.featured_image | image_url: width: 800 }}"
                 srcset="{{ current_product.featured_image | image_url: width: 400 }} 400w,
-                        {{ current_product.featured_image | image_url: width: 800 }} 800w"
-                sizes="(max-width: 900px) 90vw, 45vw"
+                        {{ current_product.featured_image | image_url: width: 800 }} 800w,
+                        {{ current_product.featured_image | image_url: width: 1200 }} 1200w"
+                sizes="(max-width: 768px) 90vw, 45vw"
                 alt="{{ current_product.featured_image.alt | default: current_product.title | escape }}"
                 loading="eager"
+                decoding="async"
+                data-images="{{ prod_images_json | escape }}"
+                data-media-index="0"
               >
             {% else %}
-              <div class="bf-product-image-placeholder" aria-label="{{ current_product.title | escape }}">
+              <div class="bf-product-image-placeholder" id="main-product-img" data-images="[]" data-media-index="0" aria-label="{{ current_product.title | escape }}">
                 <svg viewBox="0 0 320 380" xmlns="http://www.w3.org/2000/svg" width="280">
                   <polygon points="95,45 130,70 190,70 225,45 305,100 275,175 240,155 240,360 80,360 80,155 45,175 15,100" fill="#121210" stroke="#2a2a26" stroke-width="2"/>
                   <path d="M 130,70 Q 160,95 190,70" fill="none" stroke="#3a3a34" stroke-width="2.5"/>
@@ -170,41 +196,68 @@ window.bfProducts = [
             class="bf-media-arrow bf-media-arrow--next"
             id="media-next-btn"
             aria-label="Next image"
-            {% if prod_media.size <= 1 %}style="display: none;"{% endif %}
-          >
-            ›
-          </button>
+            {% if prod_media.size <= 1 %}style="display:none;"{% endif %}
+          >›</button>
+
+          <!-- Image counter dots -->
+          {% if prod_media.size > 1 %}
+            <div class="bf-media-dots" aria-hidden="true" id="bf-media-dots">
+              {% for m in prod_media %}
+                <span class="bf-media-dot{% if forloop.first %} is-active{% endif %}"></span>
+              {% endfor %}
+            </div>
+          {% endif %}
         </div>
 
-        <!-- Right: Clean Product Info Card -->
+        <!-- Right: Product Info Card -->
         <div class="bf-product-info-card" itemscope itemtype="https://schema.org/Product">
 
-          <h1 class="bf-product-title" id="product-name">{{ current_product.title | upcase }}</h1>
+          <!-- Product counter -->
+          <div class="bf-product-counter" id="bf-product-counter" aria-label="Product position">
+            <span id="bf-product-num">{{ current_index | plus: 1 | prepend: '0' | slice: -2, 2 }}</span>
+            <span class="bf-product-counter__sep">/</span>
+            <span>{{ product_count | prepend: '0' | slice: -2, 2 }}</span>
+          </div>
 
-          <div class="bf-product-price-row">
-            <span class="bf-product-price-val" id="product-price">
+          <h1 class="bf-product-title" id="product-name" itemprop="name">
+            {{ current_product.title | upcase }}
+          </h1>
+
+          <div class="bf-product-price-row" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+            <span class="bf-product-price-val" id="product-price" itemprop="price" content="{{ current_variant.price | divided_by: 100.0 }}">
               {{ current_variant.price | money }}
             </span>
-            <span class="bf-product-price-compare" id="product-compare-price"{% unless current_variant.compare_at_price > current_variant.price %} style="display:none;"{% endunless %}>
+            <span
+              class="bf-product-price-compare"
+              id="product-compare-price"
+              {% unless current_variant.compare_at_price > current_variant.price %}style="display:none;"{% endunless %}
+            >
               {{ current_variant.compare_at_price | money }}
             </span>
+            <meta itemprop="priceCurrency" content="{{ shop.currency }}">
           </div>
 
-          <!-- Product Description & Details -->
-          <div class="bf-product-description" id="product-description">
-            {% if current_product.description != blank %}
-              {{ current_product.description }}
-            {% endif %}
+          <!-- Product description -->
+          <div
+            class="bf-product-description"
+            id="product-description"
+            {% if current_product.description == blank %}style="display:none;"{% endif %}
+          >
+            {{ current_product.description | strip_html }}
           </div>
 
-          <!-- Add to Cart & Buy It Now Form -->
-          <form class="bf-add-cart-form" action="/cart/add" method="post" id="bf-add-form">
-            <!-- Hidden input holding the real selected Shopify variant ID -->
+          <!-- Add to Cart & Buy Now Form -->
+          <form class="bf-add-cart-form" action="/cart/add" method="post" id="bf-add-form" novalidate>
             <input type="hidden" name="id" id="selected-variant-id" value="{{ current_variant.id }}">
 
             <div class="bf-size-group">
-              <span class="bf-size-group-label">SELECT SIZE</span>
-              <div class="bf-size-pills" id="bf-size-pills" role="group" aria-label="Sizes">
+              <span class="bf-size-group-label">
+                SELECT SIZE
+                {% unless current_product.has_only_default_variant %}
+                  <a href="{{ current_product.url }}#size-guide" class="bf-size-guide-link" target="_blank" rel="noopener">SIZE GUIDE ↗</a>
+                {% endunless %}
+              </span>
+              <div class="bf-size-pills" id="bf-size-pills" role="group" aria-label="Available sizes">
                 {% if current_product.variants.size > 1 %}
                   {% for variant in current_product.variants %}
                     <button
@@ -214,13 +267,12 @@ window.bfProducts = [
                       data-price="{{ variant.price }}"
                       data-compare-price="{{ variant.compare_at_price | default: 0 }}"
                       data-available="{{ variant.available }}"
-                      {% unless variant.available %}disabled title="Sold out"{% endunless %}
+                      {% unless variant.available %}disabled aria-disabled="true" title="Sold out"{% endunless %}
                     >
                       {{ variant.title }}
                     </button>
                   {% endfor %}
                 {% else %}
-                  <!-- Single variant / default sizes -->
                   <button
                     type="button"
                     class="bf-size-pill is-selected"
@@ -241,7 +293,7 @@ window.bfProducts = [
                 type="submit"
                 class="bf-cart-submit-btn"
                 id="add-to-cart-btn"
-                {% unless current_variant.available %}disabled{% endunless %}
+                {% unless current_variant.available %}disabled aria-disabled="true"{% endunless %}
               >
                 <span id="btn-text">
                   {% if current_variant.available %}ADD TO CART{% else %}SOLD OUT{% endif %}
@@ -253,17 +305,18 @@ window.bfProducts = [
                 type="button"
                 class="bf-buy-now-btn"
                 id="buy-now-btn"
-                {% unless current_variant.available %}disabled{% endunless %}
+                {% unless current_variant.available %}disabled aria-disabled="true"{% endunless %}
               >
-                <span>BUY IT NOW</span>
+                <span id="buy-now-text">BUY IT NOW</span>
               </button>
             </div>
           </form>
+
         </div>
 
       {% else %}
-        <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 0;">
-          <p style="font-family: var(--font-display); font-size: 2rem; color: var(--bf-off-white-40);">
+        <div style="grid-column:1/-1; text-align:center; padding:6rem 2rem;">
+          <p style="font-family:var(--font-display); font-size:2.5rem; color:var(--bf-off-white-40);">
             NO PRODUCTS FOUND IN THIS DROP
           </p>
         </div>
@@ -272,7 +325,12 @@ window.bfProducts = [
     </div>
 
     <!-- Next Product Arrow -->
-    <button class="bf-gallery-nav-btn bf-gallery-nav-btn--next" id="next-btn" aria-label="Next product" {% if product_list.size <= 1 %}disabled{% endif %}>
+    <button
+      class="bf-gallery-nav-btn bf-gallery-nav-btn--next"
+      id="next-btn"
+      aria-label="Next product"
+      {% if product_count <= 1 %}disabled{% endif %}
+    >
       <div class="bf-nav-box">►</div>
       <span class="bf-nav-label">NEXT</span>
     </button>
@@ -280,7 +338,7 @@ window.bfProducts = [
   </div>
 
   <!-- ─── BOTTOM TICKER ──────────────────────────── -->
-  <div class="bf-gallery-status-bar">
+  <div class="bf-gallery-status-bar" aria-hidden="true">
     <span>TUNISIAN UNDERGROUND STREET CULTURE</span>
     <span>AUTHENTIC LIMITED GARMENTS</span>
     <span>WORLDWIDE SHIPPING</span>

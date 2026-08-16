@@ -593,7 +593,42 @@ input, select, textarea { font: inherit; }
   width: auto;
   max-width: 100%;
   object-fit: contain;
-  transition: opacity var(--t-fast) ease;
+  transition: opacity var(--t-mid) ease;
+}
+
+/* Loading shimmer during image swap */
+.bf-product-image.is-loading {
+  opacity: 0.2;
+  animation: bf-shimmer 0.8s ease infinite alternate;
+}
+
+@keyframes bf-shimmer {
+  from { opacity: 0.15; }
+  to   { opacity: 0.35; }
+}
+
+/* Media dot indicators */
+.bf-media-dots {
+  position: absolute;
+  bottom: 0.8rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 30;
+}
+
+.bf-media-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--bf-off-white-15);
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  transition: background var(--t-fast) ease, transform var(--t-fast) ease;
+}
+
+.bf-media-dot.is-active {
+  background: var(--bf-off-white);
+  transform: scale(1.4);
 }
 
 /* Media Navigation Arrows (Left / Right on Garment Stage) */
@@ -632,6 +667,63 @@ input, select, textarea { font: inherit; }
   color: var(--bf-black);
   border-color: var(--bf-off-white);
   transform: translateY(-50%) scale(1.08);
+}
+
+/* Product counter badge (01 / 06) */
+.bf-product-counter {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bf-off-white-40);
+}
+
+.bf-product-counter__sep {
+  opacity: 0.4;
+}
+
+/* Size guide link */
+.bf-size-group-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bf-size-guide-link {
+  font-size: 0.6rem;
+  color: var(--bf-off-white-40);
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  transition: color var(--t-fast) ease;
+}
+
+.bf-size-guide-link:hover {
+  color: var(--bf-off-white);
+}
+
+/* Error toast */
+.bf-cart-error-toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ff4444;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  padding: 0.9rem 2rem;
+  clip-path: polygon(0% 0%, 98% 0%, 100% 30%, 100% 100%, 2% 100%, 0% 70%);
+  z-index: 99999;
+  animation: bf-toast-in 0.2s ease;
+}
+
+@keyframes bf-toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
 /* Product Info Box */
@@ -720,6 +812,9 @@ input, select, textarea { font: inherit; }
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--bf-off-white-70);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .bf-size-pills {

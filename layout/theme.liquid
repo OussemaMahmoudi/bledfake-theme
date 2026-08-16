@@ -70,14 +70,17 @@
   <!-- Pass Shopify globals to JS -->
   <script>
     window.BF = {
-      shopCurrency:   {{ shop.currency | json }},
-      moneyFormat:    {{ shop.money_format | json }},
-      cartUrl:        '/cart',
-      cartAddUrl:     '/cart/add.js',
-      cartChangeUrl:  '/cart/change.js',
-      cartClearUrl:   '/cart/clear.js',
-      cartJsonUrl:    '/cart.js',
-      collectionsUrl: '/collections/all'
+      shopCurrency:      {{ shop.currency | json }},
+      moneyFormat:       {{ shop.money_format | json }},
+      cartUrl:           '/cart',
+      cartAddUrl:        '/cart/add.js',
+      cartChangeUrl:     '/cart/change.js',
+      cartClearUrl:      '/cart/clear.js',
+      cartJsonUrl:       '/cart.js',
+      collectionsUrl:    '/collections/all',
+      checkoutUrl:       '/pages/checkout',
+      cartCount:         {{ cart.item_count }},
+      cartTotal:         {{ cart.total_price }}
     };
   </script>
 
