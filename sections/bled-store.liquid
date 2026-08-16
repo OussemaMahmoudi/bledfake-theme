@@ -1,6 +1,6 @@
 {% comment %}
   BLED FAKE — Store & Collection Section (bled-store.liquid)
-  Fully integrated with live Shopify backend (real collections, multi-image views, dynamic variants)
+  Clean brutalist storefront with media navigation arrows and real product descriptions.
 {% endcomment %}
 
 {% if collection %}
@@ -33,6 +33,7 @@ window.bfProducts = [
     "id":            {{ p.id }},
     "title":         {{ p.title | json }},
     "url":           {{ p.url | json }},
+    "description":   {{ p.description | json }},
     "price":         {{ p.price }},
     "compare_at_price": {{ p.compare_at_price | default: 0 }},
     "available":     {{ p.available }},
@@ -108,7 +109,7 @@ window.bfProducts = [
   <!-- ─── MAIN GALLERY VIEWPORT ──────────────────── -->
   <div class="bf-gallery-viewport">
 
-    <!-- Previous Arrow -->
+    <!-- Previous Product Arrow -->
     <button class="bf-gallery-nav-btn bf-gallery-nav-btn--prev" id="prev-btn" aria-label="Previous product" {% if product_list.size <= 1 %}disabled{% endif %}>
       <div class="bf-nav-box">◄</div>
       <span class="bf-nav-label">PREV</span>
@@ -119,9 +120,20 @@ window.bfProducts = [
 
       {% if current_product %}
 
-        <!-- Left: Floating Garment Stage with Ambient White Glow & Multi-View Switcher -->
+        <!-- Left: Floating Garment Stage with White Ambient Glow & Image Navigation Arrows -->
         <div class="bf-garment-stage">
           <div class="bf-garment-glow" aria-hidden="true"></div>
+
+          <!-- Product Media Image Nav Arrows -->
+          <button
+            type="button"
+            class="bf-media-arrow bf-media-arrow--prev"
+            id="media-prev-btn"
+            aria-label="Previous image"
+            {% if current_product.images.size <= 1 %}style="display: none;"{% endif %}
+          >
+            ‹
+          </button>
           
           <div class="bf-garment-artwork" id="product-art-container">
             {% if current_product.featured_image %}
@@ -147,37 +159,19 @@ window.bfProducts = [
             {% endif %}
           </div>
 
-          <!-- Multi-Image Front / Back View Switcher -->
-          <div class="bf-view-switcher" id="bf-view-switcher" role="tablist" aria-label="Product angles"{% if current_product.images.size <= 1 %} style="display:none;"{% endif %}>
-            {% for img in current_product.images %}
-              <button
-                type="button"
-                class="bf-view-btn{% if forloop.first %} is-active{% endif %}"
-                data-img-src="{{ img | image_url: width: 800 }}"
-                aria-label="View {{ forloop.index }}"
-              >
-                {% if forloop.index == 1 %}
-                  FRONT
-                {% elsif forloop.index == 2 %}
-                  BACK
-                {% else %}
-                  VIEW {{ forloop.index }}
-                {% endif %}
-              </button>
-            {% endfor %}
-          </div>
+          <button
+            type="button"
+            class="bf-media-arrow bf-media-arrow--next"
+            id="media-next-btn"
+            aria-label="Next image"
+            {% if current_product.images.size <= 1 %}style="display: none;"{% endif %}
+          >
+            ›
+          </button>
         </div>
 
         <!-- Right: Clean Product Info Card -->
         <div class="bf-product-info-card" itemscope itemtype="https://schema.org/Product">
-          <div class="bf-card-meta">
-            <span id="product-collection-label">
-              {{ collection.title | default: 'BLED FAKE' | upcase }} // DROP
-            </span>
-            <span class="bf-card-index" id="product-num">
-              {{ current_index | plus: 1 | prepend: '000' | slice: -3, 3 }} / {{ product_list.size | default: 1 | prepend: '000' | slice: -3, 3 }}
-            </span>
-          </div>
 
           <h1 class="bf-product-title" id="product-name">{{ current_product.title | upcase }}</h1>
 
@@ -188,6 +182,13 @@ window.bfProducts = [
             <span class="bf-product-price-compare" id="product-compare-price"{% unless current_variant.compare_at_price > current_variant.price %} style="display:none;"{% endunless %}>
               {{ current_variant.compare_at_price | money }}
             </span>
+          </div>
+
+          <!-- Product Description & Details -->
+          <div class="bf-product-description" id="product-description">
+            {% if current_product.description != blank %}
+              {{ current_product.description }}
+            {% endif %}
           </div>
 
           <!-- Add to Cart Form & Size Selection -->
@@ -252,7 +253,7 @@ window.bfProducts = [
 
     </div>
 
-    <!-- Next Arrow -->
+    <!-- Next Product Arrow -->
     <button class="bf-gallery-nav-btn bf-gallery-nav-btn--next" id="next-btn" aria-label="Next product" {% if product_list.size <= 1 %}disabled{% endif %}>
       <div class="bf-nav-box">►</div>
       <span class="bf-nav-label">NEXT</span>

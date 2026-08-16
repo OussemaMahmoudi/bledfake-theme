@@ -302,6 +302,18 @@ ul, ol { list-style: none; }
 }
 .bf-garment-artwork:hover { transform: translateY(-6px) scale(1.02); }
 
+.bf-media-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 25;
+  width: 38px; height: 46px; background: var(--bf-dark-2); border: 1px solid var(--bf-off-white-40);
+  color: var(--bf-off-white); font-family: var(--font-display); font-size: 2rem; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  clip-path: polygon(15% 0%, 85% 0%, 100% 50%, 85% 100%, 15% 100%, 0% 50%);
+  cursor: none; transition: all var(--t-fast) ease;
+}
+.bf-media-arrow--prev { left: 0; }
+.bf-media-arrow--next { right: 0; }
+.bf-media-arrow:hover { background: var(--bf-off-white); color: var(--bf-black); border-color: var(--bf-off-white); transform: translateY(-50%) scale(1.08); }
+
 .bf-product-info-card {
   position: relative; z-index: 10;
   display: flex; flex-direction: column; gap: 1.2rem; padding: 2.2rem;
@@ -309,17 +321,17 @@ ul, ol { list-style: none; }
   clip-path: polygon(0% 0%, 96% 0%, 100% 6%, 100% 100%, 4% 100%, 0% 94%);
   box-shadow: 0 15px 40px rgba(0,0,0,0.7);
 }
-.bf-card-meta {
-  display: flex; justify-content: space-between; align-items: center;
-  font-family: var(--font-body); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
-  color: var(--bf-off-white-70); border-bottom: 1px solid var(--bf-off-white-08); padding-bottom: 0.8rem;
-}
-.bf-card-index { font-family: var(--font-display); font-size: 1.2rem; color: var(--bf-off-white); }
 .bf-product-title {
   font-family: var(--font-display); font-size: clamp(2.2rem, 3.5vw, 3.2rem); line-height: 0.95; text-transform: uppercase; color: var(--bf-off-white); letter-spacing: 0.01em;
 }
 .bf-product-price-row { display: flex; align-items: baseline; gap: 1rem; }
 .bf-product-price-val { font-family: var(--font-display); font-size: 2.2rem; color: var(--bf-off-white); line-height: 1; }
+
+.bf-product-description {
+  font-family: var(--font-body); font-size: 0.85rem; line-height: 1.6; color: var(--bf-off-white-70);
+  border-top: 1px solid var(--bf-off-white-08); border-bottom: 1px solid var(--bf-off-white-08);
+  padding: 0.8rem 0; max-height: 140px; overflow-y: auto;
+}
 
 .bf-size-group { display: flex; flex-direction: column; gap: 0.5rem; }
 .bf-size-group-label { font-family: var(--font-body); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--bf-off-white-70); }
@@ -623,30 +635,27 @@ ul, ol { list-style: none; }
     </button>
 
     <div class="bf-product-stage-grid" id="product-display">
-      <!-- Left: Floating Garment Stage with White Ambient Glow & Multi-Angle Switcher -->
+      <!-- Left: Floating Garment Stage with White Ambient Glow & Image Navigation Arrows -->
       <div class="bf-garment-stage">
         <div class="bf-garment-glow" aria-hidden="true"></div>
+        <button type="button" class="bf-media-arrow bf-media-arrow--prev" id="media-prev-btn" aria-label="Previous view">‹</button>
         <div class="bf-garment-artwork" id="product-art-container">
           <!-- Dynamic Vector Apparel Silhouette -->
         </div>
-        <!-- Angle switcher -->
-        <div class="bf-view-switcher" id="bf-view-switcher" role="tablist">
-          <button type="button" class="bf-view-btn is-active" data-angle="front">FRONT</button>
-          <button type="button" class="bf-view-btn" data-angle="back">BACK</button>
-        </div>
+        <button type="button" class="bf-media-arrow bf-media-arrow--next" id="media-next-btn" aria-label="Next view">›</button>
       </div>
 
       <!-- Right: Clean Product Info Card -->
       <div class="bf-product-info-card">
-        <div class="bf-card-meta">
-          <span id="product-collection-label">BLED BLOCKS // COLLECTION</span>
-          <span class="bf-card-index" id="product-num">001 / 006</span>
-        </div>
 
-        <h2 class="bf-product-title" id="product-name">BF BLOC HOODIE</h2>
+        <h1 class="bf-product-title" id="product-name">BF BLOC HOODIE</h1>
 
         <div class="bf-product-price-row">
           <span class="bf-product-price-val" id="product-price">169.00 TND</span>
+        </div>
+
+        <div class="bf-product-description" id="product-description">
+          Heavyweight 450 GSM organic French terry cotton. Custom oversized boxy fit with dropped shoulders and double-layered hood. Stencil graphics screen-printed with puff ink in Tunis.
         </div>
 
         <div class="bf-size-group">
@@ -952,12 +961,48 @@ const productSVGs = {
 };
 
 const allProducts = [
-  { title:'BF BLOC HOODIE',        price: 169, num:'001', collection:'Bledfake', type:'hoodie' },
-  { title:'HORRA OVERSIZED TEE',   price: 89,  num:'002', collection:'BledHorra', type:'oversizedTee' },
-  { title:'TOMORROW CARGO VEST',   price: 199, num:'003', collection:'Comeback Tommorow', type:'cargoVest' },
-  { title:'BLED STENCIL CAP',      price: 59,  num:'004', collection:'Bledfake', type:'cap' },
-  { title:'HORRA HEAVYWEIGHT TEE', price: 95,  num:'005', collection:'BledHorra', type:'heavyweightTee' },
-  { title:'TOMORROW TACTICAL BAG', price: 139, num:'006', collection:'Comeback Tommorow', type:'bag' },
+  {
+    title: 'BF BLOC HOODIE',
+    price: 169,
+    collection: 'Bledfake',
+    type: 'hoodie',
+    description: 'Heavyweight 450 GSM organic French terry cotton. Custom oversized boxy fit with dropped shoulders and double-layered hood. Stencil graphics screen-printed with puff ink in Tunis.'
+  },
+  {
+    title: 'HORRA OVERSIZED TEE',
+    price: 89,
+    collection: 'BledHorra',
+    type: 'oversizedTee',
+    description: '280 GSM luxury combed cotton jersey. Raw unfinished hem cut, drop-shoulder silhouette with heavy contrast screenprint on front and oversized back.'
+  },
+  {
+    title: 'TOMORROW CARGO VEST',
+    price: 199,
+    collection: 'Comeback Tommorow',
+    type: 'cargoVest',
+    description: 'Technical ripstop nylon utility vest with modular tactical pockets, reinforced webbing straps, and industrial matte black buckles.'
+  },
+  {
+    title: 'BLED STENCIL CAP',
+    price: 59,
+    collection: 'Bledfake',
+    type: 'cap',
+    description: 'Unstructured 6-panel low profile cotton twill cap. Contrast embroidered BF stencil insignia with custom metal buckle closure.'
+  },
+  {
+    title: 'HORRA HEAVYWEIGHT TEE',
+    price: 95,
+    collection: 'BledHorra',
+    type: 'heavyweightTee',
+    description: '300 GSM ultra-heavyweight cotton. Garment dyed vintage wash with distressed collar ribbing and underground manifesto print.'
+  },
+  {
+    title: 'TOMORROW TACTICAL BAG',
+    price: 139,
+    collection: 'Comeback Tommorow',
+    type: 'bag',
+    description: 'Water-resistant Cordura cross-body messenger bag with military webbing, quick-release Cobra-style buckle, and breathable 3D air-mesh backing.'
+  },
 ];
 
 let demoProducts = [...allProducts];
@@ -969,13 +1014,14 @@ function updateProductDisplay() {
   const p = demoProducts[currentIdx];
   if (!p) return;
 
-  const totalStr = String(demoProducts.length).padStart(3, '0');
-  const numStr   = String(currentIdx + 1).padStart(3, '0');
+  const nameEl = document.getElementById('product-name');
+  if (nameEl) nameEl.textContent = p.title;
 
-  document.getElementById('product-num').textContent = `${numStr} / ${totalStr}`;
-  document.getElementById('product-name').textContent = p.title;
-  document.getElementById('product-price').textContent = p.price.toFixed(2) + ' TND';
-  document.getElementById('product-collection-label').textContent = `${p.collection.toUpperCase()} // DROP`;
+  const priceEl = document.getElementById('product-price');
+  if (priceEl) priceEl.textContent = p.price.toFixed(2) + ' TND';
+
+  const descEl = document.getElementById('product-description');
+  if (descEl) descEl.textContent = p.description || '';
 
   const container = document.getElementById('product-art-container');
   if (container && productSVGs[p.type]) {
@@ -983,14 +1029,14 @@ function updateProductDisplay() {
   }
 }
 
-// ── Multi-Angle Front / Back Switcher ──
-document.querySelectorAll('.bf-view-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.bf-view-btn').forEach(b => b.classList.remove('is-active'));
-    btn.classList.add('is-active');
-    currentAngle = btn.dataset.angle || 'front';
-    updateProductDisplay();
-  });
+// ── Media Arrow Navigation (Flip Angle) ──
+document.getElementById('media-prev-btn')?.addEventListener('click', () => {
+  currentAngle = currentAngle === 'front' ? 'back' : 'front';
+  updateProductDisplay();
+});
+document.getElementById('media-next-btn')?.addEventListener('click', () => {
+  currentAngle = currentAngle === 'front' ? 'back' : 'front';
+  updateProductDisplay();
 });
 
 // ── Size Pills ──

@@ -260,26 +260,54 @@ async function cartChange(key, quantity) {
 }
 
 /* ================================================================
-   5. MULTI-IMAGE SWITCHER (FRONT / BACK)
+   5. PRODUCT MEDIA NAVIGATION (LEFT / RIGHT ARROWS ON GARMENT STAGE)
    ================================================================ */
 
-function initImageSwitcher() {
+let currentMediaIndex = 0;
+
+function updateMediaArrows(images) {
+  const prevMediaBtn = $('#media-prev-btn');
+  const nextMediaBtn = $('#media-next-btn');
+
+  if (!images || images.length <= 1) {
+    if (prevMediaBtn) prevMediaBtn.style.display = 'none';
+    if (nextMediaBtn) nextMediaBtn.style.display = 'none';
+  } else {
+    if (prevMediaBtn) prevMediaBtn.style.display = 'flex';
+    if (nextMediaBtn) nextMediaBtn.style.display = 'flex';
+  }
+}
+
+function setMediaAngle(index, images) {
+  if (!images || images.length === 0) return;
+  currentMediaIndex = (index + images.length) % images.length;
+  const newSrc = images[currentMediaIndex];
+  const mainImg = $('#main-product-img');
+  if (mainImg && newSrc) {
+    mainImg.style.opacity = '0.35';
+    mainImg.src = newSrc;
+    mainImg.onload = () => { mainImg.style.opacity = '1'; };
+  }
+}
+
+function initMediaNavigation() {
+  const products = (window.bfProducts || []);
+  const displayEl = $('#product-display');
+
   document.addEventListener('click', (e) => {
-    const btn = e.target.closest('.bf-view-btn');
-    if (!btn) return;
+    const prevBtn = e.target.closest('#media-prev-btn');
+    const nextBtn = e.target.closest('#media-next-btn');
 
-    const switcher = btn.closest('.bf-view-switcher');
-    if (switcher) {
-      $$('.bf-view-btn', switcher).forEach(b => b.classList.remove('is-active'));
-      btn.classList.add('is-active');
-    }
+    if (!prevBtn && !nextBtn) return;
 
-    const newSrc = btn.dataset.imgSrc;
-    const mainImg = $('#main-product-img');
-    if (mainImg && newSrc) {
-      mainImg.style.opacity = '0.4';
-      mainImg.src = newSrc;
-      mainImg.onload = () => { mainImg.style.opacity = '1'; };
+    let currProdIdx = parseInt(displayEl?.dataset.currentIndex || '0', 10);
+    const prod = products[currProdIdx];
+    if (!prod || !prod.images || prod.images.length <= 1) return;
+
+    if (prevBtn) {
+      setMediaAngle(currentMediaIndex - 1, prod.images);
+    } else if (nextBtn) {
+      setMediaAngle(currentMediaIndex + 1, prod.images);
     }
   });
 }
@@ -350,40 +378,29 @@ function initProductNavigation() {
     const product = products[index];
     if (!product) return;
 
-    const totalPadded = String(products.length).padStart(3, '0');
-    const currPadded  = String(index + 1).padStart(3, '0');
-
     displayEl.classList.add('is-changing');
 
     setTimeout(() => {
-      // Counter
-      const numEl = $('#product-num');
-      if (numEl) numEl.textContent = `${currPadded} / ${totalPadded}`;
-
       // Title
       const nameEl = $('#product-name');
       if (nameEl) nameEl.textContent = (product.title || '').toUpperCase();
 
-      // Main Image
+      // Reset media angle & update Main Image
+      currentMediaIndex = 0;
       const imgEl = $('#main-product-img');
       if (imgEl && product.featured_image) {
         imgEl.src = product.featured_image;
         imgEl.alt = product.title;
       }
 
-      // Update Multi-Image View Switcher
-      const switcher = $('#bf-view-switcher');
-      if (switcher) {
-        if (product.images && product.images.length > 1) {
-          switcher.style.display = 'flex';
-          switcher.innerHTML = product.images.map((imgUrl, i) => `
-            <button type="button" class="bf-view-btn${i === 0 ? ' is-active' : ''}" data-img-src="${imgUrl}">
-              ${i === 0 ? 'FRONT' : i === 1 ? 'BACK' : 'VIEW ' + (i + 1)}
-            </button>
-          `).join('');
-        } else {
-          switcher.style.display = 'none';
-        }
+      // Update Media Nav Arrows
+      updateMediaArrows(product.images);
+
+      // Update Description & Details
+      const descEl = $('#product-description');
+      if (descEl) {
+        descEl.innerHTML = product.description || '';
+        descEl.style.display = product.description ? '' : 'none';
       }
 
       // First Variant & Price
@@ -499,7 +516,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   // Feature initializers
-  initImageSwitcher();
+  initMediaNavigation();
   initVariantSelection();
   initProductNavigation();
 

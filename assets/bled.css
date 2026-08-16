@@ -596,44 +596,42 @@ input, select, textarea { font: inherit; }
   transition: opacity var(--t-fast) ease;
 }
 
-/* Multi-View Front / Back Switcher Chips */
-.bf-view-switcher {
+/* Media Navigation Arrows (Left / Right on Garment Stage) */
+.bf-media-arrow {
   position: absolute;
-  bottom: -0.8rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  display: flex;
-  gap: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 25;
+  width: 40px;
+  height: 48px;
   background: var(--bf-dark-2);
-  border: 1px solid var(--bf-off-white-15);
-  padding: 0.3rem 0.5rem;
-  clip-path: polygon(6% 0%, 94% 0%, 100% 30%, 100% 70%, 94% 100%, 6% 100%, 0% 70%, 0% 30%);
-}
-
-.bf-view-btn {
-  padding: 0.35rem 0.8rem;
-  font-family: var(--font-body);
-  font-size: 0.65rem;
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--bf-off-white-70);
-  background: transparent;
-  border: none;
+  border: 1px solid var(--bf-off-white-40);
+  color: var(--bf-off-white);
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  clip-path: polygon(15% 0%, 85% 0%, 100% 50%, 85% 100%, 15% 100%, 0% 50%);
   cursor: none;
   transition: all var(--t-fast) ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
 }
 
-.bf-view-btn:hover {
-  color: var(--bf-off-white);
-  background: var(--bf-off-white-08);
+.bf-media-arrow--prev {
+  left: 0;
 }
 
-.bf-view-btn.is-active {
+.bf-media-arrow--next {
+  right: 0;
+}
+
+.bf-media-arrow:hover {
   background: var(--bf-off-white);
   color: var(--bf-black);
-  font-weight: 600;
+  border-color: var(--bf-off-white);
+  transform: translateY(-50%) scale(1.08);
 }
 
 /* Product Info Box */
@@ -650,23 +648,35 @@ input, select, textarea { font: inherit; }
   box-shadow: 0 15px 40px rgba(0,0,0,0.7);
 }
 
-.bf-card-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* Product Description */
+.bf-product-description {
   font-family: var(--font-body);
-  font-size: 0.65rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  font-size: 0.85rem;
+  line-height: 1.6;
   color: var(--bf-off-white-70);
+  border-top: 1px solid var(--bf-off-white-08);
   border-bottom: 1px solid var(--bf-off-white-08);
-  padding-bottom: 0.8rem;
+  padding: 1rem 0;
+  max-height: 160px;
+  overflow-y: auto;
 }
 
-.bf-card-index {
-  font-family: var(--font-display);
-  font-size: 1.2rem;
-  color: var(--bf-off-white);
+.bf-product-description p {
+  margin-bottom: 0.5rem;
+}
+
+.bf-product-description p:last-child {
+  margin-bottom: 0;
+}
+
+.bf-product-description ul, .bf-product-description ol {
+  padding-left: 1.2rem;
+  margin: 0.5rem 0;
+  list-style: square;
+}
+
+.bf-product-description li {
+  margin-bottom: 0.25rem;
 }
 
 .bf-product-title {
