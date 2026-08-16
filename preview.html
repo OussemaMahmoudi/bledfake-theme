@@ -647,6 +647,11 @@ ul, ol { list-style: none; }
           <!-- Dynamic Vector Apparel Silhouette -->
         </div>
         <button type="button" class="bf-media-arrow bf-media-arrow--next" id="media-next-btn" aria-label="Next view">›</button>
+
+        <div class="bf-media-dots" aria-hidden="true" id="preview-media-dots">
+          <span class="bf-media-dot is-active" id="dot-front" title="Front view"></span>
+          <span class="bf-media-dot" id="dot-back" title="Back view"></span>
+        </div>
       </div>
 
       <!-- Right: Clean Product Info Card -->
@@ -663,7 +668,10 @@ ul, ol { list-style: none; }
         </div>
 
         <div class="bf-size-group">
-          <span class="bf-size-group-label">SELECT SIZE</span>
+          <span class="bf-size-group-label">
+            SELECT SIZE
+            <span class="bf-size-guide-link">TRUE TO OVERSIZED FIT</span>
+          </span>
           <div class="bf-size-pills" role="group" aria-label="Sizes">
             <button class="bf-size-pill">XS</button>
             <button class="bf-size-pill is-selected">S</button>
@@ -682,6 +690,22 @@ ul, ol { list-style: none; }
             <span>BUY IT NOW</span>
             <span>⚡</span>
           </button>
+        </div>
+
+        <!-- Product Specs & Guarantees -->
+        <div class="bf-pdp-specs">
+          <div class="bf-pdp-spec-item">
+            <span class="bf-pdp-spec-label">FABRICATION</span>
+            <span class="bf-pdp-spec-val">100% HEAVYWEIGHT ORGANIC COTTON / TUNIS</span>
+          </div>
+          <div class="bf-pdp-spec-item">
+            <span class="bf-pdp-spec-label">SHIPPING</span>
+            <span class="bf-pdp-spec-val">2–4 DAYS DOMESTIC · CASH ON DELIVERY</span>
+          </div>
+          <div class="bf-pdp-spec-item">
+            <span class="bf-pdp-spec-label">AUTHENTICITY</span>
+            <span class="bf-pdp-spec-val">LIMITED DROP ARCHIVE PIECE</span>
+          </div>
         </div>
       </div>
     </div>
@@ -1449,20 +1473,47 @@ function updateProductDisplay() {
   const descEl = document.getElementById('product-description');
   if (descEl) descEl.textContent = p.description || '';
 
+  const colLabel = document.getElementById('pdp-col-label');
+  if (colLabel) colLabel.textContent = (p.collection || 'BLED FAKE').toUpperCase();
+
   const container = document.getElementById('product-art-container');
   if (container && productSVGs[p.type]) {
     container.innerHTML = productSVGs[p.type][currentAngle] || productSVGs[p.type].front;
   }
+
+  // Update media dots
+  const dotFront = document.getElementById('dot-front');
+  const dotBack = document.getElementById('dot-back');
+  if (dotFront && dotBack) {
+    dotFront.classList.toggle('is-active', currentAngle === 'front');
+    dotBack.classList.toggle('is-active', currentAngle === 'back');
+  }
 }
 
-// ── Media Arrow Navigation (Flip Angle) ──
-document.getElementById('media-prev-btn')?.addEventListener('click', () => {
-  currentAngle = currentAngle === 'front' ? 'back' : 'front';
-  updateProductDisplay();
-});
-document.getElementById('media-next-btn')?.addEventListener('click', () => {
-  currentAngle = currentAngle === 'front' ? 'back' : 'front';
-  updateProductDisplay();
+// ── Media Arrow Navigation (Flip Angle Front <-> Back) ──
+document.addEventListener('click', (e) => {
+  const arrow = e.target.closest('#media-prev-btn, #media-next-btn, .bf-media-arrow');
+  if (arrow) {
+    e.preventDefault();
+    e.stopPropagation();
+    currentAngle = currentAngle === 'front' ? 'back' : 'front';
+    updateProductDisplay();
+    return;
+  }
+
+  const dotFront = e.target.closest('#dot-front');
+  if (dotFront) {
+    currentAngle = 'front';
+    updateProductDisplay();
+    return;
+  }
+
+  const dotBack = e.target.closest('#dot-back');
+  if (dotBack) {
+    currentAngle = 'back';
+    updateProductDisplay();
+    return;
+  }
 });
 
 // ── Size Pills ──

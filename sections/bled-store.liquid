@@ -212,13 +212,6 @@ window.bfProducts = [
         <!-- Right: Product Info Card -->
         <div class="bf-product-info-card" itemscope itemtype="https://schema.org/Product">
 
-          <!-- Product counter -->
-          <div class="bf-product-counter" id="bf-product-counter" aria-label="Product position">
-            <span id="bf-product-num">{{ current_index | plus: 1 | prepend: '0' | slice: -2, 2 }}</span>
-            <span class="bf-product-counter__sep">/</span>
-            <span>{{ product_count | prepend: '0' | slice: -2, 2 }}</span>
-          </div>
-
           <h1 class="bf-product-title" id="product-name" itemprop="name">
             {{ current_product.title | upcase }}
           </h1>

@@ -271,8 +271,16 @@ function getMediaImages() {
   if (!imgEl) return [];
   try {
     const raw = imgEl.getAttribute('data-images') || '[]';
-    return JSON.parse(raw.replace(/&quot;/g, '"').replace(/&#x27;/g, "'"));
-  } catch {
+    if (!raw || raw === '[]') return [];
+    const decoded = raw
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&#x27;/g, "'")
+      .replace(/&amp;/g, '&');
+    const parsed = JSON.parse(decoded);
+    return Array.isArray(parsed) ? parsed.filter(Boolean) : [];
+  } catch (e) {
+    console.error('[BLED] Error parsing media images:', e);
     return [];
   }
 }
@@ -284,11 +292,12 @@ function setMediaImage(index) {
   const imgEl = $('#main-product-img');
   if (imgEl && imgEl.tagName === 'IMG') {
     imgEl.classList.add('is-loading');
+    imgEl.removeAttribute('srcset');
     imgEl.src = images[currentMediaIndex];
     imgEl.onload = () => imgEl.classList.remove('is-loading');
     imgEl.onerror = () => imgEl.classList.remove('is-loading');
   }
-  imgEl && (imgEl.dataset.mediaIndex = currentMediaIndex);
+  if (imgEl) imgEl.dataset.mediaIndex = currentMediaIndex;
   updateMediaDots(currentMediaIndex);
 }
 
@@ -310,14 +319,28 @@ function updateMediaArrows(images) {
 
 function initMediaNavigation() {
   document.addEventListener('click', (e) => {
-    const isNext = !!e.target.closest('#media-next-btn');
-    const isPrev = !!e.target.closest('#media-prev-btn');
-    if (!isPrev && !isNext) return;
+    const prevBtn = e.target.closest('#media-prev-btn, .bf-media-arrow--prev');
+    const nextBtn = e.target.closest('#media-next-btn, .bf-media-arrow--next');
+    if (!prevBtn && !nextBtn) return;
+
+    e.preventDefault();
+    e.stopPropagation();
 
     const images = getMediaImages();
-    if (!images.length) return;
+    if (!images || images.length <= 1) return;
 
-    setMediaImage(isPrev ? currentMediaIndex - 1 : currentMediaIndex + 1);
+    setMediaImage(prevBtn ? currentMediaIndex - 1 : currentMediaIndex + 1);
+  });
+
+  // Direct dot click support
+  document.addEventListener('click', (e) => {
+    const dot = e.target.closest('.bf-media-dot');
+    if (!dot) return;
+    const allDots = $$('#bf-media-dots .bf-media-dot');
+    const dotIdx = allDots.indexOf(dot);
+    if (dotIdx !== -1) {
+      setMediaImage(dotIdx);
+    }
   });
 }
 
