@@ -1,6 +1,7 @@
 {% comment %}
-  BLED FAKE — Brutalist Checkout Section (bled-checkout.liquid)
-  Underground aesthetic order review & delivery collection
+  BLED FAKE — Brutalist Checkout Page (bled-checkout.liquid)
+  Custom themed checkout — replaces Shopify native checkout UI.
+  Accessible at: /pages/checkout (using template: page.checkout.json)
 {% endcomment %}
 
 <section class="bf-checkout-page" id="bf-checkout-page" aria-label="BLED FAKE Checkout">
@@ -14,46 +15,58 @@
       <span class="visually-hidden">BLED FAKE</span>
     </a>
     <div class="bf-nav-right">
-      <a href="/collections/all" class="bf-nav-btn">
-        <span>RETURN TO DROPS</span>
-        <span>←</span>
+      <a href="javascript:history.back()" class="bf-nav-btn">
+        <span>← RETURN</span>
       </a>
     </div>
   </header>
 
-  <div class="bf-checkout-container">
+  <!-- ═══ ORDER CONFIRMATION (shown after submit) ═══ -->
+  <div id="bf-order-confirmed" style="display:none; flex-direction:column; align-items:center; justify-content:center; min-height:80svh; gap:2.5rem; text-align:center; padding:2rem;">
+    <div style="font-family:var(--font-display); font-size:clamp(5rem,12vw,10rem); line-height:0.85; color:var(--bf-off-white);">ORDER<br>PLACED</div>
+    <p style="font-family:var(--font-body); font-size:0.85rem; letter-spacing:0.15em; color:var(--bf-off-white-70); max-width:420px; line-height:1.7;">
+      YOUR PACKAGE WILL SHIP WITHIN 2–4 BUSINESS DAYS.<br>CHECK YOUR EMAIL FOR TRACKING DETAILS.
+    </p>
+    <a href="/" class="bf-checkout-submit-btn" style="text-decoration:none; max-width:320px;">
+      <span>BACK TO HOME</span><span>→</span>
+    </a>
+  </div>
 
-    <!-- Left Column: Checkout Form (Shipping & Payment) -->
+  <!-- ═══ CHECKOUT FORM ═══ -->
+  <div class="bf-checkout-container" id="bf-checkout-form-wrap">
+
+    <!-- Left Column: Delivery & Payment -->
     <div class="bf-checkout-main">
+
       <div class="bf-checkout-step">
         <h2 class="bf-checkout-step__title">01 // CONTACT & DELIVERY</h2>
-        
-        <form class="bf-checkout-form" id="checkout-order-form" onsubmit="event.preventDefault();">
+
+        <form class="bf-checkout-form" id="bf-order-form" novalidate>
           <div class="bf-form-row">
             <div class="bf-form-group">
               <label class="bf-form-label" for="co-name">FULL NAME *</label>
-              <input type="text" id="co-name" class="bf-form-input" placeholder="e.g. Aziz Ben Salem" required>
+              <input type="text" id="co-name" name="name" class="bf-form-input" placeholder="e.g. Aziz Ben Salem" required>
             </div>
             <div class="bf-form-group">
-              <label class="bf-form-label" for="co-phone">PHONE NUMBER (TUNISIA) *</label>
-              <input type="tel" id="co-phone" class="bf-form-input" placeholder="+216 -- --- ---" required>
+              <label class="bf-form-label" for="co-phone">PHONE (TUNISIA) *</label>
+              <input type="tel" id="co-phone" name="phone" class="bf-form-input" placeholder="+216 -- --- ---" required>
             </div>
           </div>
 
           <div class="bf-form-group">
             <label class="bf-form-label" for="co-email">EMAIL ADDRESS *</label>
-            <input type="email" id="co-email" class="bf-form-input" placeholder="aziz@example.com" required>
+            <input type="email" id="co-email" name="email" class="bf-form-input" placeholder="you@example.com" required>
           </div>
 
           <div class="bf-form-group">
             <label class="bf-form-label" for="co-address">STREET ADDRESS & APARTMENT *</label>
-            <input type="text" id="co-address" class="bf-form-input" placeholder="Street name, building, apartment..." required>
+            <input type="text" id="co-address" name="address" class="bf-form-input" placeholder="Street name, building, apt..." required>
           </div>
 
           <div class="bf-form-row">
             <div class="bf-form-group">
-              <label class="bf-form-label" for="co-city">CITY / GOVERNORATE *</label>
-              <select id="co-city" class="bf-form-select" required>
+              <label class="bf-form-label" for="co-city">GOVERNORATE *</label>
+              <select id="co-city" name="city" class="bf-form-select" required>
                 <option value="">SELECT GOVERNORATE</option>
                 <option value="Tunis">Tunis</option>
                 <option value="Ariana">Ariana</option>
@@ -64,78 +77,105 @@
                 <option value="Monastir">Monastir</option>
                 <option value="Sfax">Sfax</option>
                 <option value="Bizerte">Bizerte</option>
-                <option value="Other">Other Region</option>
+                <option value="Gabes">Gabes</option>
+                <option value="Gafsa">Gafsa</option>
+                <option value="Kairouan">Kairouan</option>
+                <option value="Kasserine">Kasserine</option>
+                <option value="Kebili">Kebili</option>
+                <option value="Kef">Kef</option>
+                <option value="Mahdia">Mahdia</option>
+                <option value="Medenine">Medenine</option>
+                <option value="Jendouba">Jendouba</option>
+                <option value="Sidi Bouzid">Sidi Bouzid</option>
+                <option value="Siliana">Siliana</option>
+                <option value="Tataouine">Tataouine</option>
+                <option value="Tozeur">Tozeur</option>
+                <option value="Zaghouan">Zaghouan</option>
               </select>
             </div>
             <div class="bf-form-group">
               <label class="bf-form-label" for="co-zip">POSTAL CODE</label>
-              <input type="text" id="co-zip" class="bf-form-input" placeholder="1000">
+              <input type="text" id="co-zip" name="zip" class="bf-form-input" placeholder="1000">
             </div>
           </div>
 
           <!-- Step 2: Payment -->
-          <div class="bf-checkout-step" style="margin-top: 2.5rem;">
+          <div class="bf-checkout-step" style="margin-top:2.5rem;">
             <h2 class="bf-checkout-step__title">02 // PAYMENT METHOD</h2>
-            <div class="bf-payment-methods">
-              <label class="bf-payment-option is-selected">
+            <div class="bf-payment-methods" id="bf-payment-methods">
+
+              <label class="bf-payment-option is-selected" id="pay-opt-cod">
                 <input type="radio" name="payment" value="cod" checked>
                 <span class="bf-payment-box">
                   <strong>CASH ON DELIVERY (PAIEMENT À LA LIVRAISON)</strong>
-                  <small>Pay cash to courier when receiving your package in Tunisia</small>
+                  <small>Pay cash in Tunisian Dinars when your parcel arrives at your door</small>
                 </span>
               </label>
 
-              <label class="bf-payment-option">
+              <label class="bf-payment-option" id="pay-opt-flouci">
                 <input type="radio" name="payment" value="flouci">
                 <span class="bf-payment-box">
                   <strong>FLOUCI / D17 / BANK CARD</strong>
                   <small>Instant digital payment with Tunisian cards & wallets</small>
                 </span>
               </label>
+
             </div>
           </div>
 
-          <button type="submit" class="bf-checkout-submit-btn" id="confirm-order-btn">
-            <span>CONFIRM & PLACE ORDER</span>
+          <!-- Submit -->
+          <button type="submit" class="bf-checkout-submit-btn" id="bf-confirm-btn">
+            <span id="bf-confirm-label">CONFIRM & PLACE ORDER</span>
             <span>➔</span>
           </button>
+
+          <p class="bf-checkout-note">
+            Your order will be confirmed within 24h by phone. By confirming you agree to our terms.
+          </p>
         </form>
       </div>
+
     </div>
 
-    <!-- Right Column: Order Summary -->
+    <!-- Right Column: Live Bag Summary -->
     <aside class="bf-checkout-sidebar">
       <div class="bf-summary-card">
         <h2 class="bf-summary-title">BAG SUMMARY</h2>
-        
+
         <div class="bf-summary-items" id="co-summary-items">
-          <!-- Dynamically filled with cart items -->
           {% for item in cart.items %}
             <div class="bf-summary-item">
-              <img src="{{ item.image | image_url: width: 120 }}" alt="{{ item.title }}" class="bf-summary-item__img">
+              <img
+                src="{{ item.image | image_url: width: 120 }}"
+                alt="{{ item.title | escape }}"
+                class="bf-summary-item__img"
+                loading="lazy"
+              >
               <div class="bf-summary-item__info">
-                <p class="bf-summary-item__title">{{ item.product.title }}</p>
-                <p class="bf-summary-item__variant">SIZE: {{ item.variant.title }} × {{ item.quantity }}</p>
-                <p class="bf-summary-item__price">{{ item.final_line_price | money }}</p>
+                <div class="bf-summary-item__title">{{ item.product.title | upcase }}</div>
+                <div class="bf-summary-item__variant">SIZE: {{ item.variant.title }} × {{ item.quantity }}</div>
+                <div class="bf-summary-item__price">{{ item.final_line_price | money }}</div>
               </div>
             </div>
           {% else %}
-            <p style="font-family: var(--font-display); font-size: 1.2rem; opacity: 0.5;">NO ITEMS IN CART</p>
+            <p style="font-family:var(--font-body); font-size:0.8rem; color:var(--bf-off-white-40); text-align:center; padding:1rem 0;">
+              YOUR BAG IS EMPTY
+            </p>
           {% endfor %}
         </div>
 
         <div class="bf-summary-totals">
           <div class="bf-summary-row">
             <span>SUBTOTAL</span>
-            <span id="co-subtotal">{{ cart.total_price | money }}</span>
+            <span>{{ cart.total_price | money }}</span>
           </div>
           <div class="bf-summary-row">
-            <span>SHIPPING (TUNISIA EXPRESS)</span>
+            <span>EXPRESS SHIPPING (TUNISIA)</span>
             <span>7.00 TND</span>
           </div>
           <div class="bf-summary-row bf-summary-row--total">
-            <span>TOTAL AMOUNT</span>
-            <span id="co-grand-total">{{ cart.total_price | plus: 700 | money }}</span>
+            <span>TOTAL</span>
+            <span>{{ cart.total_price | plus: 700 | money }}</span>
           </div>
         </div>
       </div>
@@ -144,6 +184,54 @@
   </div>
 
 </section>
+
+<script>
+(function() {
+  // Payment option toggle
+  document.querySelectorAll('.bf-payment-option').forEach(function(opt) {
+    opt.addEventListener('click', function() {
+      document.querySelectorAll('.bf-payment-option').forEach(function(o) {
+        o.classList.remove('is-selected');
+      });
+      opt.classList.add('is-selected');
+    });
+  });
+
+  // Form submit → show confirmation
+  var form = document.getElementById('bf-order-form');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Basic validation
+      var required = form.querySelectorAll('[required]');
+      var valid = true;
+      required.forEach(function(field) {
+        if (!field.value.trim()) {
+          field.style.borderColor = '#ff4444';
+          valid = false;
+        } else {
+          field.style.borderColor = '';
+        }
+      });
+      if (!valid) return;
+
+      // Button loading state
+      var btn   = document.getElementById('bf-confirm-btn');
+      var label = document.getElementById('bf-confirm-label');
+      if (label) label.textContent = 'PLACING ORDER...';
+      if (btn)   btn.disabled = true;
+
+      // Simulate processing (replace with real API call)
+      setTimeout(function() {
+        document.getElementById('bf-checkout-form-wrap').style.display = 'none';
+        var conf = document.getElementById('bf-order-confirmed');
+        if (conf) { conf.style.display = 'flex'; }
+      }, 1400);
+    });
+  }
+})();
+</script>
 
 {% schema %}
 {

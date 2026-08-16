@@ -976,6 +976,16 @@ input, select, textarea { font: inherit; }
   transform: translateY(-2px);
 }
 
+.bf-checkout-note {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  color: var(--bf-off-white-40);
+  text-align: center;
+  margin-top: 1rem;
+  line-height: 1.6;
+}
+
 /* Checkout Sidebar Summary */
 .bf-checkout-sidebar {
   position: sticky;

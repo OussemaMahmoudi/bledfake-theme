@@ -291,23 +291,41 @@ function setMediaAngle(index, images) {
 }
 
 function initMediaNavigation() {
+  // Build a lookup: map featured_image URL -> full images array
+  // so we can find the current product's images from the visible <img> src
   const products = (window.bfProducts || []);
-  const displayEl = $('#product-display');
+
+  function getCurrentImages() {
+    const mainImg = $('#main-product-img');
+    if (!mainImg) return null;
+    // Try to match current img src to a product's image list
+    const src = (mainImg.src || '').split('?')[0];
+    for (const prod of products) {
+      if (!prod.images || prod.images.length === 0) continue;
+      const match = prod.images.some(img => (img || '').split('?')[0] === src);
+      if (match) return prod.images;
+      // also check featured_image
+      if (prod.featured_image && (prod.featured_image || '').split('?')[0] === src) {
+        return prod.images;
+      }
+    }
+    // Fallback: return first product with multiple images
+    const firstMulti = products.find(p => p.images && p.images.length > 1);
+    return firstMulti ? firstMulti.images : null;
+  }
 
   document.addEventListener('click', (e) => {
-    const prevBtn = e.target.closest('#media-prev-btn');
-    const nextBtn = e.target.closest('#media-next-btn');
+    const isNext = !!e.target.closest('#media-next-btn');
+    const isPrev = !!e.target.closest('#media-prev-btn');
+    if (!isPrev && !isNext) return;
 
-    if (!prevBtn && !nextBtn) return;
+    const images = getCurrentImages();
+    if (!images || images.length <= 1) return;
 
-    let currProdIdx = parseInt(displayEl?.dataset.currentIndex || '0', 10);
-    const prod = products[currProdIdx];
-    if (!prod || !prod.images || prod.images.length <= 1) return;
-
-    if (prevBtn) {
-      setMediaAngle(currentMediaIndex - 1, prod.images);
-    } else if (nextBtn) {
-      setMediaAngle(currentMediaIndex + 1, prod.images);
+    if (isPrev) {
+      setMediaAngle(currentMediaIndex - 1, images);
+    } else {
+      setMediaAngle(currentMediaIndex + 1, images);
     }
   });
 }
@@ -388,12 +406,17 @@ function initProductNavigation() {
       // Reset media angle & update Main Image
       currentMediaIndex = 0;
       const imgEl = $('#main-product-img');
-      if (imgEl && product.featured_image) {
-        imgEl.src = product.featured_image;
-        imgEl.alt = product.title;
+      if (imgEl) {
+        const firstSrc = (product.images && product.images[0]) ? product.images[0] : product.featured_image;
+        if (firstSrc) {
+          imgEl.style.opacity = '0.35';
+          imgEl.src = firstSrc;
+          imgEl.alt = product.title;
+          imgEl.onload = () => { imgEl.style.opacity = '1'; };
+        }
       }
 
-      // Update Media Nav Arrows
+      // Update Media Nav Arrows visibility
       updateMediaArrows(product.images);
 
       // Update Description & Details
@@ -531,7 +554,8 @@ window.addEventListener('DOMContentLoaded', () => {
         headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
         body: JSON.stringify({ id: idInput.value, quantity: 1 })
       });
-      window.location.href = '/checkout';
+      // Redirect to styled checkout page, not native Shopify checkout
+      window.location.href = '/pages/checkout';
     } catch (err) {
       console.error('[BLED Checkout] Error:', err);
       window.location.href = '/checkout';
