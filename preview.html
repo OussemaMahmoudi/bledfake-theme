@@ -1687,9 +1687,135 @@ function hideAllViews() {
   document.getElementById('contact-view').style.display = 'none';
 }
 
+function renderCheckoutSummary() {
+  const itemsEl = document.getElementById('pv-summary-items');
+  const subtotalEl = document.getElementById('pv-co-subtotal');
+  const totalEl = document.getElementById('pv-co-total');
+
+  if (!itemsEl) return;
+
+  const shipping = 7;
+
+  if (cartItems.length === 0) {
+    // If no items in cart, show the current product as the order
+    const p = demoProducts[currentIdx];
+    if (p) {
+      itemsEl.innerHTML = `
+        <div class="bf-summary-item">
+          <div class="bf-summary-item__info">
+            <div class="bf-summary-item__title">${p.title}</div>
+            <div class="bf-summary-item__variant">SIZE: ${selectedSize} × 1</div>
+            <div class="bf-summary-item__price">${p.price.toFixed(2)} TND</div>
+          </div>
+        </div>`;
+      if (subtotalEl) subtotalEl.textContent = p.price.toFixed(2) + ' TND';
+      if (totalEl) totalEl.textContent = (p.price + shipping).toFixed(2) + ' TND';
+    }
+    return;
+  }
+
+  const subtotal = cartItems.reduce((s, i) => s + i.price * i.qty, 0);
+  itemsEl.innerHTML = cartItems.map(item => `
+    <div class="bf-summary-item">
+      <div class="bf-summary-item__info">
+        <div class="bf-summary-item__title">${item.title}</div>
+        <div class="bf-summary-item__variant">SIZE: ${item.size} × ${item.qty}</div>
+        <div class="bf-summary-item__price">${(item.price * item.qty).toFixed(2)} TND</div>
+      </div>
+    </div>
+  `).join('');
+
+  if (subtotalEl) subtotalEl.textContent = subtotal.toFixed(2) + ' TND';
+  if (totalEl) totalEl.textContent = (subtotal + shipping).toFixed(2) + ' TND';
+}
+
+// ── Payment option toggle for preview checkout ──
+document.addEventListener('click', e => {
+  const opt = e.target.closest('.bf-payment-option');
+  if (!opt) return;
+  const form = opt.closest('form') || opt.closest('#checkout') || opt.closest('.bf-checkout-page');
+  const siblings = form
+    ? form.querySelectorAll('.bf-payment-option')
+    : document.querySelectorAll('.bf-payment-option');
+  siblings.forEach(o => o.classList.remove('is-selected'));
+  opt.classList.add('is-selected');
+});
+
+// ── Checkout form submit → show order confirmation ──
+(function wireCheckoutForm() {
+  const chkSection = document.getElementById('checkout');
+  if (!chkSection) return;
+
+  // Listen for submit on the checkout form
+  chkSection.addEventListener('submit', function(e) {
+    const form = e.target.closest('#preview-checkout-form');
+    if (!form) return;
+    e.preventDefault();
+
+    // Validate required fields
+    let valid = true;
+    form.querySelectorAll('[required]').forEach(field => {
+      if (!field.value.trim()) {
+        field.style.borderColor = '#ff4444';
+        valid = false;
+      } else {
+        field.style.borderColor = '';
+      }
+    });
+    if (!valid) return;
+
+    // Button loading state
+    const btn = document.getElementById('pv-confirm-btn');
+    if (btn) {
+      btn.disabled = true;
+      btn.querySelector('span').textContent = 'PLACING ORDER...';
+    }
+
+    // Simulate processing → show confirmation
+    setTimeout(() => {
+      // Hide the form
+      const formWrap = chkSection.querySelector('.bf-checkout-container');
+      if (formWrap) formWrap.style.display = 'none';
+
+      // Show confirmation message
+      let conf = chkSection.querySelector('.bf-order-confirmed-msg');
+      if (!conf) {
+        conf = document.createElement('div');
+        conf.className = 'bf-order-confirmed-msg';
+        conf.innerHTML = `
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:70svh;gap:2.5rem;text-align:center;padding:2rem;">
+            <div style="font-family:var(--font-display);font-size:clamp(4rem,12vw,9rem);line-height:0.85;color:var(--bf-off-white);">ORDER<br>PLACED</div>
+            <p style="font-family:var(--font-body);font-size:0.85rem;letter-spacing:0.15em;color:var(--bf-off-white-70);max-width:400px;line-height:1.7;">
+              YOUR PACKAGE WILL SHIP WITHIN 2–4 BUSINESS DAYS.<br>WE'LL CONFIRM BY PHONE WITHIN 24H.
+            </p>
+            <button onclick="cartItems=[];renderCart();showCatalog(null,'all');" class="bf-checkout-submit-btn" style="max-width:320px;border:none;cursor:pointer;">
+              <span>CONTINUE SHOPPING</span><span>→</span>
+            </button>
+          </div>`;
+        chkSection.appendChild(conf);
+      }
+      conf.style.display = '';
+
+      // Clear cart
+      cartItems = [];
+      renderCart();
+    }, 1400);
+  });
+})();
+
 function showCheckout() {
   transitionTo(() => {
     hideAllViews();
+    // Reset confirmation state when entering checkout fresh
+    const chkSection = document.getElementById('checkout');
+    if (chkSection) {
+      const conf = chkSection.querySelector('.bf-order-confirmed-msg');
+      if (conf) conf.style.display = 'none';
+      const formWrap = chkSection.querySelector('.bf-checkout-container');
+      if (formWrap) formWrap.style.display = '';
+      const btn = document.getElementById('pv-confirm-btn');
+      if (btn) { btn.disabled = false; btn.querySelector('span') && (btn.querySelector('span').textContent = 'CONFIRM & PLACE ORDER'); }
+    }
     document.getElementById('checkout').style.display = '';
     window.scrollTo(0, 0);
     renderCheckoutSummary();
