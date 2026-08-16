@@ -1536,3 +1536,552 @@ input, select, textarea { font: inherit; }
   }
   .bf-landing__city, .bf-landing__mascot { transform: none !important; }
 }
+
+/* =============================================================
+   11. SHARED PAGE LAYOUT (About, Manifesto, Contact, etc.)
+   ============================================================= */
+
+.bf-page {
+  position: relative;
+  min-height: 100svh;
+  background: var(--bf-black);
+  color: var(--bf-off-white);
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* Page Hero / Title Block */
+.bf-page-hero {
+  padding: 6.5rem 4rem 3rem;
+  border-bottom: 1px solid var(--bf-off-white-08);
+}
+
+.bf-page-hero__eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--bf-off-white-40);
+  margin-bottom: 1rem;
+}
+
+.bf-page-hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 9vw, 9rem);
+  line-height: 0.88;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.bf-page-hero__rule {
+  margin-top: 2rem;
+  width: 60px;
+  height: 2px;
+  background: var(--bf-off-white);
+}
+
+/* Page Footer Strip */
+.bf-page-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 1.5rem 4rem;
+  border-top: 1px solid var(--bf-off-white-08);
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--bf-off-white-40);
+  margin-top: auto;
+}
+
+/* CTA Band */
+.bf-page-cta-band {
+  display: flex;
+  gap: 1.5rem;
+  padding: 3rem 4rem;
+  flex-wrap: wrap;
+}
+
+.bf-page-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1rem 2rem;
+  background: var(--bf-off-white);
+  color: var(--bf-black);
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  clip-path: polygon(0% 0%, 95% 0%, 100% 40%, 100% 100%, 5% 100%, 0% 60%);
+  transition: transform var(--t-fast) ease;
+}
+
+.bf-page-cta-btn:hover { transform: translateY(-3px); }
+
+.bf-page-cta-btn--outline {
+  background: transparent;
+  border: 1px solid var(--bf-off-white);
+  color: var(--bf-off-white);
+}
+
+.bf-page-cta-btn--outline:hover {
+  background: var(--bf-off-white);
+  color: var(--bf-black);
+}
+
+/* =============================================================
+   12. ABOUT PAGE
+   ============================================================= */
+
+.bf-about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 0;
+  padding: 4rem;
+  flex: 1;
+}
+
+.bf-about-statement {
+  padding-right: 4rem;
+  border-right: 1px solid var(--bf-off-white-08);
+  position: sticky;
+  top: 6rem;
+  height: fit-content;
+}
+
+.bf-about-statement__text {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 4vw, 3.8rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.bf-about-statement__sub {
+  margin-top: 1.5rem;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: var(--bf-off-white-70);
+  max-width: 340px;
+}
+
+.bf-about-story {
+  padding-left: 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.bf-about-block {
+  position: relative;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--bf-off-white-08);
+}
+
+.bf-about-block:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.bf-about-block__num {
+  font-family: var(--font-display);
+  font-size: 5rem;
+  line-height: 1;
+  color: var(--bf-off-white-08);
+  position: absolute;
+  top: -1rem;
+  right: 0;
+  pointer-events: none;
+}
+
+.bf-about-block__title {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  color: var(--bf-off-white);
+}
+
+.bf-about-block__body {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  line-height: 1.8;
+  color: var(--bf-off-white-70);
+}
+
+.bf-about-block__body strong {
+  color: var(--bf-off-white);
+  font-weight: 500;
+}
+
+/* =============================================================
+   13. MANIFESTO PAGE
+   ============================================================= */
+
+.bf-manifesto-page {
+  --manifesto-col: min(680px, 90vw);
+}
+
+.bf-manifesto-content {
+  max-width: var(--manifesto-col);
+  margin: 0 auto;
+  padding: 6rem 2rem 4rem;
+  flex: 1;
+}
+
+.bf-manifesto-opening {
+  margin-bottom: 2rem;
+}
+
+.bf-manifesto-overline {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--bf-off-white-40);
+}
+
+.bf-manifesto-headline {
+  font-family: var(--font-display);
+  font-size: clamp(4.5rem, 12vw, 10rem);
+  line-height: 0.86;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  margin-bottom: 0.5rem;
+}
+
+.bf-manifesto-sub-headline {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--bf-off-white-70);
+  margin-bottom: 4rem;
+}
+
+.bf-manifesto-em {
+  color: var(--bf-off-white);
+  -webkit-text-stroke: 1px var(--bf-off-white);
+}
+
+.bf-manifesto-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.bf-manifesto-para {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.9;
+  color: var(--bf-off-white-70);
+}
+
+.bf-manifesto-para strong { color: var(--bf-off-white); font-weight: 500; }
+.bf-manifesto-para em { font-style: normal; color: var(--bf-off-white); }
+
+.bf-manifesto-para--large {
+  font-size: 1.15rem;
+  color: var(--bf-off-white);
+  line-height: 1.7;
+}
+
+.bf-manifesto-para--pullquote {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  color: var(--bf-off-white);
+  line-height: 1.2;
+  padding: 2rem 0;
+  border-top: 1px solid var(--bf-off-white-15);
+  border-bottom: 1px solid var(--bf-off-white-15);
+}
+
+.bf-manifesto-para--closing {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  color: var(--bf-off-white);
+  line-height: 1.15;
+}
+
+.bf-manifesto-divider {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  color: var(--bf-off-white-40);
+}
+
+.bf-manifesto-divider::before,
+.bf-manifesto-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--bf-off-white-15);
+}
+
+.bf-manifesto-divider span {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  letter-spacing: 0.1em;
+}
+
+.bf-manifesto-sig {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--bf-off-white-15);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.bf-manifesto-sig__brand {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.bf-manifesto-sig__loc {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bf-off-white-40);
+}
+
+/* =============================================================
+   14. CONTACT PAGE
+   ============================================================= */
+
+.bf-contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 0;
+  padding: 4rem;
+  flex: 1;
+}
+
+.bf-contact-info {
+  padding-right: 4rem;
+  border-right: 1px solid var(--bf-off-white-08);
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.bf-contact-block__label {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bf-off-white-40);
+  margin-bottom: 0.6rem;
+}
+
+.bf-contact-block__val {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: var(--bf-off-white-70);
+}
+
+.bf-contact-link {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--bf-off-white);
+  text-decoration: none;
+  border-bottom: 1px solid var(--bf-off-white-15);
+  transition: border-color var(--t-fast) ease, color var(--t-fast) ease;
+}
+
+.bf-contact-link:hover {
+  color: var(--bf-off-white);
+  border-color: var(--bf-off-white);
+}
+
+.bf-contact-form-wrap {
+  padding-left: 4rem;
+}
+
+.bf-form-textarea {
+  resize: vertical;
+  min-height: 150px;
+  clip-path: none !important;
+}
+
+.bf-contact-success {
+  padding: 3rem;
+  border: 1px solid var(--bf-off-white-15);
+  text-align: center;
+}
+
+.bf-contact-error {
+  padding: 1rem;
+  border: 1px solid #ff4444;
+  color: #ff4444;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+/* =============================================================
+   15. 404 PAGE
+   ============================================================= */
+
+.bf-404-page {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.bf-404-content {
+  padding: 8rem 2rem 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.bf-404-code {
+  font-family: var(--font-display);
+  font-size: clamp(8rem, 20vw, 18rem);
+  line-height: 0.85;
+  color: var(--bf-off-white-08);
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: -0.02em;
+}
+
+.bf-404-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 7vw, 6rem);
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.bf-404-body {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: var(--bf-off-white-70);
+  max-width: 480px;
+}
+
+/* =============================================================
+   16. UPDATED MENU STYLES
+   ============================================================= */
+
+.bf-menu__item {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.2rem 0;
+  border-bottom: 1px solid var(--bf-off-white-08);
+  transition: all var(--t-fast) ease;
+}
+
+.bf-menu__item-num {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--bf-off-white-40);
+  flex-shrink: 0;
+  width: 24px;
+}
+
+.bf-menu__item-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  line-height: 1;
+  text-transform: uppercase;
+  flex: 1;
+}
+
+.bf-menu__item-arrow {
+  font-size: 1.5rem;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: all var(--t-fast) ease;
+}
+
+.bf-menu__item:hover .bf-menu__item-arrow,
+.bf-menu__item.is-active .bf-menu__item-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.bf-menu__item.is-active .bf-menu__item-title {
+  -webkit-text-stroke: 1px var(--bf-off-white);
+  color: transparent;
+}
+
+.bf-menu__collections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1.5rem 3rem;
+  border-top: 1px solid var(--bf-off-white-08);
+}
+
+.bf-menu__collections-label {
+  font-family: var(--font-body);
+  font-size: 0.55rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--bf-off-white-40);
+  margin-bottom: 0.5rem;
+}
+
+.bf-menu__collection-link {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--bf-off-white-70);
+  transition: color var(--t-fast) ease;
+}
+
+.bf-menu__collection-link:hover { color: var(--bf-off-white); }
+
+.bf-menu__social { margin-bottom: 0.8rem; }
+
+.bf-menu__social-link {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bf-off-white-70);
+  transition: color var(--t-fast) ease;
+}
+
+.bf-menu__social-link:hover { color: var(--bf-off-white); }
+
+/* =============================================================
+   17. RESPONSIVE — NEW PAGES
+   ============================================================= */
+
+@media (max-width: 900px) {
+  .bf-page-hero { padding: 5.5rem 1.5rem 2rem; }
+  .bf-page-footer { padding: 1rem 1.5rem; flex-direction: column; gap: 0.4rem; }
+  .bf-page-cta-band { padding: 2rem 1.5rem; flex-direction: column; }
+  .bf-page-cta-btn { width: 100%; justify-content: center; }
+
+  .bf-about-grid { grid-template-columns: 1fr; padding: 2rem 1.5rem; gap: 2.5rem; }
+  .bf-about-statement { padding-right: 0; border-right: none; border-bottom: 1px solid var(--bf-off-white-08); padding-bottom: 2rem; position: static; }
+  .bf-about-story { padding-left: 0; }
+
+  .bf-manifesto-content { padding: 5.5rem 1.5rem 3rem; }
+
+  .bf-contact-grid { grid-template-columns: 1fr; padding: 2rem 1.5rem; }
+  .bf-contact-info { padding-right: 0; border-right: none; border-bottom: 1px solid var(--bf-off-white-08); padding-bottom: 2rem; }
+  .bf-contact-form-wrap { padding-left: 0; padding-top: 2rem; }
+
+  .bf-menu__item-title { font-size: clamp(2rem, 8vw, 3.5rem); }
+  .bf-menu__nav { padding: 1.5rem; }
+  .bf-menu__collections { padding: 1rem 1.5rem; }
+}
+

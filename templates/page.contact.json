@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": {
+      "type": "bled-contact",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}

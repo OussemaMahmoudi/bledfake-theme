@@ -1,0 +1,137 @@
+{% comment %}
+  BLED FAKE — Manifesto Page Section (bled-manifesto.liquid)
+  The underground declaration. Heavy typography, full brutalist layout.
+{% endcomment %}
+
+<section class="bf-page bf-manifesto-page" aria-label="BLED FAKE Manifesto">
+  <div class="bf-grain" aria-hidden="true"></div>
+
+  <!-- Header -->
+  <header class="bf-header" role="banner">
+    <a href="/" class="bf-logo-link" aria-label="BLED FAKE — Home">
+      {%- render 'bled-logo' -%}
+      <span class="visually-hidden">BLED FAKE</span>
+    </a>
+    <div class="bf-nav-right">
+      <button class="bf-nav-btn" data-cart-open aria-label="Open cart">
+        <span>BAG</span>
+        <span class="bf-cart-badge-count bf-cart-count">{{ cart.item_count }}</span>
+      </button>
+      <button class="bf-nav-btn" data-menu-open aria-label="Open menu">
+        <span>MENU</span>
+        <div class="bf-hamburger" aria-hidden="true">
+          <div class="bf-hamburger__line"></div>
+          <div class="bf-hamburger__line"></div>
+        </div>
+      </button>
+    </div>
+  </header>
+
+  <!-- Manifesto Content -->
+  <article class="bf-manifesto-content" itemscope itemtype="https://schema.org/Article">
+
+    <!-- Opening statement — massive typography -->
+    <div class="bf-manifesto-opening" aria-hidden="true">
+      <span class="bf-manifesto-overline">TUNIS // {{ 'now' | date: '%Y' }} // UNDERGROUND</span>
+    </div>
+
+    <h1 class="bf-manifesto-headline" itemprop="headline">
+      WE DON'T<br>HATE TUNISIA.
+    </h1>
+    <h2 class="bf-manifesto-sub-headline">
+      WE HATE <span class="bf-manifesto-em">THE ILLUSION.</span>
+    </h2>
+
+    <!-- Body text in brutalist columns -->
+    <div class="bf-manifesto-body" itemprop="text">
+
+      <div class="bf-manifesto-para bf-manifesto-para--large">
+        This is not a brand story. This is a police report.
+        A document of what happens when a generation refuses to pretend.
+      </div>
+
+      <div class="bf-manifesto-divider"><span>I</span></div>
+
+      <div class="bf-manifesto-para">
+        We grew up watching Tunisia sell itself. To tourism. To foreign investment.
+        To a narrative of stability while the streets told a completely different story.
+        <em>Bled</em> was supposed to mean home. It started to feel like a stage set.
+      </div>
+
+      <div class="bf-manifesto-para">
+        BLED FAKE is the name we gave the gap between the postcard and the pavement.
+        Between the official story and the one your neighbour tells at 2am.
+        We wear that gap. We print it on heavyweight cotton and ship it to your door.
+      </div>
+
+      <div class="bf-manifesto-divider"><span>II</span></div>
+
+      <div class="bf-manifesto-para bf-manifesto-para--pullquote">
+        "The garment is the argument.<br>
+        The wearer is the proof."
+      </div>
+
+      <div class="bf-manifesto-para">
+        Every piece we make is a limited document. We don't restock. We don't dilute.
+        When a drop is gone, it becomes part of the archive — a timestamp on a specific moment
+        in Tunisian underground culture. You either caught it or you didn't.
+      </div>
+
+      <div class="bf-manifesto-divider"><span>III</span></div>
+
+      <div class="bf-manifesto-para">
+        <strong>BLED FAKE</strong> is the confrontation line. Oversized, stencilled, in your face.<br>
+        <strong>BLED HORRA</strong> is the quiet line. Free Tunisia. Raw edges, understated, uncompromising.<br>
+        <strong>COMEBACK TOMORROW</strong> is the endurance line. Built for the long game. Tactical, technical, permanent.
+      </div>
+
+      <div class="bf-manifesto-divider"><span>IV</span></div>
+
+      <div class="bf-manifesto-para">
+        We ship from Tunis. We photograph in Tunis. We pay Tunisian creatives,
+        Tunisian photographers, Tunisian seamstresses.
+        The money stays. The culture stays. The illusion gets exposed.
+      </div>
+
+      <div class="bf-manifesto-para bf-manifesto-para--closing">
+        This is the reality.<br>
+        Enter it.
+      </div>
+
+    </div>
+
+    <!-- Signature -->
+    <div class="bf-manifesto-sig">
+      <span class="bf-manifesto-sig__brand">BLED FAKE</span>
+      <span class="bf-manifesto-sig__loc">TUNIS, TUNISIA</span>
+    </div>
+
+  </article>
+
+  <!-- CTA -->
+  <div class="bf-page-cta-band">
+    <a href="/collections/all" class="bf-page-cta-btn">
+      <span>ENTER THE DROPS</span>
+      <span>→</span>
+    </a>
+    <a href="/pages/about" class="bf-page-cta-btn bf-page-cta-btn--outline">
+      <span>WHO WE ARE</span>
+      <span>→</span>
+    </a>
+  </div>
+
+  <footer class="bf-page-footer">
+    <span>BLED FAKE // TUNIS // {{ 'now' | date: '%Y' }}</span>
+    <span>AUTHENTIC LIMITED GARMENTS</span>
+  </footer>
+
+</section>
+
+{% schema %}
+{
+  "name": "BLED Manifesto",
+  "tag": "section",
+  "settings": [],
+  "presets": [{ "name": "BLED Manifesto Page" }]
+}
+{% endschema %}

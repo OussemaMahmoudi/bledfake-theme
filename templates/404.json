@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": {
+      "type": "bled-404",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}

@@ -10,7 +10,6 @@
   aria-label="Main navigation"
   aria-modal="true"
 >
-  <!-- Grain texture inside menu -->
   <div class="bf-grain" aria-hidden="true"></div>
 
   <!-- Menu header row -->
@@ -20,11 +19,7 @@
       <span class="visually-hidden">BLED FAKE</span>
     </a>
 
-    <button
-      class="bf-menu__close bf-menu-trigger"
-      data-menu-close
-      aria-label="Close navigation menu"
-    >
+    <button class="bf-menu__close" data-menu-close aria-label="Close navigation menu">
       <span class="bf-menu__close-label" aria-hidden="true">CLOSE</span>
       <div class="bf-hamburger" aria-hidden="true">
         <div class="bf-hamburger__line"></div>
@@ -34,47 +29,66 @@
     </button>
   </div>
 
-  <!-- Navigation items — horizontal paper strips -->
+  <!-- Navigation items -->
   <ul class="bf-menu__nav" role="list">
 
     <li>
-      <a href="/collections/all" class="bf-menu__item" aria-label="Store">
-        <span class="bf-menu__item-title">STORE</span>
+      <a href="/collections/all" class="bf-menu__item{% if request.path contains '/collections' %} is-active{% endif %}">
         <span class="bf-menu__item-num" aria-hidden="true">01</span>
+        <span class="bf-menu__item-title">STORE</span>
+        <span class="bf-menu__item-arrow" aria-hidden="true">→</span>
       </a>
     </li>
 
     <li>
-      <a href="/pages/about" class="bf-menu__item" aria-label="About">
-        <span class="bf-menu__item-title">ABOUT</span>
+      <a href="/pages/about" class="bf-menu__item{% if request.page_title == 'About' %} is-active{% endif %}">
         <span class="bf-menu__item-num" aria-hidden="true">02</span>
+        <span class="bf-menu__item-title">ABOUT</span>
+        <span class="bf-menu__item-arrow" aria-hidden="true">→</span>
       </a>
     </li>
 
     <li>
-      <a href="/pages/manifesto" class="bf-menu__item" aria-label="Manifesto">
-        <span class="bf-menu__item-title">MANIFESTO</span>
+      <a href="/pages/manifesto" class="bf-menu__item{% if request.page_title == 'Manifesto' %} is-active{% endif %}">
         <span class="bf-menu__item-num" aria-hidden="true">03</span>
+        <span class="bf-menu__item-title">MANIFESTO</span>
+        <span class="bf-menu__item-arrow" aria-hidden="true">→</span>
       </a>
     </li>
 
     <li>
-      <a href="/pages/contact" class="bf-menu__item" aria-label="Contact">
-        <span class="bf-menu__item-title">CONTACT</span>
+      <a href="/pages/contact" class="bf-menu__item{% if request.page_title == 'Contact' %} is-active{% endif %}">
         <span class="bf-menu__item-num" aria-hidden="true">04</span>
+        <span class="bf-menu__item-title">CONTACT</span>
+        <span class="bf-menu__item-arrow" aria-hidden="true">→</span>
       </a>
     </li>
 
   </ul>
 
-  <!-- Menu footer bar -->
-  <div class="bf-menu__footer" aria-hidden="true">
+  <!-- Collection quick-links -->
+  <div class="bf-menu__collections">
+    <span class="bf-menu__collections-label">DROPS</span>
+    {% for col in collections %}
+      {% unless col.handle == 'frontpage' or col.handle == 'all' %}
+        {% if col.all_products_count > 0 or col.products_count > 0 %}
+          <a href="{{ col.url }}" class="bf-menu__collection-link">
+            {{ col.title | upcase }} →
+          </a>
+        {% endif %}
+      {% endunless %}
+    {% endfor %}
+  </div>
+
+  <!-- Menu footer -->
+  <div class="bf-menu__footer">
+    <div class="bf-menu__social">
+      <a href="https://instagram.com/bledfake" target="_blank" rel="noopener" class="bf-menu__social-link">INSTAGRAM →</a>
+    </div>
     <p class="bf-menu__tagline">
-      BLED FAKE<br>
-      BLED BLOCKS<br>
-      TUNISIA
+      WE DON'T HATE TUNISIA.<br>WE HATE THE ILLUSION.
     </p>
-    <p class="bf-label" style="opacity:0.2; font-size:0.55rem">
+    <p style="font-size:0.55rem; opacity:0.2; letter-spacing:0.1em;">
       © {{ 'now' | date: '%Y' }} BLED FAKE
     </p>
   </div>

@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": {
+      "type": "bled-manifesto",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}

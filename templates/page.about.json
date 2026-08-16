@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": {
+      "type": "bled-about",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}
