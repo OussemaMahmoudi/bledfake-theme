@@ -96,22 +96,32 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
    3. MENU OVERLAY
    ================================================================ */
 
-const menuEl  = $('#bf-main-menu');
-// Fix: layout uses id="bf-overlay-backdrop"
-const backdrop = $('#bf-overlay-backdrop') || $('#bf-backdrop');
+function getMenuEl() {
+  return $('#bf-main-menu') || $('#bf-menu') || $('.bf-menu');
+}
+
+function getBackdropEl() {
+  return $('#bf-overlay-backdrop') || $('#bf-backdrop') || $('.bf-overlay-backdrop');
+}
+
+function getCartDrawerEl() {
+  return $('#bf-cart-drawer') || $('.bf-cart-drawer');
+}
 
 function openMenu() {
-  if (!menuEl) return;
-  menuEl.classList.add('is-open');
+  const menu = getMenuEl();
+  const backdrop = getBackdropEl();
+  if (menu) menu.classList.add('is-open');
   if (backdrop) backdrop.classList.add('is-active');
   document.body.style.overflow = 'hidden';
 }
 
 function closeMenu() {
-  if (!menuEl) return;
-  menuEl.classList.remove('is-open');
-  const cartEl = $('#bf-cart-drawer');
-  if (backdrop && (!cartEl || !cartEl.classList.contains('is-open'))) {
+  const menu = getMenuEl();
+  const backdrop = getBackdropEl();
+  const cart = getCartDrawerEl();
+  if (menu) menu.classList.remove('is-open');
+  if (backdrop && (!cart || !cart.classList.contains('is-open'))) {
     backdrop.classList.remove('is-active');
   }
   document.body.style.overflow = '';
@@ -121,20 +131,25 @@ function closeMenu() {
    4. AJAX CART (Shopify: /cart.js, /cart/add.js, /cart/change.js)
    ================================================================ */
 
-const cartDrawer = $('#bf-cart-drawer');
-
 function openCart() {
-  if (!cartDrawer) return;
-  cartDrawer.classList.add('is-open');
+  const cart = getCartDrawerEl();
+  const backdrop = getBackdropEl();
+  if (!cart) {
+    window.location.href = '/cart';
+    return;
+  }
+  cart.classList.add('is-open');
   if (backdrop) backdrop.classList.add('is-active');
   document.body.style.overflow = 'hidden';
   fetchAndRenderCart();
 }
 
 function closeCart() {
-  if (!cartDrawer) return;
-  cartDrawer.classList.remove('is-open');
-  if (backdrop && (!menuEl || !menuEl.classList.contains('is-open'))) {
+  const cart = getCartDrawerEl();
+  const backdrop = getBackdropEl();
+  const menu = getMenuEl();
+  if (cart) cart.classList.remove('is-open');
+  if (backdrop && (!menu || !menu.classList.contains('is-open'))) {
     backdrop.classList.remove('is-active');
   }
   document.body.style.overflow = '';
@@ -534,15 +549,73 @@ window.addEventListener('DOMContentLoaded', () => {
     updateCartCountBadge(window.BF.cartCount);
   }
 
-  // ── Menu ──
-  $$('[data-menu-open]').forEach(btn => btn.addEventListener('click', openMenu));
-  $$('[data-menu-close]').forEach(btn => btn.addEventListener('click', closeMenu));
+  // ── Global click delegations (Menu, Cart, Backdrop, Buy Now) ──
+  document.addEventListener('click', async (e) => {
+    // Menu open / close
+    if (e.target.closest('[data-menu-open], #menu-open-btn, #menu-open-btn-store')) {
+      e.preventDefault();
+      openMenu();
+      return;
+    }
+    if (e.target.closest('[data-menu-close], #menu-close-btn')) {
+      e.preventDefault();
+      closeMenu();
+      return;
+    }
 
-  // ── Cart drawer ──
-  $$('[data-cart-open]').forEach(btn => btn.addEventListener('click', openCart));
-  $$('[data-cart-close]').forEach(btn => btn.addEventListener('click', closeCart));
+    // Cart drawer open / close
+    if (e.target.closest('[data-cart-open], #cart-open-btn')) {
+      e.preventDefault();
+      openCart();
+      return;
+    }
+    if (e.target.closest('[data-cart-close], #cart-close-btn')) {
+      e.preventDefault();
+      closeCart();
+      return;
+    }
 
-  if (backdrop) backdrop.addEventListener('click', () => { closeMenu(); closeCart(); });
+    // Backdrop click
+    if (e.target.closest('#bf-overlay-backdrop, #bf-backdrop, .bf-overlay-backdrop')) {
+      closeMenu();
+      closeCart();
+      return;
+    }
+
+    // Buy It Now CTA
+    const buyBtn = e.target.closest('#buy-now-btn, .bf-buy-now-btn');
+    if (buyBtn) {
+      e.preventDefault();
+      const form = buyBtn.closest('form') || $('#bf-add-form') || $('.bf-add-cart-form');
+      const idInput = form ? form.querySelector('[name="id"]') : $('#selected-variant-id');
+      const variantId = idInput ? idInput.value : null;
+
+      const textSpan = buyBtn.querySelector('#buy-now-text') || buyBtn;
+
+      try {
+        if (textSpan) textSpan.textContent = 'PROCEEDING...';
+        buyBtn.disabled = true;
+
+        if (variantId) {
+          await fetch('/cart/add.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+            body: JSON.stringify({ id: parseInt(variantId, 10), quantity: 1 })
+          });
+        }
+
+        const checkoutUrl = (window.BF && window.BF.checkoutUrl) || '/checkout';
+        window.location.href = checkoutUrl;
+
+      } catch (err) {
+        console.error('[BLED Buy Now]', err);
+        if (textSpan) textSpan.textContent = 'BUY IT NOW';
+        buyBtn.disabled = false;
+        window.location.href = '/checkout';
+      }
+    }
+  });
+
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') { closeMenu(); closeCart(); }
   });
@@ -566,40 +639,6 @@ window.addEventListener('DOMContentLoaded', () => {
     } finally {
       if (textSpan) textSpan.textContent = 'ADD TO CART';
       if (btn) btn.disabled = false;
-    }
-  });
-
-  // ── Buy It Now ──
-  document.addEventListener('click', async (e) => {
-    const buyBtn = e.target.closest('#buy-now-btn, .bf-buy-now-btn');
-    if (!buyBtn) return;
-    e.preventDefault();
-
-    const form    = buyBtn.closest('form') || $('#bf-add-form');
-    const idInput = form ? form.querySelector('[name="id"]') : $('#selected-variant-id');
-    if (!idInput || !idInput.value) return;
-
-    const textSpan = buyBtn.querySelector('#buy-now-text') || buyBtn;
-
-    try {
-      if (textSpan) textSpan.textContent = 'PROCEEDING...';
-      buyBtn.disabled = true;
-
-      await fetch('/cart/add.js', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
-        body: JSON.stringify({ id: parseInt(idInput.value, 10), quantity: 1 })
-      });
-
-      const checkoutUrl = (window.BF && window.BF.checkoutUrl) || '/checkout';
-      window.location.href = checkoutUrl;
-
-    } catch (err) {
-      console.error('[BLED Buy Now]', err);
-      if (textSpan) textSpan.textContent = 'BUY IT NOW';
-      buyBtn.disabled = false;
-      // Still navigate even on non-fatal errors
-      window.location.href = '/checkout';
     }
   });
 

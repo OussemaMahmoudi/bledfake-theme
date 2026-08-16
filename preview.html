@@ -1078,6 +1078,89 @@ ul, ol { list-style: none; }
   </footer>
 </section>
 
+<!-- ================================================================
+     GLOBAL: CART DRAWER (Shopping Bag Modal)
+     ================================================================ -->
+<aside class="bf-cart-drawer" id="bf-cart-drawer" role="dialog" aria-label="Shopping bag" aria-modal="true">
+  <div class="bf-cart-drawer__header">
+    <div>
+      <h2 class="bf-cart-drawer__title">BAG</h2>
+      <p class="bf-cart-drawer__count" id="bf-cart-count-label" aria-live="polite">0 ITEMS</p>
+    </div>
+    <button class="bf-cart-drawer__close" id="cart-close-btn" onclick="closeCart()" aria-label="Close bag">
+      CLOSE ✕
+    </button>
+  </div>
+
+  <div class="bf-cart-drawer__body" id="bf-cart-body" aria-live="polite">
+    <div class="bf-cart-empty">YOUR BAG IS EMPTY</div>
+  </div>
+
+  <div class="bf-cart-drawer__footer">
+    <div class="bf-cart-total">
+      <span class="bf-cart-total__label">SUBTOTAL</span>
+      <span class="bf-cart-total__price" id="bf-cart-total">0.00 TND</span>
+    </div>
+
+    <button type="button" class="bf-checkout-btn" id="drawer-checkout-btn" onclick="closeCart(); showCheckout();" aria-label="Proceed to checkout">
+      CHECKOUT →
+    </button>
+  </div>
+</aside>
+
+<!-- ================================================================
+     GLOBAL: MENU OVERLAY
+     ================================================================ -->
+<nav class="bf-menu" id="bf-menu" role="dialog" aria-label="Site menu" aria-modal="true">
+  <div class="bf-menu__grain" aria-hidden="true"></div>
+  <div class="bf-menu__top">
+    <a href="#" class="bf-logo-link" onclick="closeMenu(); showLanding(event);">
+      <img src="img/Fichier 21.png" alt="BLED FAKE" class="bf-logo-img">
+    </a>
+    <button class="bf-menu__close" id="menu-close-btn" onclick="closeMenu()" aria-label="Close menu">
+      ✕
+    </button>
+  </div>
+
+  <div class="bf-menu__body">
+    <div class="bf-menu__nav">
+      <a href="#" class="bf-menu__link" onclick="closeMenu(); showCatalog(event, 'all');">
+        <span class="bf-menu__link-num">01</span>
+        <span class="bf-menu__link-text">ALL DROPS</span>
+        <span class="bf-menu__link-arrow">→</span>
+      </a>
+      <a href="#" class="bf-menu__link" onclick="closeMenu(); showCatalog(event, 'bledfake');">
+        <span class="bf-menu__link-num">02</span>
+        <span class="bf-menu__link-text">BLED FAKE</span>
+        <span class="bf-menu__link-arrow">→</span>
+      </a>
+      <a href="#" class="bf-menu__link" onclick="closeMenu(); showCatalog(event, 'bledhorra');">
+        <span class="bf-menu__link-num">03</span>
+        <span class="bf-menu__link-text">BLED HORRA</span>
+        <span class="bf-menu__link-arrow">→</span>
+      </a>
+      <a href="#" class="bf-menu__link" onclick="closeMenu(); showAbout(event);">
+        <span class="bf-menu__link-num">04</span>
+        <span class="bf-menu__link-text">ABOUT</span>
+        <span class="bf-menu__link-arrow">→</span>
+      </a>
+      <a href="#" class="bf-menu__link" onclick="closeMenu(); showManifesto(event);">
+        <span class="bf-menu__link-num">05</span>
+        <span class="bf-menu__link-text">MANIFESTO</span>
+        <span class="bf-menu__link-arrow">→</span>
+      </a>
+      <a href="#" class="bf-menu__link" onclick="closeMenu(); showContact(event);">
+        <span class="bf-menu__link-num">06</span>
+        <span class="bf-menu__link-text">CONTACT</span>
+        <span class="bf-menu__link-arrow">→</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- Shared Backdrop -->
+<div class="bf-overlay-backdrop" id="bf-backdrop" onclick="closeMenu(); closeCart();" aria-hidden="true"></div>
+
 <script>
 'use strict';
 
@@ -1216,40 +1299,78 @@ function showLanding(e) {
 })();
 
 // ── Menu Overlay ──
-const menuEl = document.getElementById('bf-main-menu');
-const backdrop = document.getElementById('bf-backdrop');
-function openMenu()  { menuEl.classList.add('is-open'); backdrop.classList.add('is-active'); document.body.style.overflow='hidden'; }
-function closeMenu() { menuEl.classList.remove('is-open'); if(!document.getElementById('bf-cart-drawer').classList.contains('is-open')) backdrop.classList.remove('is-active'); document.body.style.overflow=''; }
-document.getElementById('menu-open-btn').addEventListener('click', openMenu);
-document.getElementById('menu-open-btn-store').addEventListener('click', openMenu);
-document.getElementById('menu-close-btn').addEventListener('click', closeMenu);
-document.getElementById('menu-store-link').addEventListener('click', e => { e.preventDefault(); closeMenu(); showStore(); });
+function getMenu() { return document.getElementById('bf-main-menu') || document.getElementById('bf-menu'); }
+function getBackdrop() { return document.getElementById('bf-backdrop') || document.getElementById('bf-overlay-backdrop'); }
+function getCartDrawer() { return document.getElementById('bf-cart-drawer'); }
+
+function openMenu() {
+  const m = getMenu();
+  const b = getBackdrop();
+  if (m) m.classList.add('is-open');
+  if (b) b.classList.add('is-active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeMenu() {
+  const m = getMenu();
+  const b = getBackdrop();
+  const c = getCartDrawer();
+  if (m) m.classList.remove('is-open');
+  if (b && (!c || !c.classList.contains('is-open'))) b.classList.remove('is-active');
+  document.body.style.overflow = '';
+}
 
 // ── Cart Drawer ──
-const cartDrawer = document.getElementById('bf-cart-drawer');
 let cartItems = [];
-function openCart()  { cartDrawer.classList.add('is-open'); backdrop.classList.add('is-active'); document.body.style.overflow='hidden'; renderCart(); }
-function closeCart() { cartDrawer.classList.remove('is-open'); if(!menuEl.classList.contains('is-open')) backdrop.classList.remove('is-active'); document.body.style.overflow=''; }
-document.getElementById('cart-open-btn').addEventListener('click', openCart);
-document.getElementById('cart-close-btn').addEventListener('click', closeCart);
-backdrop.addEventListener('click', () => { closeMenu(); closeCart(); });
-document.addEventListener('keydown', e => { if(e.key==='Escape'){ closeMenu(); closeCart(); } });
+
+function openCart() {
+  const c = getCartDrawer();
+  const b = getBackdrop();
+  if (c) c.classList.add('is-open');
+  if (b) b.classList.add('is-active');
+  document.body.style.overflow = 'hidden';
+  renderCart();
+}
+
+function closeCart() {
+  const c = getCartDrawer();
+  const b = getBackdrop();
+  const m = getMenu();
+  if (c) c.classList.remove('is-open');
+  if (b && (!m || !m.classList.contains('is-open'))) b.classList.remove('is-active');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeMenu();
+    closeCart();
+  }
+});
 
 function renderCart() {
-  const body  = document.getElementById('bf-cart-body');
+  const body = document.getElementById('bf-cart-body');
   const total = document.getElementById('bf-cart-total');
-  const badge = document.getElementById('cart-badge');
   const count = document.getElementById('bf-cart-count-label');
 
+  const n = cartItems.reduce((s, i) => s + i.qty, 0);
+  const subtotal = cartItems.reduce((s, i) => s + i.price * i.qty, 0);
+
+  // Update badge count across all headers
+  document.querySelectorAll('.bf-cart-count, .bf-cart-badge-count, #cart-badge, #catalog-cart-badge').forEach(b => {
+    b.textContent = String(n);
+  });
+
+  if (count) count.textContent = `${n} ITEM${n !== 1 ? 'S' : ''}`;
+  if (total) total.textContent = subtotal.toFixed(2) + ' TND';
+
+  if (!body) return;
+
   if (cartItems.length === 0) {
-    body.innerHTML = '<div class="bf-cart-empty">CART IS EMPTY</div>';
-    if(total) total.textContent = '0.00 TND';
-    if(badge) badge.textContent = '0';
-    if(count) count.textContent = '0 ITEMS';
+    body.innerHTML = '<div class="bf-cart-empty">YOUR BAG IS EMPTY</div>';
     return;
   }
 
-  const subtotal = cartItems.reduce((s,i) => s + i.price * i.qty, 0);
   body.innerHTML = cartItems.map((item, idx) => `
     <div class="bf-cart-item">
       <div class="bf-cart-item__img">
@@ -1269,14 +1390,10 @@ function renderCart() {
       </div>
     </div>
   `).join('');
-
-  if(total) total.textContent = subtotal.toFixed(2) + ' TND';
-  const n = cartItems.reduce((s,i) => s + i.qty, 0);
-  if(badge) badge.textContent = String(n);
-  if(count) count.textContent = `${n} ITEM${n!==1?'S':''}`;
 }
 
 function changeQty(idx, delta) {
+  if (!cartItems[idx]) return;
   cartItems[idx].qty += delta;
   if (cartItems[idx].qty <= 0) cartItems.splice(idx, 1);
   renderCart();
