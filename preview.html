@@ -623,11 +623,16 @@ ul, ol { list-style: none; }
     </button>
 
     <div class="bf-product-stage-grid" id="product-display">
-      <!-- Left: Floating Garment Stage with White Ambient Glow -->
+      <!-- Left: Floating Garment Stage with White Ambient Glow & Multi-Angle Switcher -->
       <div class="bf-garment-stage">
         <div class="bf-garment-glow" aria-hidden="true"></div>
         <div class="bf-garment-artwork" id="product-art-container">
           <!-- Dynamic Vector Apparel Silhouette -->
+        </div>
+        <!-- Angle switcher -->
+        <div class="bf-view-switcher" id="bf-view-switcher" role="tablist">
+          <button type="button" class="bf-view-btn is-active" data-angle="front">FRONT</button>
+          <button type="button" class="bf-view-btn" data-angle="back">BACK</button>
         </div>
       </div>
 
@@ -814,70 +819,136 @@ function changeQty(idx, delta) {
   renderCart();
 }
 
-// ── Vector Apparel Silhouettes ──
+// ── Vector Apparel Silhouettes (Front & Back Views) ──
 const productSVGs = {
-  hoodie: `
-    <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="300">
-      <polygon points="100,55 170,15 240,55 315,115 285,190 245,160 245,355 95,355 95,160 55,190 25,115" fill="#121210" stroke="#2c2c28" stroke-width="2"/>
-      <path d="M 125,50 C 125,10 215,10 215,50 C 215,85 125,85 125,50 Z" fill="#090908" stroke="#333330" stroke-width="2"/>
-      <line x1="150" y1="80" x2="148" y2="135" stroke="#F1EEE6" stroke-width="2.5" opacity="0.85"/>
-      <line x1="190" y1="80" x2="192" y2="140" stroke="#F1EEE6" stroke-width="2.5" opacity="0.85"/>
-      <polygon points="120,240 220,240 235,320 105,320" fill="#181816" stroke="#2c2c28" stroke-width="1.5"/>
-      <rect x="95" y="340" width="150" height="15" fill="#151513" stroke="#2c2c28" stroke-width="1"/>
-      <text x="170" y="150" font-family="'Bebas Neue', Impact" font-size="34" fill="#F1EEE6" text-anchor="middle" letter-spacing="2">BLED FAKE</text>
-      <text x="170" y="172" font-family="'Space Grotesk', monospace" font-size="9" fill="#F1EEE6" text-anchor="middle" letter-spacing="4" opacity="0.7">TUNISIAN REBELLION</text>
-    </svg>`,
+  hoodie: {
+    front: `
+      <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="300">
+        <polygon points="100,55 170,15 240,55 315,115 285,190 245,160 245,355 95,355 95,160 55,190 25,115" fill="#121210" stroke="#2c2c28" stroke-width="2"/>
+        <path d="M 125,50 C 125,10 215,10 215,50 C 215,85 125,85 125,50 Z" fill="#090908" stroke="#333330" stroke-width="2"/>
+        <line x1="150" y1="80" x2="148" y2="135" stroke="#F1EEE6" stroke-width="2.5" opacity="0.85"/>
+        <line x1="190" y1="80" x2="192" y2="140" stroke="#F1EEE6" stroke-width="2.5" opacity="0.85"/>
+        <polygon points="120,240 220,240 235,320 105,320" fill="#181816" stroke="#2c2c28" stroke-width="1.5"/>
+        <rect x="95" y="340" width="150" height="15" fill="#151513" stroke="#2c2c28" stroke-width="1"/>
+        <text x="170" y="150" font-family="'Bebas Neue', Impact" font-size="34" fill="#F1EEE6" text-anchor="middle" letter-spacing="2">BLED FAKE</text>
+        <text x="170" y="172" font-family="'Space Grotesk', monospace" font-size="9" fill="#F1EEE6" text-anchor="middle" letter-spacing="4" opacity="0.7">TUNISIAN REBELLION</text>
+      </svg>`,
+    back: `
+      <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="300">
+        <polygon points="100,55 170,15 240,55 315,115 285,190 245,160 245,355 95,355 95,160 55,190 25,115" fill="#121210" stroke="#2c2c28" stroke-width="2"/>
+        <path d="M 115,35 C 115,5 225,5 225,35 C 225,95 115,95 115,35 Z" fill="#090908" stroke="#333330" stroke-width="2"/>
+        <rect x="95" y="340" width="150" height="15" fill="#151513" stroke="#2c2c28" stroke-width="1"/>
+        <!-- Massive Back Graphic: BLED BLOCKS MANIFESTO -->
+        <rect x="110" y="110" width="120" height="180" fill="#080807" stroke="#F1EEE6" stroke-width="2"/>
+        <text x="170" y="155" font-family="'Bebas Neue', Impact" font-size="44" fill="#F1EEE6" text-anchor="middle" letter-spacing="4">WE HATE</text>
+        <text x="170" y="195" font-family="'Bebas Neue', Impact" font-size="36" fill="#050505" text-anchor="middle" letter-spacing="2">ILLUSION</text>
+        <rect x="115" y="165" width="110" height="38" fill="#F1EEE6"/>
+        <text x="170" y="193" font-family="'Bebas Neue', Impact" font-size="32" fill="#050505" text-anchor="middle" letter-spacing="2">THE ILLUSION</text>
+        <text x="170" y="240" font-family="'Space Grotesk', monospace" font-size="8" fill="#F1EEE6" text-anchor="middle" letter-spacing="3" opacity="0.8">001 // TUNIS // 2025</text>
+      </svg>`
+  },
 
-  oversizedTee: `
-    <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="300">
-      <polygon points="105,45 135,70 205,70 235,45 325,100 290,175 250,155 250,360 90,360 90,155 50,175 15,100" fill="#0e0e0c" stroke="#282824" stroke-width="2"/>
-      <path d="M 135,70 Q 170,95 205,70" fill="none" stroke="#F1EEE6" stroke-width="2" opacity="0.6"/>
-      <rect x="110" y="140" width="120" height="42" fill="#1a1a16" stroke="#F1EEE6" stroke-width="1.5"/>
-      <text x="170" y="170" font-family="'Bebas Neue', Impact" font-size="30" fill="#F1EEE6" text-anchor="middle" letter-spacing="3">BLED HORRA</text>
-      <rect x="115" y="195" width="110" height="12" fill="#F1EEE6" opacity="0.85"/>
-    </svg>`,
+  oversizedTee: {
+    front: `
+      <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="300">
+        <polygon points="105,45 135,70 205,70 235,45 325,100 290,175 250,155 250,360 90,360 90,155 50,175 15,100" fill="#0e0e0c" stroke="#282824" stroke-width="2"/>
+        <path d="M 135,70 Q 170,95 205,70" fill="none" stroke="#F1EEE6" stroke-width="2" opacity="0.6"/>
+        <rect x="110" y="140" width="120" height="42" fill="#1a1a16" stroke="#F1EEE6" stroke-width="1.5"/>
+        <text x="170" y="170" font-family="'Bebas Neue', Impact" font-size="30" fill="#F1EEE6" text-anchor="middle" letter-spacing="3">BLED HORRA</text>
+        <rect x="115" y="195" width="110" height="12" fill="#F1EEE6" opacity="0.85"/>
+      </svg>`,
+    back: `
+      <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="300">
+        <polygon points="105,45 135,70 205,70 235,45 325,100 290,175 250,155 250,360 90,360 90,155 50,175 15,100" fill="#0e0e0c" stroke="#282824" stroke-width="2"/>
+        <path d="M 135,60 Q 170,75 205,60" fill="none" stroke="#333330" stroke-width="2"/>
+        <!-- Huge Back Stencil Print -->
+        <text x="170" y="160" font-family="'Bebas Neue', Impact" font-size="54" fill="#F1EEE6" text-anchor="middle" letter-spacing="4">HORRA</text>
+        <text x="170" y="210" font-family="'Bebas Neue', Impact" font-size="54" fill="#F1EEE6" text-anchor="middle" letter-spacing="4">OVERSIZED</text>
+        <rect x="110" y="235" width="120" height="5" fill="#F1EEE6" opacity="0.7"/>
+      </svg>`
+  },
 
-  cargoVest: `
-    <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="300">
-      <polygon points="110,40 170,90 230,40 280,85 260,165 245,150 245,355 95,355 95,150 80,165 60,85" fill="#161613" stroke="#33332c" stroke-width="2"/>
-      <line x1="170" y1="90" x2="170" y2="355" stroke="#F1EEE6" stroke-width="3" opacity="0.8"/>
-      <rect x="110" y="125" width="45" height="50" fill="#1f1f1a" stroke="#F1EEE6" stroke-width="1.2"/>
-      <rect x="185" y="125" width="45" height="50" fill="#1f1f1a" stroke="#F1EEE6" stroke-width="1.2"/>
-      <rect x="105" y="200" width="55" height="75" fill="#1c1c18" stroke="#33332c" stroke-width="1.5"/>
-      <rect x="180" y="200" width="55" height="75" fill="#1c1c18" stroke="#33332c" stroke-width="1.5"/>
-      <rect x="105" y="290" width="130" height="14" fill="#0a0a09" stroke="#F1EEE6" stroke-width="1"/>
-      <text x="170" y="301" font-family="'Space Grotesk', monospace" font-size="8" fill="#F1EEE6" text-anchor="middle" letter-spacing="2">COMEBACK TOMORROW</text>
-    </svg>`,
+  cargoVest: {
+    front: `
+      <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="300">
+        <polygon points="110,40 170,90 230,40 280,85 260,165 245,150 245,355 95,355 95,150 80,165 60,85" fill="#161613" stroke="#33332c" stroke-width="2"/>
+        <line x1="170" y1="90" x2="170" y2="355" stroke="#F1EEE6" stroke-width="3" opacity="0.8"/>
+        <rect x="110" y="125" width="45" height="50" fill="#1f1f1a" stroke="#F1EEE6" stroke-width="1.2"/>
+        <rect x="185" y="125" width="45" height="50" fill="#1f1f1a" stroke="#F1EEE6" stroke-width="1.2"/>
+        <rect x="105" y="200" width="55" height="75" fill="#1c1c18" stroke="#33332c" stroke-width="1.5"/>
+        <rect x="180" y="200" width="55" height="75" fill="#1c1c18" stroke="#33332c" stroke-width="1.5"/>
+        <rect x="105" y="290" width="130" height="14" fill="#0a0a09" stroke="#F1EEE6" stroke-width="1"/>
+        <text x="170" y="301" font-family="'Space Grotesk', monospace" font-size="8" fill="#F1EEE6" text-anchor="middle" letter-spacing="2">COMEBACK TOMORROW</text>
+      </svg>`,
+    back: `
+      <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="300">
+        <polygon points="110,40 170,90 230,40 280,85 260,165 245,150 245,355 95,355 95,150 80,165 60,85" fill="#161613" stroke="#33332c" stroke-width="2"/>
+        <!-- Tactical back harness & holster lines -->
+        <rect x="105" y="120" width="130" height="150" fill="#11110e" stroke="#33332c" stroke-width="2"/>
+        <line x1="105" y1="120" x2="235" y2="270" stroke="#F1EEE6" stroke-width="1.5" opacity="0.6"/>
+        <line x1="235" y1="120" x2="105" y2="270" stroke="#F1EEE6" stroke-width="1.5" opacity="0.6"/>
+        <text x="170" y="205" font-family="'Bebas Neue', Impact" font-size="28" fill="#F1EEE6" text-anchor="middle" letter-spacing="3">TACTICAL RIG</text>
+      </svg>`
+  },
 
-  cap: `
-    <svg viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" width="290">
-      <path d="M 70,210 C 70,80 270,80 270,210 Z" fill="#121210" stroke="#2d2d28" stroke-width="2"/>
-      <path d="M 50,210 Q 170,255 290,210 Q 170,230 50,210 Z" fill="#181815" stroke="#F1EEE6" stroke-width="1.5"/>
-      <path d="M 170,85 L 170,210" stroke="#252520" stroke-width="2"/>
-      <ellipse cx="170" cy="85" rx="8" ry="5" fill="#F1EEE6"/>
-      <rect x="135" y="130" width="70" height="38" fill="#F1EEE6"/>
-      <text x="170" y="158" font-family="'Bebas Neue', Impact" font-size="28" fill="#050505" text-anchor="middle" letter-spacing="2">BF</text>
-    </svg>`,
+  cap: {
+    front: `
+      <svg viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" width="290">
+        <path d="M 70,210 C 70,80 270,80 270,210 Z" fill="#121210" stroke="#2d2d28" stroke-width="2"/>
+        <path d="M 50,210 Q 170,255 290,210 Q 170,230 50,210 Z" fill="#181815" stroke="#F1EEE6" stroke-width="1.5"/>
+        <path d="M 170,85 L 170,210" stroke="#252520" stroke-width="2"/>
+        <ellipse cx="170" cy="85" rx="8" ry="5" fill="#F1EEE6"/>
+        <rect x="135" y="130" width="70" height="38" fill="#F1EEE6"/>
+        <text x="170" y="158" font-family="'Bebas Neue', Impact" font-size="28" fill="#050505" text-anchor="middle" letter-spacing="2">BF</text>
+      </svg>`,
+    back: `
+      <svg viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" width="290">
+        <path d="M 70,210 C 70,80 270,80 270,210 Z" fill="#121210" stroke="#2d2d28" stroke-width="2"/>
+        <ellipse cx="170" cy="85" rx="8" ry="5" fill="#F1EEE6"/>
+        <!-- Arch strap & metal buckle -->
+        <path d="M 120,210 Q 170,160 220,210" fill="none" stroke="#050505" stroke-width="14"/>
+        <rect x="135" y="195" width="70" height="12" fill="#F1EEE6" stroke="#222"/>
+        <text x="170" y="204" font-family="'Space Grotesk', monospace" font-size="7" fill="#050505" text-anchor="middle">BLED FAKE</text>
+      </svg>`
+  },
 
-  heavyweightTee: `
-    <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="300">
-      <polygon points="105,45 135,70 205,70 235,45 325,100 290,175 250,155 250,360 90,360 90,155 50,175 15,100" fill="#141412" stroke="#33332e" stroke-width="2"/>
-      <path d="M 135,70 Q 170,95 205,70" fill="none" stroke="#3a3a34" stroke-width="3"/>
-      <polygon points="120,130 220,130 205,240 135,240" fill="#090908" stroke="#F1EEE6" stroke-width="1.5"/>
-      <text x="170" y="175" font-family="'Bebas Neue', Impact" font-size="34" fill="#F1EEE6" text-anchor="middle" letter-spacing="3">HORRA</text>
-      <text x="170" y="198" font-family="'Space Grotesk', monospace" font-size="8" fill="#F1EEE6" text-anchor="middle" letter-spacing="3" opacity="0.8">EDITION 005</text>
-    </svg>`,
+  heavyweightTee: {
+    front: `
+      <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="300">
+        <polygon points="105,45 135,70 205,70 235,45 325,100 290,175 250,155 250,360 90,360 90,155 50,175 15,100" fill="#141412" stroke="#33332e" stroke-width="2"/>
+        <path d="M 135,70 Q 170,95 205,70" fill="none" stroke="#3a3a34" stroke-width="3"/>
+        <polygon points="120,130 220,130 205,240 135,240" fill="#090908" stroke="#F1EEE6" stroke-width="1.5"/>
+        <text x="170" y="175" font-family="'Bebas Neue', Impact" font-size="34" fill="#F1EEE6" text-anchor="middle" letter-spacing="3">HORRA</text>
+        <text x="170" y="198" font-family="'Space Grotesk', monospace" font-size="8" fill="#F1EEE6" text-anchor="middle" letter-spacing="3" opacity="0.8">EDITION 005</text>
+      </svg>`,
+    back: `
+      <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" width="300">
+        <polygon points="105,45 135,70 205,70 235,45 325,100 290,175 250,155 250,360 90,360 90,155 50,175 15,100" fill="#141412" stroke="#33332e" stroke-width="2"/>
+        <path d="M 135,60 Q 170,75 205,60" fill="none" stroke="#333330" stroke-width="2"/>
+        <text x="170" y="180" font-family="'Bebas Neue', Impact" font-size="46" fill="#F1EEE6" text-anchor="middle" letter-spacing="4">HEAVYWEIGHT</text>
+      </svg>`
+  },
 
-  bag: `
-    <svg viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" width="280">
-      <rect x="75" y="110" width="190" height="150" rx="12" fill="#131310" stroke="#33332c" stroke-width="2"/>
-      <rect x="90" y="150" width="160" height="90" rx="6" fill="#1c1c18" stroke="#F1EEE6" stroke-width="1.5"/>
-      <line x1="90" y1="170" x2="250" y2="170" stroke="#F1EEE6" stroke-width="2" opacity="0.6"/>
-      <path d="M 50,40 Q 170,110 290,40" fill="none" stroke="#252520" stroke-width="16"/>
-      <path d="M 50,40 Q 170,110 290,40" fill="none" stroke="#F1EEE6" stroke-width="2" opacity="0.7"/>
-      <rect x="145" y="130" width="50" height="16" fill="#050505" stroke="#F1EEE6" stroke-width="1.5"/>
-      <text x="170" y="215" font-family="'Bebas Neue', Impact" font-size="20" fill="#F1EEE6" text-anchor="middle" letter-spacing="3">COMEBACK</text>
-    </svg>`
+  bag: {
+    front: `
+      <svg viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" width="280">
+        <rect x="75" y="110" width="190" height="150" rx="12" fill="#131310" stroke="#33332c" stroke-width="2"/>
+        <rect x="90" y="150" width="160" height="90" rx="6" fill="#1c1c18" stroke="#F1EEE6" stroke-width="1.5"/>
+        <line x1="90" y1="170" x2="250" y2="170" stroke="#F1EEE6" stroke-width="2" opacity="0.6"/>
+        <path d="M 50,40 Q 170,110 290,40" fill="none" stroke="#252520" stroke-width="16"/>
+        <path d="M 50,40 Q 170,110 290,40" fill="none" stroke="#F1EEE6" stroke-width="2" opacity="0.7"/>
+        <rect x="145" y="130" width="50" height="16" fill="#050505" stroke="#F1EEE6" stroke-width="1.5"/>
+        <text x="170" y="215" font-family="'Bebas Neue', Impact" font-size="20" fill="#F1EEE6" text-anchor="middle" letter-spacing="3">COMEBACK</text>
+      </svg>`,
+    back: `
+      <svg viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" width="280">
+        <rect x="75" y="110" width="190" height="150" rx="12" fill="#131310" stroke="#33332c" stroke-width="2"/>
+        <!-- Breathable mesh padding -->
+        <rect x="90" y="125" width="160" height="120" rx="8" fill="#1b1b16" stroke="#252520" stroke-dasharray="4,4"/>
+        <path d="M 50,40 Q 170,110 290,40" fill="none" stroke="#252520" stroke-width="16"/>
+        <text x="170" y="190" font-family="'Space Grotesk', monospace" font-size="9" fill="#F1EEE6" text-anchor="middle" opacity="0.6">TACTICAL AIR-MESH</text>
+      </svg>`
+  }
 };
 
 const allProducts = [
@@ -892,6 +963,7 @@ const allProducts = [
 let demoProducts = [...allProducts];
 let currentIdx = 0;
 let selectedSize = 'S';
+let currentAngle = 'front';
 
 function updateProductDisplay() {
   const p = demoProducts[currentIdx];
@@ -907,9 +979,19 @@ function updateProductDisplay() {
 
   const container = document.getElementById('product-art-container');
   if (container && productSVGs[p.type]) {
-    container.innerHTML = productSVGs[p.type];
+    container.innerHTML = productSVGs[p.type][currentAngle] || productSVGs[p.type].front;
   }
 }
+
+// ── Multi-Angle Front / Back Switcher ──
+document.querySelectorAll('.bf-view-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.bf-view-btn').forEach(b => b.classList.remove('is-active'));
+    btn.classList.add('is-active');
+    currentAngle = btn.dataset.angle || 'front';
+    updateProductDisplay();
+  });
+});
 
 // ── Size Pills ──
 document.querySelectorAll('.bf-size-pill').forEach(btn => {

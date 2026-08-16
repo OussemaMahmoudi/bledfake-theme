@@ -1,7 +1,7 @@
 /**
  * BLED FAKE — bled.js
  * Custom storefront JavaScript
- * Covers: cursor, parallax, page transition, menu, cart AJAX, product navigation
+ * Covers: cursor, parallax, page transition, menu, cart AJAX, multi-image switcher, variant selection & product navigation
  */
 
 'use strict';
@@ -14,7 +14,7 @@ const $ = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
 function formatMoney(cents, currency = 'TND') {
-  if (typeof cents !== 'number') cents = parseInt(cents, 10);
+  if (typeof cents !== 'number') cents = parseInt(cents, 10) || 0;
   return (cents / 100).toFixed(2) + ' ' + currency;
 }
 
@@ -69,11 +69,11 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
 })();
 
 /* ================================================================
-   2. PARALLAX (mouse & touch)
-   ================================================================ */
+   2. PARALLAX
+   =============================================================== */
 
 (function initParallax() {
-  if (prefersReducedMotion) return;
+  if (prefersReducedMotion || isTouchDevice) return;
 
   let targetPX = 0, targetPY = 0;
   let currentPX = 0, currentPY = 0;
@@ -86,219 +86,83 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
     document.documentElement.style.setProperty('--px', currentPX.toFixed(4));
     document.documentElement.style.setProperty('--py', currentPY.toFixed(4));
 
-    if (
-      Math.abs(targetPX - currentPX) > 0.002 ||
-      Math.abs(targetPY - currentPY) > 0.002
-    ) {
+    if (Math.abs(targetPX - currentPX) > 0.002 || Math.abs(targetPY - currentPY) > 0.002) {
       rafId = requestAnimationFrame(applyParallax);
     } else {
       rafId = null;
     }
   }
 
-  function scheduleParallax(x, y) {
-    targetPX = x;
-    targetPY = y;
+  document.addEventListener('mousemove', (e) => {
+    targetPX = (e.clientX / window.innerWidth  - 0.5) * 2;
+    targetPY = (e.clientY / window.innerHeight - 0.5) * 2;
     if (!rafId) rafId = requestAnimationFrame(applyParallax);
-  }
-
-  if (!isTouchDevice) {
-    document.addEventListener('mousemove', (e) => {
-      const x = (e.clientX / window.innerWidth  - 0.5) * 2; // -1 to 1
-      const y = (e.clientY / window.innerHeight - 0.5) * 2;
-      scheduleParallax(x, y);
-    });
-  } else {
-    // Mobile: gentle auto-drift + touch response
-    let driftAngle = 0;
-    let driftRaf;
-
-    function drift() {
-      driftAngle += 0.0022;
-      scheduleParallax(
-        Math.sin(driftAngle) * 0.25,
-        Math.cos(driftAngle * 0.7) * 0.18
-      );
-      driftRaf = requestAnimationFrame(drift);
-    }
-    driftRaf = requestAnimationFrame(drift);
-
-    document.addEventListener('touchmove', (e) => {
-      const touch = e.touches[0];
-      const x = (touch.clientX / window.innerWidth  - 0.5) * 1.4;
-      const y = (touch.clientY / window.innerHeight - 0.5) * 1.4;
-      scheduleParallax(x, y);
-    }, { passive: true });
-  }
+  });
 })();
 
 /* ================================================================
-   3. PAGE TRANSITION
+   3. MENU OVERLAY & BACKDROP
    ================================================================ */
 
-const overlay = $('#bf-transition-overlay');
-
-function transitionTo(url) {
-  if (!overlay || prefersReducedMotion) {
-    window.location.href = url;
-    return;
-  }
-
-  // Step 1 — curtain drops
-  overlay.classList.add('is-entering');
-
-  // Step 2 — animate city + mascot away
-  setTimeout(() => {
-    const city   = $('.bf-landing__city');
-    const mascot = $('.bf-landing__mascot');
-    if (city) {
-      city.style.transition = 'transform 0.5s cubic-bezier(0.76, 0, 0.24, 1)';
-      city.style.transform  = 'translate(-4%, 3%) scale(1.06)';
-    }
-    if (mascot) {
-      mascot.style.transition = 'transform 0.4s cubic-bezier(0.76, 0, 0.24, 1)';
-      mascot.style.transform  = 'translate(calc(var(--px,-0) * -9px), -30px) scale(1.12)';
-    }
-  }, 80);
-
-  // Step 3 — navigate
-  setTimeout(() => {
-    window.location.href = url;
-  }, 680);
-}
-
-// Page-load reveal animation
-window.addEventListener('DOMContentLoaded', () => {
-  if (!overlay || prefersReducedMotion) return;
-  overlay.classList.add('is-exiting');
-  overlay.addEventListener('animationend', () => {
-    overlay.classList.remove('is-entering', 'is-exiting');
-  }, { once: true });
-});
-
-/* ================================================================
-   4. CTA CLICK (landing → store)
-   ================================================================ */
-
-window.addEventListener('DOMContentLoaded', () => {
-  const cta = $('.bf-landing__cta');
-  if (cta) {
-    cta.addEventListener('click', (e) => {
-      e.preventDefault();
-      transitionTo(cta.getAttribute('href') || (window.BF && window.BF.collectionsUrl) || '/collections/all');
-    });
-  }
-
-  // Also handle menu nav links for transition
-  $$('.bf-menu__item').forEach(item => {
-    item.addEventListener('click', (e) => {
-      const href = item.getAttribute('href');
-      if (href && href !== '#' && !href.startsWith('#')) {
-        e.preventDefault();
-        closeMenu();
-        setTimeout(() => transitionTo(href), 50);
-      }
-    });
-  });
-});
-
-/* ================================================================
-   5. MENU
-   ================================================================ */
-
-const menuEl     = $('.bf-menu');
-const backdropEl = $('#bf-overlay-backdrop');
+const menuEl   = $('#bf-main-menu');
+const backdrop = $('#bf-backdrop') || $('.bf-overlay-backdrop');
 
 function openMenu() {
   if (!menuEl) return;
   menuEl.classList.add('is-open');
+  if (backdrop) backdrop.classList.add('is-active');
   document.body.style.overflow = 'hidden';
-  if (backdropEl) backdropEl.classList.add('is-active');
-  // Animate hamburger to X
-  const trigger = $('[data-menu-open]');
-  if (trigger) trigger.closest('.bf-menu-trigger, .bf-nav-right')?.classList.add('bf-menu--open');
-  // Or global body class
-  document.body.classList.add('bf-menu-is-open');
 }
 
 function closeMenu() {
   if (!menuEl) return;
   menuEl.classList.remove('is-open');
-  document.body.style.overflow = '';
-  if (backdropEl && !$('.bf-cart-drawer.is-open')) {
-    backdropEl.classList.remove('is-active');
+  const cartDrawer = $('#bf-cart-drawer') || $('.bf-cart-drawer');
+  if (backdrop && (!cartDrawer || !cartDrawer.classList.contains('is-open'))) {
+    backdrop.classList.remove('is-active');
   }
-  document.body.classList.remove('bf-menu-is-open');
+  document.body.style.overflow = '';
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  $$('[data-menu-open]').forEach(btn => btn.addEventListener('click', openMenu));
-  $$('[data-menu-close]').forEach(btn => btn.addEventListener('click', closeMenu));
-
-  // Esc key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeMenu();
-      closeCart();
-    }
-  });
-
-  // Backdrop click
-  if (backdropEl) {
-    backdropEl.addEventListener('click', () => {
-      closeMenu();
-      closeCart();
-    });
-  }
-});
-
 /* ================================================================
-   6. CART DRAWER (AJAX)
+   4. AJAX CART (Shopify API: /cart.js, /cart/add.js, /cart/change.js)
    ================================================================ */
 
-const cartDrawerEl = $('.bf-cart-drawer');
-const cartBodyEl   = $('.bf-cart-drawer__body');
-const cartCountEls = $$('.bf-cart-count');
+const cartDrawer = $('#bf-cart-drawer') || $('.bf-cart-drawer');
 
 function openCart() {
-  if (!cartDrawerEl) return;
-  cartDrawerEl.classList.add('is-open');
+  if (!cartDrawer) return;
+  cartDrawer.classList.add('is-open');
+  if (backdrop) backdrop.classList.add('is-active');
   document.body.style.overflow = 'hidden';
-  if (backdropEl) backdropEl.classList.add('is-active');
   fetchAndRenderCart();
 }
 
 function closeCart() {
-  if (!cartDrawerEl) return;
-  cartDrawerEl.classList.remove('is-open');
-  document.body.style.overflow = '';
-  if (backdropEl && !menuEl?.classList.contains('is-open')) {
-    backdropEl.classList.remove('is-active');
+  if (!cartDrawer) return;
+  cartDrawer.classList.remove('is-open');
+  if (backdrop && (!menuEl || !menuEl.classList.contains('is-open'))) {
+    backdrop.classList.remove('is-active');
   }
+  document.body.style.overflow = '';
 }
 
-// Fetch cart JSON from Shopify
 async function fetchCart() {
   try {
     const res = await fetch('/cart.js');
-    if (!res.ok) throw new Error('Cart fetch failed');
-    return res.json();
-  } catch {
+    return await res.json();
+  } catch (err) {
+    console.error('[BLED Cart] Error fetching cart:', err);
     return null;
   }
 }
 
-// Render cart items into drawer
 function renderCart(cart) {
+  const cartBodyEl = $('#bf-cart-body') || $('.bf-cart-drawer__body');
   if (!cartBodyEl) return;
 
   if (!cart || cart.item_count === 0) {
-    cartBodyEl.innerHTML = `
-      <div class="bf-cart-empty">
-        <p class="bf-display bf-display-sm" style="opacity:0.35;text-align:center;padding-top:2rem">
-          CART IS EMPTY
-        </p>
-      </div>`;
+    cartBodyEl.innerHTML = '<div class="bf-cart-empty">CART IS EMPTY</div>';
   } else {
     cartBodyEl.innerHTML = cart.items.map(item => `
       <div class="bf-cart-item" data-key="${item.key}">
@@ -310,13 +174,13 @@ function renderCart(cart) {
         <div class="bf-cart-item__info">
           <p class="bf-cart-item__title">${item.product_title || ''}</p>
           ${item.variant_title && item.variant_title !== 'Default Title'
-            ? `<p class="bf-cart-item__variant">${item.variant_title}</p>` : ''}
+            ? `<p class="bf-cart-item__variant">SIZE: ${item.variant_title}</p>` : ''}
           <div class="bf-cart-item__row">
             <div class="bf-qty-controls">
-              <button class="bf-qty-btn" aria-label="Decrease quantity"
+              <button type="button" class="bf-qty-btn" aria-label="Decrease quantity"
                       data-key="${item.key}" data-action="decrease">−</button>
               <span class="bf-qty-num">${item.quantity}</span>
-              <button class="bf-qty-btn" aria-label="Increase quantity"
+              <button type="button" class="bf-qty-btn" aria-label="Increase quantity"
                       data-key="${item.key}" data-action="increase">+</button>
             </div>
             <span class="bf-cart-item__price">${formatMoney(item.final_price)}</span>
@@ -325,7 +189,6 @@ function renderCart(cart) {
       </div>
     `).join('');
 
-    // Attach qty button events
     $$('.bf-qty-btn', cartBodyEl).forEach(btn => {
       btn.addEventListener('click', async () => {
         const key    = btn.dataset.key;
@@ -338,23 +201,23 @@ function renderCart(cart) {
     });
   }
 
-  // Update total
-  const totalEl = $('.bf-cart-total__price');
+  // Update subtotal
+  const totalEl = $('#bf-cart-total') || $('.bf-cart-total__price');
   if (totalEl && cart) totalEl.textContent = formatMoney(cart.total_price);
 
   // Update count badge everywhere
   updateCartCountBadge(cart ? cart.item_count : 0);
 
-  // Update drawer item count label
-  const drawerCount = $('.bf-cart-drawer__count');
+  // Update drawer count label
+  const drawerCount = $('#bf-cart-count-label') || $('.bf-cart-drawer__count');
   if (drawerCount && cart) {
     drawerCount.textContent = `${cart.item_count} ITEM${cart.item_count !== 1 ? 'S' : ''}`;
   }
 }
 
 function updateCartCountBadge(count) {
-  $$('.bf-cart-count').forEach(el => {
-    el.textContent = count > 0 ? `(${count})` : '';
+  $$('.bf-cart-count, #cart-badge').forEach(el => {
+    el.textContent = count > 0 ? String(count) : '0';
   });
 }
 
@@ -363,13 +226,12 @@ async function fetchAndRenderCart() {
   renderCart(cart);
 }
 
-// Add to cart
-async function cartAdd(variantId, quantity = 1, properties = {}) {
+async function cartAdd(variantId, quantity = 1) {
   try {
     const res = await fetch('/cart/add.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
-      body: JSON.stringify({ id: variantId, quantity, properties })
+      body: JSON.stringify({ id: variantId, quantity })
     });
     if (!res.ok) {
       const err = await res.json();
@@ -378,12 +240,11 @@ async function cartAdd(variantId, quantity = 1, properties = {}) {
     await fetchAndRenderCart();
     openCart();
   } catch (err) {
-    console.error('[BLED] Add to cart error:', err.message);
-    alert(err.message); // Simple fallback — replace with custom notification if desired
+    console.error('[BLED Cart] Add error:', err.message);
+    alert(err.message);
   }
 }
 
-// Change cart item quantity (0 = remove)
 async function cartChange(key, quantity) {
   try {
     const res = await fetch('/cart/change.js', {
@@ -394,67 +255,93 @@ async function cartChange(key, quantity) {
     const cart = await res.json();
     renderCart(cart);
   } catch (err) {
-    console.error('[BLED] Cart change error:', err);
+    console.error('[BLED Cart] Change error:', err);
   }
 }
 
-// Wire up cart triggers & add-to-cart forms
-window.addEventListener('DOMContentLoaded', () => {
-  $$('[data-cart-open]').forEach(btn => btn.addEventListener('click', openCart));
-  $$('[data-cart-close]').forEach(btn => btn.addEventListener('click', closeCart));
-
-  // Add-to-cart form submissions
-  document.addEventListener('submit', async (e) => {
-    const form = e.target.closest('.bf-add-cart-form');
-    if (!form) return;
-    e.preventDefault();
-
-    const idInput = form.querySelector('[name="id"]:checked, [name="id"]');
-    if (!idInput) return;
-
-    const btn = form.querySelector('.bf-add-cart-btn');
-    if (btn) {
-      btn.textContent = 'ADDING...';
-      btn.disabled = true;
-    }
-
-    await cartAdd(idInput.value, 1);
-
-    if (btn) {
-      btn.textContent = 'ADD TO CART';
-      btn.disabled = false;
-    }
-  });
-
-  // Size radio toggle (visual selection)
-  document.addEventListener('change', (e) => {
-    const radio = e.target;
-    if (!radio.matches('[name="id"]')) return;
-    const group = radio.closest('.bf-size-selector');
-    if (!group) return;
-    $$('.bf-size-option', group).forEach(opt => opt.classList.remove('selected'));
-    radio.closest('.bf-size-option')?.classList.add('selected');
-  });
-
-  // Initial cart count on every page
-  fetchCart().then(cart => {
-    if (cart) updateCartCountBadge(cart.item_count);
-  });
-});
-
 /* ================================================================
-   7. STORE — PRODUCT NAVIGATION
+   5. MULTI-IMAGE SWITCHER (FRONT / BACK)
    ================================================================ */
 
-(function initProductNavigation() {
-  const prevBtn       = $('.bf-arrow--prev');
-  const nextBtn       = $('.bf-arrow--next');
-  const displayEl     = $('.bf-product-display');
-  const counterNumEl  = $('.bf-counter__num');
-  const counterNameEl = $('.bf-counter__name');
+function initImageSwitcher() {
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.bf-view-btn');
+    if (!btn) return;
 
-  // Products passed from Liquid via window.bfProducts
-  const products = (window.bfProducts || []);
+    const switcher = btn.closest('.bf-view-switcher');
+    if (switcher) {
+      $$('.bf-view-btn', switcher).forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+    }
+
+    const newSrc = btn.dataset.imgSrc;
+    const mainImg = $('#main-product-img');
+    if (mainImg && newSrc) {
+      mainImg.style.opacity = '0.4';
+      mainImg.src = newSrc;
+      mainImg.onload = () => { mainImg.style.opacity = '1'; };
+    }
+  });
+}
+
+/* ================================================================
+   6. SIZE / VARIANT SELECTION
+   ================================================================ */
+
+function initVariantSelection() {
+  document.addEventListener('click', (e) => {
+    const pill = e.target.closest('.bf-size-pill');
+    if (!pill || pill.disabled || pill.classList.contains('is-disabled')) return;
+
+    const group = pill.closest('.bf-size-pills');
+    if (group) {
+      $$('.bf-size-pill', group).forEach(p => p.classList.remove('is-selected'));
+      pill.classList.add('is-selected');
+    }
+
+    // Update variant ID in hidden input
+    const variantId = pill.dataset.variantId;
+    const input = $('#selected-variant-id');
+    if (input && variantId) input.value = variantId;
+
+    // Update price display
+    const priceVal = pill.dataset.price;
+    const priceEl = $('#product-price');
+    if (priceEl && priceVal) priceEl.textContent = formatMoney(priceVal);
+
+    // Update compare price
+    const compVal = pill.dataset.comparePrice;
+    const compEl = $('#product-compare-price');
+    if (compEl) {
+      if (compVal && parseInt(compVal, 10) > parseInt(priceVal, 10)) {
+        compEl.textContent = formatMoney(compVal);
+        compEl.style.display = '';
+      } else {
+        compEl.style.display = 'none';
+      }
+    }
+
+    // Check availability
+    const isAvail = pill.dataset.available !== 'false';
+    const atcBtn = $('#add-to-cart-btn');
+    const atcText = $('#btn-text');
+    if (atcBtn) {
+      atcBtn.disabled = !isAvail;
+      if (atcText) atcText.textContent = isAvail ? 'ADD TO CART' : 'SOLD OUT';
+    }
+  });
+}
+
+/* ================================================================
+   7. STORE — PRODUCT CAROUSEL NAVIGATION
+   ================================================================ */
+
+function initProductNavigation() {
+  const prevBtn   = $('#prev-btn');
+  const nextBtn   = $('#next-btn');
+  const displayEl = $('#product-display');
+  const products  = (window.bfProducts || []);
+
   if (!prevBtn || !nextBtn || !displayEl || products.length === 0) return;
 
   let currentIndex = parseInt(displayEl.dataset.currentIndex || '0', 10);
@@ -463,49 +350,98 @@ window.addEventListener('DOMContentLoaded', () => {
     const product = products[index];
     if (!product) return;
 
-    const padded = String(index + 1).padStart(3, '0');
+    const totalPadded = String(products.length).padStart(3, '0');
+    const currPadded  = String(index + 1).padStart(3, '0');
 
-    // Animate out
     displayEl.classList.add('is-changing');
 
     setTimeout(() => {
-      // Update counter
-      if (counterNumEl)  counterNumEl.textContent  = padded;
-      if (counterNameEl) counterNameEl.textContent = product.title;
+      // Counter
+      const numEl = $('#product-num');
+      if (numEl) numEl.textContent = `${currPadded} / ${totalPadded}`;
 
-      // Update image
-      const imgEl = displayEl.querySelector('.bf-product-image');
-      const phEl  = displayEl.querySelector('.bf-product-image-placeholder');
-      if (imgEl) {
-        if (product.featured_image) {
-          imgEl.src = product.featured_image;
-          imgEl.alt = product.title;
-          if (phEl) phEl.style.display = 'none';
-          imgEl.style.display = 'block';
+      // Title
+      const nameEl = $('#product-name');
+      if (nameEl) nameEl.textContent = (product.title || '').toUpperCase();
+
+      // Main Image
+      const imgEl = $('#main-product-img');
+      if (imgEl && product.featured_image) {
+        imgEl.src = product.featured_image;
+        imgEl.alt = product.title;
+      }
+
+      // Update Multi-Image View Switcher
+      const switcher = $('#bf-view-switcher');
+      if (switcher) {
+        if (product.images && product.images.length > 1) {
+          switcher.style.display = 'flex';
+          switcher.innerHTML = product.images.map((imgUrl, i) => `
+            <button type="button" class="bf-view-btn${i === 0 ? ' is-active' : ''}" data-img-src="${imgUrl}">
+              ${i === 0 ? 'FRONT' : i === 1 ? 'BACK' : 'VIEW ' + (i + 1)}
+            </button>
+          `).join('');
         } else {
-          if (phEl) phEl.style.display = 'flex';
-          imgEl.style.display = 'none';
+          switcher.style.display = 'none';
         }
       }
 
-      // Update price
-      const priceEl = displayEl.querySelector('.bf-product-price');
-      if (priceEl) priceEl.textContent = formatMoney(product.price);
+      // First Variant & Price
+      const firstVar = (product.variants && product.variants[0]) ? product.variants[0] : null;
+      const priceEl = $('#product-price');
+      if (priceEl && firstVar) priceEl.textContent = formatMoney(firstVar.price);
 
-      // Update ATC form variant id
-      const variantInput = displayEl.querySelector('[name="id"]');
-      if (variantInput && product.variants && product.variants[0]) {
-        variantInput.value = product.variants[0].id;
+      const varInput = $('#selected-variant-id');
+      if (varInput && firstVar) varInput.value = firstVar.id;
+
+      // Update Size Pills
+      const pillsContainer = $('#bf-size-pills');
+      if (pillsContainer && product.variants) {
+        if (product.variants.length > 1) {
+          pillsContainer.innerHTML = product.variants.map((v, i) => `
+            <button
+              type="button"
+              class="bf-size-pill${i === 0 ? ' is-selected' : ''}${!v.available ? ' is-disabled' : ''}"
+              data-variant-id="${v.id}"
+              data-price="${v.price}"
+              data-compare-price="${v.compare_at_price || 0}"
+              data-available="${v.available}"
+              ${!v.available ? 'disabled' : ''}
+            >
+              ${v.title}
+            </button>
+          `).join('');
+        } else if (firstVar) {
+          pillsContainer.innerHTML = `
+            <button
+              type="button"
+              class="bf-size-pill is-selected"
+              data-variant-id="${firstVar.id}"
+              data-price="${firstVar.price}"
+              data-compare-price="${firstVar.compare_at_price || 0}"
+              data-available="${firstVar.available}"
+            >
+              ${firstVar.title !== 'Default Title' ? firstVar.title : 'ONE SIZE'}
+            </button>
+          `;
+        }
       }
 
-      // Update URL without reload
+      // Update ATC button availability
+      const atcBtn = $('#add-to-cart-btn');
+      const atcText = $('#btn-text');
+      if (atcBtn && firstVar) {
+        atcBtn.disabled = !firstVar.available;
+        if (atcText) atcText.textContent = firstVar.available ? 'ADD TO CART' : 'SOLD OUT';
+      }
+
+      // Update URL silently
       if (product.url) {
         history.replaceState(null, '', product.url);
       }
 
-      // Animate in
       displayEl.classList.remove('is-changing');
-    }, 230);
+    }, 220);
 
     currentIndex = index;
     displayEl.dataset.currentIndex = index;
@@ -519,42 +455,56 @@ window.addEventListener('DOMContentLoaded', () => {
     setProduct((currentIndex + 1) % products.length);
   });
 
-  // Keyboard navigation on store page
   if ($('.bf-store')) {
     document.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowLeft')  prevBtn.click();
       if (e.key === 'ArrowRight') nextBtn.click();
     });
   }
-
-  // Rail category items — active state
-  $$('.bf-rail-item').forEach(item => {
-    item.addEventListener('click', (e) => {
-      $$('.bf-rail-item').forEach(r => r.classList.remove('is-active'));
-      item.classList.add('is-active');
-    });
-  });
-})();
+}
 
 /* ================================================================
-   8. LANDING SHAPES — subtle entrance animation
+   INITIALIZATION
    ================================================================ */
 
 window.addEventListener('DOMContentLoaded', () => {
-  if (prefersReducedMotion) return;
+  // Menu triggers
+  $$('[data-menu-open]').forEach(btn => btn.addEventListener('click', openMenu));
+  $$('[data-menu-close]').forEach(btn => btn.addEventListener('click', closeMenu));
 
-  const statement = $('.bf-landing__statement');
-  const cta       = $('.bf-landing__cta');
-  const mascot    = $('.bf-landing__mascot');
+  // Cart triggers
+  $$('[data-cart-open]').forEach(btn => btn.addEventListener('click', openCart));
+  $$('[data-cart-close]').forEach(btn => btn.addEventListener('click', closeCart));
+  if (backdrop) backdrop.addEventListener('click', () => { closeMenu(); closeCart(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeMenu(); closeCart(); } });
 
-  [statement, cta, mascot].forEach((el, i) => {
-    if (!el) return;
-    el.style.opacity = '0';
-    el.style.transform = (el === cta ? el.style.transform || '' : '') + ' translateY(12px)';
-    setTimeout(() => {
-      el.style.transition = 'opacity 0.6s ease, transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)';
-      el.style.opacity    = '1';
-      el.style.transform  = '';
-    }, 400 + i * 120);
+  // Add to Cart Form
+  document.addEventListener('submit', async (e) => {
+    const form = e.target.closest('.bf-add-cart-form');
+    if (!form) return;
+    e.preventDefault();
+
+    const idInput = form.querySelector('[name="id"]');
+    if (!idInput || !idInput.value) return;
+
+    const btn = form.querySelector('.bf-cart-submit-btn, .bf-add-cart-btn');
+    const textSpan = btn ? (btn.querySelector('#btn-text') || btn) : null;
+    if (textSpan) textSpan.textContent = 'ADDING...';
+    if (btn) btn.disabled = true;
+
+    await cartAdd(idInput.value, 1);
+
+    if (textSpan) textSpan.textContent = 'ADD TO CART';
+    if (btn) btn.disabled = false;
+  });
+
+  // Feature initializers
+  initImageSwitcher();
+  initVariantSelection();
+  initProductNavigation();
+
+  // Initial cart fetch
+  fetchCart().then(cart => {
+    if (cart) updateCartCountBadge(cart.item_count);
   });
 });

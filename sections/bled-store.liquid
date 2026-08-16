@@ -1,6 +1,6 @@
 {% comment %}
   BLED FAKE — Store & Collection Section (bled-store.liquid)
-  Clean, high-end underground streetwear gallery.
+  Fully integrated with live Shopify backend (real collections, multi-image views, dynamic variants)
 {% endcomment %}
 
 {% if collection %}
@@ -24,6 +24,8 @@
   {% assign current_index = 0 %}
 {% endif %}
 
+{% assign current_variant = current_product.selected_or_first_available_variant %}
+
 <script>
 window.bfProducts = [
   {%- for p in product_list -%}
@@ -32,14 +34,21 @@ window.bfProducts = [
     "title":         {{ p.title | json }},
     "url":           {{ p.url | json }},
     "price":         {{ p.price }},
+    "compare_at_price": {{ p.compare_at_price | default: 0 }},
     "available":     {{ p.available }},
     "featured_image":{{ p.featured_image | image_url: width: 800 | json }},
+    "images": [
+      {%- for img in p.images -%}
+      {{ img | image_url: width: 800 | json }}{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ],
     "variants": [
       {%- for v in p.variants -%}
       {
         "id":        {{ v.id }},
         "title":     {{ v.title | json }},
         "price":     {{ v.price }},
+        "compare_at_price": {{ v.compare_at_price | default: 0 }},
         "available": {{ v.available }}
       }{% unless forloop.last %},{% endunless %}
       {%- endfor -%}
@@ -64,7 +73,7 @@ window.bfProducts = [
     <div class="bf-nav-right">
       <button class="bf-nav-btn" data-cart-open aria-label="Open cart drawer">
         <span>CART</span>
-        <span class="bf-cart-badge-count bf-cart-count">0</span>
+        <span class="bf-cart-badge-count bf-cart-count">{{ cart.item_count }}</span>
       </button>
 
       <button class="bf-nav-btn" data-menu-open aria-label="Open menu">
@@ -77,13 +86,23 @@ window.bfProducts = [
     </div>
   </header>
 
-  <!-- ─── COLLECTION TABS BAR ────────────────────── -->
+  <!-- ─── REAL SHOPIFY COLLECTION TABS ───────────── -->
   <nav class="bf-collection-bar" aria-label="Collections filter">
-    {% assign active_handle = collection.handle | default: 'all' %}
-    <a href="/collections/all" class="bf-collection-tab{% if active_handle == 'all' %} is-active{% endif %}">ALL DROPS</a>
-    <a href="/collections/bledfake" class="bf-collection-tab{% if active_handle == 'bledfake' %} is-active{% endif %}">BLEDFAKE</a>
-    <a href="/collections/bledhorra" class="bf-collection-tab{% if active_handle == 'bledhorra' %} is-active{% endif %}">BLEDHORRA</a>
-    <a href="/collections/comeback-tommorow" class="bf-collection-tab{% if active_handle == 'comeback-tommorow' %} is-active{% endif %}">COMEBACK TOMMOROW</a>
+    {% assign current_col_handle = collection.handle | default: 'all' %}
+    
+    <a href="/collections/all" class="bf-collection-tab{% if current_col_handle == 'all' or collection == blank %} is-active{% endif %}">
+      ALL DROPS
+    </a>
+
+    {% for col in collections %}
+      {% unless col.handle == 'frontpage' or col.handle == 'all' %}
+        {% if col.all_products_count > 0 or col.products_count > 0 %}
+          <a href="{{ col.url }}" class="bf-collection-tab{% if current_col_handle == col.handle %} is-active{% endif %}">
+            {{ col.title | upcase }}
+          </a>
+        {% endif %}
+      {% endunless %}
+    {% endfor %}
   </nav>
 
   <!-- ─── MAIN GALLERY VIEWPORT ──────────────────── -->
@@ -100,13 +119,15 @@ window.bfProducts = [
 
       {% if current_product %}
 
-        <!-- Left: Floating Garment Stage with Ambient White Glow -->
+        <!-- Left: Floating Garment Stage with Ambient White Glow & Multi-View Switcher -->
         <div class="bf-garment-stage">
           <div class="bf-garment-glow" aria-hidden="true"></div>
-          <div class="bf-garment-artwork">
+          
+          <div class="bf-garment-artwork" id="product-art-container">
             {% if current_product.featured_image %}
               <img
                 class="bf-product-image"
+                id="main-product-img"
                 src="{{ current_product.featured_image | image_url: width: 800 }}"
                 srcset="{{ current_product.featured_image | image_url: width: 400 }} 400w,
                         {{ current_product.featured_image | image_url: width: 800 }} 800w"
@@ -125,75 +146,98 @@ window.bfProducts = [
               </div>
             {% endif %}
           </div>
+
+          <!-- Multi-Image Front / Back View Switcher -->
+          <div class="bf-view-switcher" id="bf-view-switcher" role="tablist" aria-label="Product angles"{% if current_product.images.size <= 1 %} style="display:none;"{% endif %}>
+            {% for img in current_product.images %}
+              <button
+                type="button"
+                class="bf-view-btn{% if forloop.first %} is-active{% endif %}"
+                data-img-src="{{ img | image_url: width: 800 }}"
+                aria-label="View {{ forloop.index }}"
+              >
+                {% if forloop.index == 1 %}
+                  FRONT
+                {% elsif forloop.index == 2 %}
+                  BACK
+                {% else %}
+                  VIEW {{ forloop.index }}
+                {% endif %}
+              </button>
+            {% endfor %}
+          </div>
         </div>
 
         <!-- Right: Clean Product Info Card -->
         <div class="bf-product-info-card" itemscope itemtype="https://schema.org/Product">
           <div class="bf-card-meta">
-            <span>BLED BLOCKS // COLLECTION</span>
+            <span id="product-collection-label">
+              {{ collection.title | default: 'BLED FAKE' | upcase }} // DROP
+            </span>
             <span class="bf-card-index" id="product-num">
               {{ current_index | plus: 1 | prepend: '000' | slice: -3, 3 }} / {{ product_list.size | default: 1 | prepend: '000' | slice: -3, 3 }}
             </span>
           </div>
 
-          <h2 class="bf-product-title" id="product-name">{{ current_product.title | upcase }}</h2>
+          <h1 class="bf-product-title" id="product-name">{{ current_product.title | upcase }}</h1>
 
           <div class="bf-product-price-row">
             <span class="bf-product-price-val" id="product-price">
-              {{ current_product.selected_or_first_available_variant.price | money }}
+              {{ current_variant.price | money }}
             </span>
-            {% if current_product.compare_at_price > current_product.price %}
-              <span class="bf-product-price-compare">
-                {{ current_product.compare_at_price | money }}
-              </span>
-            {% endif %}
+            <span class="bf-product-price-compare" id="product-compare-price"{% unless current_variant.compare_at_price > current_variant.price %} style="display:none;"{% endunless %}>
+              {{ current_variant.compare_at_price | money }}
+            </span>
           </div>
 
-          <!-- Size Selector -->
-          <form class="bf-add-cart-form" action="/cart/add" method="post">
+          <!-- Add to Cart Form & Size Selection -->
+          <form class="bf-add-cart-form" action="/cart/add" method="post" id="bf-add-form">
+            <!-- Hidden input holding the real selected Shopify variant ID -->
+            <input type="hidden" name="id" id="selected-variant-id" value="{{ current_variant.id }}">
+
             <div class="bf-size-group">
               <span class="bf-size-group-label">SELECT SIZE</span>
-              <div class="bf-size-pills" role="group" aria-label="Sizes">
+              <div class="bf-size-pills" id="bf-size-pills" role="group" aria-label="Sizes">
                 {% if current_product.variants.size > 1 %}
                   {% for variant in current_product.variants %}
-                    <label class="bf-size-pill{% if variant == current_product.selected_or_first_available_variant %} is-selected{% endif %}{% unless variant.available %} is-disabled{% endunless %}">
-                      <input
-                        type="radio"
-                        name="id"
-                        value="{{ variant.id }}"
-                        class="visually-hidden"
-                        {% if variant == current_product.selected_or_first_available_variant %}checked{% endif %}
-                        {% unless variant.available %}disabled{% endunless %}
-                      >
+                    <button
+                      type="button"
+                      class="bf-size-pill{% if variant.id == current_variant.id %} is-selected{% endif %}{% unless variant.available %} is-disabled{% endunless %}"
+                      data-variant-id="{{ variant.id }}"
+                      data-price="{{ variant.price }}"
+                      data-compare-price="{{ variant.compare_at_price | default: 0 }}"
+                      data-available="{{ variant.available }}"
+                      {% unless variant.available %}disabled title="Sold out"{% endunless %}
+                    >
                       {{ variant.title }}
-                    </label>
+                    </button>
                   {% endfor %}
                 {% else %}
-                  {% assign default_sizes = "S,M,L,XL" | split: "," %}
-                  {% for s in default_sizes %}
-                    <label class="bf-size-pill{% if forloop.first %} is-selected{% endif %}">
-                      <input
-                        type="radio"
-                        name="size_display"
-                        value="{{ s }}"
-                        class="visually-hidden"
-                        {% if forloop.first %}checked{% endif %}
-                      >
-                      {{ s }}
-                    </label>
-                  {% endfor %}
-                  <input type="hidden" name="id" value="{{ current_product.variants.first.id }}">
+                  <!-- Single variant / default sizes -->
+                  <button
+                    type="button"
+                    class="bf-size-pill is-selected"
+                    data-variant-id="{{ current_variant.id }}"
+                    data-price="{{ current_variant.price }}"
+                    data-compare-price="{{ current_variant.compare_at_price | default: 0 }}"
+                    data-available="{{ current_variant.available }}"
+                  >
+                    {% if current_variant.title != 'Default Title' %}{{ current_variant.title }}{% else %}ONE SIZE{% endif %}
+                  </button>
                 {% endif %}
               </div>
             </div>
 
-            <button type="submit" class="bf-cart-submit-btn" {% unless current_product.available %}disabled{% endunless %}>
-              {% if current_product.available %}
-                <span>ADD TO CART</span>
-                <span>➔</span>
-              {% else %}
-                <span>SOLD OUT</span>
-              {% endif %}
+            <button
+              type="submit"
+              class="bf-cart-submit-btn"
+              id="add-to-cart-btn"
+              {% unless current_variant.available %}disabled{% endunless %}
+            >
+              <span id="btn-text">
+                {% if current_variant.available %}ADD TO CART{% else %}SOLD OUT{% endif %}
+              </span>
+              <span aria-hidden="true">➔</span>
             </button>
           </form>
         </div>
