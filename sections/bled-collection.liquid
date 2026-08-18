@@ -5,11 +5,11 @@
 {% endcomment %}
 
 {% if collection %}
-  {% assign product_list = collection.products %}
+  {% assign product_list = collection.products | sort: 'created_at' | reverse %}
   {% assign current_col_title = collection.title %}
   {% assign current_col_handle = collection.handle %}
 {% else %}
-  {% assign product_list = collections.all.products %}
+  {% assign product_list = collections.all.products | sort: 'created_at' | reverse %}
   {% assign current_col_title = 'ALL DROPS' %}
   {% assign current_col_handle = 'all' %}
 {% endif %}
