@@ -154,7 +154,7 @@
               <div class="bf-summary-item__info">
                 <div class="bf-summary-item__title">{{ item.product.title | upcase }}</div>
                 <div class="bf-summary-item__variant">SIZE: {{ item.variant.title }} × {{ item.quantity }}</div>
-                <div class="bf-summary-item__price">{{ item.final_line_price | money }}</div>
+                <div class="bf-summary-item__price">{{ item.final_line_price | money_with_currency }}</div>
               </div>
             </div>
           {% else %}
@@ -167,7 +167,7 @@
         <div class="bf-summary-totals">
           <div class="bf-summary-row">
             <span>SUBTOTAL</span>
-            <span>{{ cart.total_price | money }}</span>
+            <span>{{ cart.total_price | money_with_currency }}</span>
           </div>
           <div class="bf-summary-row">
             <span>EXPRESS SHIPPING (TUNISIA)</span>
@@ -175,7 +175,7 @@
           </div>
           <div class="bf-summary-row bf-summary-row--total">
             <span>TOTAL</span>
-            <span>{{ cart.total_price | plus: 700 | money }}</span>
+            <span>{{ cart.total_price | plus: 700 | money_with_currency }}</span>
           </div>
         </div>
       </div>

@@ -54,7 +54,7 @@
                 <button type="button" class="bf-qty-btn" aria-label="Increase quantity"
                         data-key="{{ item.key }}" data-action="increase">+</button>
               </div>
-              <span class="bf-cart-item__price">{{ item.final_price | money }}</span>
+              <span class="bf-cart-item__price">{{ item.final_price | money_with_currency }}</span>
             </div>
           </div>
         </div>
@@ -68,7 +68,7 @@
   <div class="bf-cart-drawer__footer">
     <div class="bf-cart-total">
       <span class="bf-cart-total__label">SUBTOTAL</span>
-      <span class="bf-cart-total__price" id="bf-cart-total">{{ cart.total_price | money }}</span>
+      <span class="bf-cart-total__price" id="bf-cart-total">{{ cart.total_price | money_with_currency }}</span>
     </div>
 
     <a

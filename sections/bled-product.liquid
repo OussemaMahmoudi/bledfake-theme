@@ -118,14 +118,14 @@
 
         <div class="bf-product-price-row" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
           <span class="bf-product-price-val" id="product-price" itemprop="price" content="{{ current_variant.price | divided_by: 100.0 }}">
-            {{ current_variant.price | money }}
+            {{ current_variant.price | money_with_currency }}
           </span>
           <span
             class="bf-product-price-compare"
             id="product-compare-price"
             {% unless current_variant.compare_at_price > current_variant.price %}style="display:none;"{% endunless %}
           >
-            {{ current_variant.compare_at_price | money }}
+            {{ current_variant.compare_at_price | money_with_currency }}
           </span>
           <meta itemprop="priceCurrency" content="{{ shop.currency }}">
         </div>

@@ -151,11 +151,11 @@
 
                 <div class="bf-product-card__price-row" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
                   <span class="bf-product-card__price" itemprop="price" content="{{ current_v.price | divided_by: 100.0 }}">
-                    {{ current_v.price | money }}
+                    {{ current_v.price | money_with_currency }}
                   </span>
                   {% if current_v.compare_at_price > current_v.price %}
                     <span class="bf-product-card__compare">
-                      {{ current_v.compare_at_price | money }}
+                      {{ current_v.compare_at_price | money_with_currency }}
                     </span>
                   {% endif %}
                   <meta itemprop="priceCurrency" content="{{ shop.currency }}">
