@@ -7,6 +7,15 @@
 {% assign current_product = product | default: collections.all.products.first %}
 {% assign current_variant = current_product.selected_or_first_available_variant %}
 
+{% comment %} ── COMING SOON: Taleb Ywami products are locked until further notice ── {% endcomment %}
+{% assign COMING_SOON_HANDLE = 'taleb-yawmi' %}
+{% assign is_coming_soon = false %}
+{% for prod_col in current_product.collections %}
+  {% if prod_col.handle == COMING_SOON_HANDLE %}
+    {% assign is_coming_soon = true %}
+  {% endif %}
+{% endfor %}
+
 {% comment %} Build the media/images list for this product {% endcomment %}
 {% assign prod_media = current_product.media %}
 {% if prod_media == blank or prod_media.size == 0 %}
@@ -141,71 +150,84 @@
         </div>
 
         <!-- Add to Cart & Buy Now Form -->
-        <form class="bf-add-cart-form" action="/cart/add" method="post" id="bf-add-form" novalidate>
-          <input type="hidden" name="id" id="selected-variant-id" value="{{ current_variant.id }}">
+        {% if is_coming_soon %}
+          <!-- COMING SOON: Purchase disabled for Taleb Yawmi collection -->
+          <div class="bf-coming-soon-block">
+            <span class="bf-coming-soon-icon" aria-hidden="true">⏳</span>
+            <p class="bf-coming-soon-title">COMING SOON</p>
+            <p class="bf-coming-soon-sub">This piece will be available soon. Stay tuned.</p>
+            <button type="button" class="bf-cart-submit-btn bf-cart-submit-btn--coming-soon" disabled aria-disabled="true">
+              <span>COMING SOON</span>
+              <span aria-hidden="true">⏳</span>
+            </button>
+          </div>
+        {% else %}
+          <form class="bf-add-cart-form" action="/cart/add" method="post" id="bf-add-form" novalidate>
+            <input type="hidden" name="id" id="selected-variant-id" value="{{ current_variant.id }}">
 
-          <div class="bf-size-group">
-            <span class="bf-size-group-label">
-              SELECT SIZE
-              {% unless current_product.has_only_default_variant %}
-                <span class="bf-size-guide-link">TRUE TO OVERSIZED FIT</span>
-              {% endunless %}
-            </span>
+            <div class="bf-size-group">
+              <span class="bf-size-group-label">
+                SELECT SIZE
+                {% unless current_product.has_only_default_variant %}
+                  <span class="bf-size-guide-link">TRUE TO OVERSIZED FIT</span>
+                {% endunless %}
+              </span>
 
-            <div class="bf-size-pills" id="bf-size-pills" role="group" aria-label="Available sizes">
-              {% if current_product.variants.size > 1 %}
-                {% for variant in current_product.variants %}
+              <div class="bf-size-pills" id="bf-size-pills" role="group" aria-label="Available sizes">
+                {% if current_product.variants.size > 1 %}
+                  {% for variant in current_product.variants %}
+                    <button
+                      type="button"
+                      class="bf-size-pill{% if variant.id == current_variant.id %} is-selected{% endif %}{% unless variant.available %} is-disabled{% endunless %}"
+                      data-variant-id="{{ variant.id }}"
+                      data-price="{{ variant.price }}"
+                      data-compare-price="{{ variant.compare_at_price | default: 0 }}"
+                      data-available="{{ variant.available }}"
+                      {% unless variant.available %}disabled aria-disabled="true" title="Sold out"{% endunless %}
+                    >
+                      {{ variant.title }}
+                    </button>
+                  {% endfor %}
+                {% else %}
                   <button
                     type="button"
-                    class="bf-size-pill{% if variant.id == current_variant.id %} is-selected{% endif %}{% unless variant.available %} is-disabled{% endunless %}"
-                    data-variant-id="{{ variant.id }}"
-                    data-price="{{ variant.price }}"
-                    data-compare-price="{{ variant.compare_at_price | default: 0 }}"
-                    data-available="{{ variant.available }}"
-                    {% unless variant.available %}disabled aria-disabled="true" title="Sold out"{% endunless %}
+                    class="bf-size-pill is-selected"
+                    data-variant-id="{{ current_variant.id }}"
+                    data-price="{{ current_variant.price }}"
+                    data-compare-price="{{ current_variant.compare_at_price | default: 0 }}"
+                    data-available="{{ current_variant.available }}"
                   >
-                    {{ variant.title }}
+                    {% if current_variant.title != 'Default Title' %}{{ current_variant.title }}{% else %}ONE SIZE{% endif %}
                   </button>
-                {% endfor %}
-              {% else %}
-                <button
-                  type="button"
-                  class="bf-size-pill is-selected"
-                  data-variant-id="{{ current_variant.id }}"
-                  data-price="{{ current_variant.price }}"
-                  data-compare-price="{{ current_variant.compare_at_price | default: 0 }}"
-                  data-available="{{ current_variant.available }}"
-                >
-                  {% if current_variant.title != 'Default Title' %}{{ current_variant.title }}{% else %}ONE SIZE{% endif %}
-                </button>
-              {% endif %}
+                {% endif %}
+              </div>
             </div>
-          </div>
 
-          <!-- Action Buttons -->
-          <div class="bf-product-actions">
-            <button
-              type="submit"
-              class="bf-cart-submit-btn"
-              id="add-to-cart-btn"
-              {% unless current_variant.available %}disabled aria-disabled="true"{% endunless %}
-            >
-              <span id="btn-text">
-                {% if current_variant.available %}ADD TO CART{% else %}SOLD OUT{% endif %}
-              </span>
-              <span aria-hidden="true">➔</span>
-            </button>
+            <!-- Action Buttons -->
+            <div class="bf-product-actions">
+              <button
+                type="submit"
+                class="bf-cart-submit-btn"
+                id="add-to-cart-btn"
+                {% unless current_variant.available %}disabled aria-disabled="true"{% endunless %}
+              >
+                <span id="btn-text">
+                  {% if current_variant.available %}ADD TO CART{% else %}SOLD OUT{% endif %}
+                </span>
+                <span aria-hidden="true">➔</span>
+              </button>
 
-            <button
-              type="button"
-              class="bf-buy-now-btn"
-              id="buy-now-btn"
-              {% unless current_variant.available %}disabled aria-disabled="true"{% endunless %}
-            >
-              <span id="buy-now-text">BUY IT NOW</span>
-            </button>
-          </div>
-        </form>
+              <button
+                type="button"
+                class="bf-buy-now-btn"
+                id="buy-now-btn"
+                {% unless current_variant.available %}disabled aria-disabled="true"{% endunless %}
+              >
+                <span id="buy-now-text">BUY IT NOW</span>
+              </button>
+            </div>
+          </form>
+        {% endif %}
 
         <!-- Product Specs & Guarantees -->
         <div class="bf-pdp-specs">

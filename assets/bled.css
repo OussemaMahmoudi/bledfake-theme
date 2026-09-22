@@ -2761,3 +2761,90 @@ input, select, textarea { font: inherit; }
 }
 
 
+/* =============================================================
+   COMING SOON — Taleb Yawmi Collection Lock
+   ============================================================= */
+
+/* ── Collection Grid: Coming Soon Badge ── */
+.bf-badge--coming-soon {
+  background: transparent;
+  border: 1.5px solid #e8a830;
+  color: #e8a830;
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  padding: 0.2em 0.55em;
+  border-radius: 2px;
+  animation: bf-coming-soon-pulse 2s ease-in-out infinite;
+}
+
+@keyframes bf-coming-soon-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+/* ── Collection Grid: Locked Card ── */
+.bf-product-card--coming-soon {
+  opacity: 0.85;
+}
+
+.bf-product-card__link--locked {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.bf-product-card--coming-soon .bf-product-card__cta {
+  color: #e8a830;
+  opacity: 0.8;
+}
+
+.bf-product-card--coming-soon .bf-product-card__img-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 5, 5, 0.30);
+  pointer-events: none;
+}
+
+/* ── Product Detail Page: Coming Soon Block ── */
+.bf-coming-soon-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 1.6rem 0;
+  border-top: 1px solid var(--bf-off-white-15);
+  border-bottom: 1px solid var(--bf-off-white-15);
+  margin: 1.4rem 0;
+}
+
+.bf-coming-soon-icon {
+  font-size: 2rem;
+  animation: bf-coming-soon-pulse 2s ease-in-out infinite;
+}
+
+.bf-coming-soon-title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  letter-spacing: 0.1em;
+  color: #e8a830;
+  line-height: 1;
+}
+
+.bf-coming-soon-sub {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--bf-off-white-70);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.bf-cart-submit-btn--coming-soon {
+  opacity: 0.45;
+  cursor: not-allowed;
+  border-color: #e8a830 !important;
+  color: #e8a830 !important;
+  background: transparent !important;
+  pointer-events: none;
+  margin-top: 0.4rem;
+}

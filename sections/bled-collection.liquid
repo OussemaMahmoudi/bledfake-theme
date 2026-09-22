@@ -16,6 +16,9 @@
 
 {% assign product_count = product_list.size %}
 
+{% comment %} ── COMING SOON: Taleb Ywami collection is locked until further notice ── {% endcomment %}
+{% assign COMING_SOON_HANDLE = 'taleb-yawmi' %}
+
 <section class="bf-page bf-catalog-page" id="bf-catalog-page" aria-label="BLED FAKE Catalog">
 
   <div class="bf-grain" aria-hidden="true"></div>
@@ -73,8 +76,20 @@
           {% assign secondary_img = prod.images[1] %}
           {% assign current_v = prod.selected_or_first_available_variant %}
 
-          <article class="bf-product-card" role="listitem" itemscope itemtype="https://schema.org/Product">
-            <a href="{{ prod.url }}" class="bf-product-card__link" aria-label="{{ prod.title | escape }}">
+          {% comment %} Detect if this product belongs to the Taleb Ywami (Coming Soon) collection {% endcomment %}
+          {% assign is_coming_soon = false %}
+          {% if current_col_handle == COMING_SOON_HANDLE %}
+            {% assign is_coming_soon = true %}
+          {% else %}
+            {% for prod_col in prod.collections %}
+              {% if prod_col.handle == COMING_SOON_HANDLE %}
+                {% assign is_coming_soon = true %}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+
+          <article class="bf-product-card{% if is_coming_soon %} bf-product-card--coming-soon{% endif %}" role="listitem" itemscope itemtype="https://schema.org/Product">
+            <a href="{% if is_coming_soon %}#{% else %}{{ prod.url }}{% endif %}" class="bf-product-card__link{% if is_coming_soon %} bf-product-card__link--locked{% endif %}" aria-label="{{ prod.title | escape }}{% if is_coming_soon %} — Coming Soon{% endif %}" {% if is_coming_soon %}aria-disabled="true" tabindex="-1"{% endif %}>
 
               <!-- Floating Garment Image Stage -->
               <div class="bf-product-card__stage">
@@ -118,7 +133,9 @@
 
                 <!-- Card Stock / Discount Badges -->
                 <div class="bf-product-card__badges">
-                  {% if prod.available %}
+                  {% if is_coming_soon %}
+                    <span class="bf-badge bf-badge--coming-soon">COMING SOON</span>
+                  {% elsif prod.available %}
                     <span class="bf-badge bf-badge--available">AVAILABLE</span>
                     {% if prod.compare_at_price > prod.price %}
                       <span class="bf-badge bf-badge--sale">SALE</span>
@@ -163,8 +180,13 @@
 
                 <!-- CTA Action Button -->
                 <div class="bf-product-card__cta">
-                  <span>VIEW PIECE</span>
-                  <span class="bf-product-card__arrow" aria-hidden="true">→</span>
+                  {% if is_coming_soon %}
+                    <span>COMING SOON</span>
+                    <span class="bf-product-card__arrow" aria-hidden="true">⏳</span>
+                  {% else %}
+                    <span>VIEW PIECE</span>
+                    <span class="bf-product-card__arrow" aria-hidden="true">→</span>
+                  {% endif %}
                 </div>
               </div>
 
