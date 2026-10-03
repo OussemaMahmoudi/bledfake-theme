@@ -16,8 +16,7 @@
 
 {% assign product_count = product_list.size %}
 
-{% comment %} ── COMING SOON: Taleb Ywami collection is locked until further notice ── {% endcomment %}
-{% assign COMING_SOON_HANDLE = 'taleb-yawmi' %}
+{% comment %} ── Taleb Ywami collection — fully available ── {% endcomment %}
 
 <section class="bf-page bf-catalog-page" id="bf-catalog-page" aria-label="BLED FAKE Catalog">
 
@@ -76,17 +75,7 @@
           {% assign secondary_img = prod.images[1] %}
           {% assign current_v = prod.selected_or_first_available_variant %}
 
-          {% comment %} Detect if this product belongs to the Taleb Ywami (Coming Soon) collection {% endcomment %}
           {% assign is_coming_soon = false %}
-          {% if current_col_handle == COMING_SOON_HANDLE %}
-            {% assign is_coming_soon = true %}
-          {% else %}
-            {% for prod_col in prod.collections %}
-              {% if prod_col.handle == COMING_SOON_HANDLE %}
-                {% assign is_coming_soon = true %}
-              {% endif %}
-            {% endfor %}
-          {% endif %}
 
           <article class="bf-product-card{% if is_coming_soon %} bf-product-card--coming-soon{% endif %}" role="listitem" itemscope itemtype="https://schema.org/Product">
             <a href="{% if is_coming_soon %}#{% else %}{{ prod.url }}{% endif %}" class="bf-product-card__link{% if is_coming_soon %} bf-product-card__link--locked{% endif %}" aria-label="{{ prod.title | escape }}{% if is_coming_soon %} — Coming Soon{% endif %}" {% if is_coming_soon %}aria-disabled="true" tabindex="-1"{% endif %}>

@@ -7,14 +7,8 @@
 {% assign current_product = product | default: collections.all.products.first %}
 {% assign current_variant = current_product.selected_or_first_available_variant %}
 
-{% comment %} ── COMING SOON: Taleb Ywami products are locked until further notice ── {% endcomment %}
-{% assign COMING_SOON_HANDLE = 'taleb-yawmi' %}
+{% comment %} ── Taleb Ywami collection — fully available ── {% endcomment %}
 {% assign is_coming_soon = false %}
-{% for prod_col in current_product.collections %}
-  {% if prod_col.handle == COMING_SOON_HANDLE %}
-    {% assign is_coming_soon = true %}
-  {% endif %}
-{% endfor %}
 
 {% comment %} Build the media/images list for this product {% endcomment %}
 {% assign prod_media = current_product.media %}
@@ -150,18 +144,7 @@
         </div>
 
         <!-- Add to Cart & Buy Now Form -->
-        {% if is_coming_soon %}
-          <!-- COMING SOON: Purchase disabled for Taleb Yawmi collection -->
-          <div class="bf-coming-soon-block">
-            <span class="bf-coming-soon-icon" aria-hidden="true"></span>
-            <p class="bf-coming-soon-title">COMING SOON</p>
-            <p class="bf-coming-soon-sub">This piece will be available soon. Stay tuned.</p>
-            <button type="button" class="bf-cart-submit-btn bf-cart-submit-btn--coming-soon" disabled aria-disabled="true">
-              <span>COMING SOON</span>
-              <span aria-hidden="true"></span>
-            </button>
-          </div>
-        {% else %}
+
           <form class="bf-add-cart-form" action="/cart/add" method="post" id="bf-add-form" novalidate>
             <input type="hidden" name="id" id="selected-variant-id" value="{{ current_variant.id }}">
 
@@ -227,7 +210,6 @@
               </button>
             </div>
           </form>
-        {% endif %}
 
         <!-- Product Specs & Guarantees -->
         <div class="bf-pdp-specs">
