@@ -1,0 +1,196 @@
+{% comment %}
+  BLED FAKE — Countdown Landing Page (bled-countdown.liquid)
+  Cinematic Brutalist Pre-launch Countdown Page with Looping Video Background.
+  Target: December 1, 2026 — WLED BLED DROP DAY
+{% endcomment %}
+
+<section class="bf-countdown-page" id="bf-countdown" aria-label="BLED FAKE — WLED BLED DROP DAY">
+
+  <!-- Background Video Wrap -->
+  <div class="bf-countdown-video-wrap" aria-hidden="true">
+    <video
+      id="bf-countdown-bg-video"
+      class="bf-countdown-video"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="auto"
+    >
+      <source src="{{ 'IMG_3979_002.mp4' | asset_url }}" type="video/mp4">
+    </video>
+    <div class="bf-countdown-overlay"></div>
+  </div>
+
+  <!-- Grain texture overlay -->
+  <div class="bf-grain" aria-hidden="true"></div>
+
+  <!-- Top Brand Header -->
+  <header class="bf-countdown-header" role="banner">
+    <div class="bf-countdown-header__brand">
+      <img src="{{ 'MainLog.png' | asset_url }}" alt="BLED FAKE" class="bf-countdown-logo-img" width="52" height="58">
+      <div class="bf-countdown-badge">
+        <span class="bf-status-dot"></span>
+        <span>DROP SYSTEM ACTIVE</span>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      id="bf-countdown-sound-toggle"
+      class="bf-countdown-sound-btn"
+      aria-label="Toggle sound"
+    >
+      SOUND: OFF
+    </button>
+  </header>
+
+  <!-- Center Content: Countdown & Headline -->
+  <main class="bf-countdown-center" role="main">
+    <div class="bf-countdown-tagline">
+      <span>//</span>
+      <span>OFFICIAL COUNTDOWN</span>
+      <span>//</span>
+    </div>
+
+    <h1 class="bf-countdown-title">{{ section.settings.drop_title | default: "WLED BLED DROP DAY" }}</h1>
+
+    <div class="bf-countdown-title-sub">
+      {{ section.settings.drop_subtitle | default: "DECEMBER 01, 2026 // FROM BLEDFAKE WITH LOVE" }}
+    </div>
+
+    <!-- Countdown Timer Grid -->
+    <div class="bf-countdown-timer" id="bf-countdown-timer" aria-live="polite">
+      <div class="bf-countdown-card">
+        <span class="bf-countdown-num" id="bf-cd-days">00</span>
+        <span class="bf-countdown-label">DAYS</span>
+      </div>
+      <div class="bf-countdown-card">
+        <span class="bf-countdown-num" id="bf-cd-hours">00</span>
+        <span class="bf-countdown-label">HOURS</span>
+      </div>
+      <div class="bf-countdown-card">
+        <span class="bf-countdown-num" id="bf-cd-mins">00</span>
+        <span class="bf-countdown-label">MINUTES</span>
+      </div>
+      <div class="bf-countdown-card">
+        <span class="bf-countdown-num" id="bf-cd-secs">00</span>
+        <span class="bf-countdown-label">SECONDS</span>
+      </div>
+    </div>
+
+    <!-- Action Link -->
+    <div class="bf-countdown-actions">
+      <a
+        href="{{ section.settings.instagram_url | default: 'https://instagram.com/bledfake' }}"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="bf-countdown-cta"
+      >
+        <span>FOLLOW @BLEDFAKE</span>
+        <span class="bf-countdown-cta__arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </main>
+
+  <!-- Bottom Status Footer -->
+  <footer class="bf-countdown-footer">
+    <span>وِلاد البلاد ستوديو علامة تجارية مسجّلة</span>
+    <span>TUNIS © {{ 'now' | date: '%Y' }} // ALL RIGHTS RESERVED</span>
+  </footer>
+
+</section>
+
+<script>
+(function() {
+  // Target: December 1, 2026 00:00:00 (Tunis / UTC+1)
+  const targetDateStr = {{ section.settings.target_date | default: "2026-12-01T00:00:00" | json }};
+  const targetTime = new Date(targetDateStr).getTime();
+
+  const daysEl  = document.getElementById('bf-cd-days');
+  const hoursEl = document.getElementById('bf-cd-hours');
+  const minsEl  = document.getElementById('bf-cd-mins');
+  const secsEl  = document.getElementById('bf-cd-secs');
+
+  function updateCountdown() {
+    const now = Date.now();
+    const diff = targetTime - now;
+
+    if (diff <= 0) {
+      if (daysEl)  daysEl.textContent  = '00';
+      if (hoursEl) hoursEl.textContent = '00';
+      if (minsEl)  minsEl.textContent  = '00';
+      if (secsEl)  secsEl.textContent  = '00';
+      return;
+    }
+
+    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const m = Math.floor((diff / (1000 * 60)) % 60);
+    const s = Math.floor((diff / 1000) % 60);
+
+    if (daysEl)  daysEl.textContent  = String(d).padStart(2, '0');
+    if (hoursEl) hoursEl.textContent = String(h).padStart(2, '0');
+    if (minsEl)  minsEl.textContent  = String(m).padStart(2, '0');
+    if (secsEl)  secsEl.textContent  = String(s).padStart(2, '0');
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // Sound toggle
+  const soundBtn = document.getElementById('bf-countdown-sound-toggle');
+  const video = document.getElementById('bf-countdown-bg-video');
+  if (soundBtn && video) {
+    soundBtn.addEventListener('click', () => {
+      video.muted = !video.muted;
+      soundBtn.textContent = video.muted ? 'SOUND: OFF' : 'SOUND: ON';
+      if (!video.muted) {
+        soundBtn.style.background = '#ffe600';
+        soundBtn.style.color = '#050505';
+      } else {
+        soundBtn.style.background = '';
+        soundBtn.style.color = '';
+      }
+    });
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "BLED Countdown Drop",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "drop_title",
+      "label": "Drop Title",
+      "default": "WLED BLED DROP DAY"
+    },
+    {
+      "type": "text",
+      "id": "drop_subtitle",
+      "label": "Drop Subtitle",
+      "default": "DECEMBER 01, 2026 // FROM BLEDFAKE WITH LOVE"
+    },
+    {
+      "type": "text",
+      "id": "target_date",
+      "label": "Target Drop Date (ISO format)",
+      "default": "2026-12-01T00:00:00",
+      "info": "Format: YYYY-MM-DDTHH:MM:SS"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "BLED Countdown Drop"
+    }
+  ]
+}
+{% endschema %}

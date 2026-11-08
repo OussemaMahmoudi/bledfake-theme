@@ -2956,3 +2956,308 @@ input, select, textarea { font: inherit; }
   pointer-events: none;
   margin-top: 0.4rem;
 }
+
+/* =========================================================
+   COUNTDOWN DROP LANDING PAGE (WLED BLED DROP DAY)
+   ========================================================= */
+.bf-countdown-page {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: #050505;
+  color: #F1EEE6;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: clamp(1.2rem, 3.5vh, 2.5rem) clamp(1.2rem, 4vw, 3rem);
+  box-sizing: border-box;
+  z-index: 999;
+}
+
+/* Background video */
+.bf-countdown-video-wrap {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.bf-countdown-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+  filter: contrast(1.08) brightness(0.85);
+}
+
+.bf-countdown-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(5, 5, 5, 0.45) 0%, rgba(5, 5, 5, 0.78) 100%),
+              linear-gradient(180deg, rgba(5, 5, 5, 0.7) 0%, rgba(5, 5, 5, 0.35) 50%, rgba(5, 5, 5, 0.85) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Grain on top of video */
+.bf-countdown-page .bf-grain {
+  z-index: 3;
+  opacity: 0.22;
+}
+
+/* Top brand mark */
+.bf-countdown-header {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1400px;
+}
+
+.bf-countdown-header__brand {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.bf-countdown-logo-img {
+  width: auto;
+  height: clamp(38px, 5vw, 56px);
+  object-fit: contain;
+}
+
+.bf-countdown-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-body, 'Space Grotesk', sans-serif);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bf-off-white-70, rgba(241, 238, 230, 0.7));
+  border: 1px solid rgba(241, 238, 230, 0.15);
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(5, 5, 5, 0.5);
+  backdrop-filter: blur(8px);
+}
+
+.bf-countdown-sound-btn {
+  background: rgba(241, 238, 230, 0.08);
+  border: 1px solid rgba(241, 238, 230, 0.2);
+  color: var(--bf-off-white, #F1EEE6);
+  padding: 0.45rem 1rem;
+  font-family: var(--font-body, 'Space Grotesk', sans-serif);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 2px;
+  backdrop-filter: blur(8px);
+}
+
+.bf-countdown-sound-btn:hover {
+  background: var(--bf-yellow, #ffe600);
+  color: #050505;
+  border-color: var(--bf-yellow, #ffe600);
+}
+
+/* Center hero section */
+.bf-countdown-center {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 900px;
+  width: 100%;
+  margin: auto 0;
+  padding: 1rem 0;
+}
+
+.bf-countdown-tagline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-body, 'Space Grotesk', sans-serif);
+  font-size: clamp(0.7rem, 1.4vw, 0.9rem);
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--bf-yellow, #ffe600);
+  margin-bottom: 0.8rem;
+}
+
+.bf-countdown-title {
+  font-family: var(--font-display, 'Bebas Neue', sans-serif);
+  font-size: clamp(3.2rem, 10vw, 8.5rem);
+  line-height: 0.9;
+  letter-spacing: 0.04em;
+  color: #F1EEE6;
+  text-transform: uppercase;
+  margin: 0 0 0.8rem 0;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
+}
+
+.bf-countdown-title-sub {
+  font-family: var(--font-body, 'Space Grotesk', sans-serif);
+  font-size: clamp(0.75rem, 1.6vw, 1rem);
+  letter-spacing: 0.22em;
+  color: rgba(241, 238, 230, 0.7);
+  text-transform: uppercase;
+  margin-bottom: 2.5rem;
+}
+
+/* Countdown Grid */
+.bf-countdown-timer {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.8rem, 2vw, 2.2rem);
+  width: 100%;
+  max-width: 720px;
+  margin-bottom: 2.5rem;
+}
+
+.bf-countdown-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 10, 10, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(241, 238, 230, 0.14);
+  padding: clamp(1rem, 2.5vw, 1.8rem) clamp(0.5rem, 1.5vw, 1.2rem);
+  position: relative;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.bf-countdown-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: transparent;
+  transition: background 0.3s ease;
+}
+
+.bf-countdown-card:hover {
+  border-color: rgba(255, 230, 0, 0.5);
+  transform: translateY(-2px);
+}
+
+.bf-countdown-card:hover::before {
+  background: var(--bf-yellow, #ffe600);
+}
+
+.bf-countdown-num {
+  font-family: var(--font-display, 'Bebas Neue', sans-serif);
+  font-size: clamp(3.2rem, 8vw, 6.5rem);
+  line-height: 0.9;
+  letter-spacing: 0.02em;
+  color: var(--bf-yellow, #ffe600);
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 0.4rem;
+}
+
+.bf-countdown-label {
+  font-family: var(--font-body, 'Space Grotesk', sans-serif);
+  font-size: clamp(0.55rem, 1vw, 0.72rem);
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(241, 238, 230, 0.6);
+}
+
+/* Actions / Social */
+.bf-countdown-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+}
+
+.bf-countdown-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  background: var(--bf-yellow, #ffe600);
+  color: #050505;
+  font-family: var(--font-display, 'Bebas Neue', sans-serif);
+  font-size: 1.5rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.75rem 2.2rem;
+  text-decoration: none;
+  font-weight: 700;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 20px rgba(255, 230, 0, 0.25);
+}
+
+.bf-countdown-cta:hover {
+  background: #ffffff;
+  color: #050505;
+  box-shadow: 0 4px 25px rgba(255, 255, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+.bf-countdown-cta .bf-countdown-cta__arrow {
+  font-size: 1.2rem;
+  transition: transform 0.2s ease;
+}
+
+.bf-countdown-cta:hover .bf-countdown-cta__arrow {
+  transform: translateX(4px);
+}
+
+/* Footer */
+.bf-countdown-footer {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1400px;
+  font-family: var(--font-body, 'Space Grotesk', sans-serif);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(241, 238, 230, 0.45);
+}
+
+@media (max-width: 768px) {
+  .bf-countdown-header {
+    justify-content: center;
+  }
+  .bf-countdown-sound-btn {
+    display: none;
+  }
+  .bf-countdown-timer {
+    gap: 0.5rem;
+  }
+  .bf-countdown-card {
+    padding: 0.8rem 0.3rem;
+  }
+  .bf-countdown-footer {
+    flex-direction: column;
+    gap: 0.4rem;
+    text-align: center;
+  }
+}
+
