@@ -2780,7 +2780,7 @@ input, select, textarea { font: inherit; }
    ============================================================= */
 
 .bf-pdp-page {
-  padding-top: 5rem;
+  padding-top: clamp(6.5rem, 9.5vw, 7.5rem);
 }
 
 .bf-pdp-breadcrumb-bar {
