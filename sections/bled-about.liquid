@@ -8,16 +8,32 @@
 
   <!-- Header -->
   <header class="bf-header" role="banner">
-    <a href="/" class="bf-logo-link" aria-label="BLED FAKE — Home">
-      {%- render 'bled-logo' -%}
-      <span class="visually-hidden">BLED FAKE</span>
-    </a>
-    <div class="bf-nav-right">
-      <button class="bf-nav-btn" data-cart-open aria-label="Open cart">
-        <span>BAG</span>
-        <span class="bf-cart-badge-count bf-cart-count">{{ cart.item_count }}</span>
-      </button>
+    <div class="bf-header__inner">
+      <a href="/" class="bf-logo-link" aria-label="BLED FAKE — Home">
+        {%- render 'bled-logo' -%}
+        <span class="visually-hidden">BLED FAKE</span>
+      </a>
+
+      <a href="/" class="bf-header__mid-logo" aria-label="BLED FAKE">
+        <img
+          src="{{ 'MidLog.png' | asset_url }}"
+          alt="BLED FAKE"
+          class="bf-logo-mid-img"
+          loading="eager"
+          width="220"
+          height="60"
+        >
+      </a>
+
+      <div class="bf-nav-right">
+        <button class="bf-nav-btn" data-cart-open aria-label="Open cart">
+          <span>BAG</span>
+          <span class="bf-cart-badge-count bf-cart-count">{{ cart.item_count }}</span>
+        </button>
+      </div>
     </div>
+
+    {%- render 'bled-ticker' -%}
   </header>
 
   <!-- Page Title -->

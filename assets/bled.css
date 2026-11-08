@@ -158,7 +158,7 @@ input, select, textarea { font: inherit; }
 }
 
 /* ---------------------------------------------------------
-   5. UNIFIED HEADER (Top Bar)
+   5. UNIFIED HEADER (Top Bar + Scrolling Banner)
    --------------------------------------------------------- */
 .bf-header {
   position: fixed;
@@ -167,34 +167,137 @@ input, select, textarea { font: inherit; }
   right: 0;
   z-index: 200;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem 3rem;
-  background: linear-gradient(to bottom, rgba(5, 5, 5, 0.95) 0%, rgba(5, 5, 5, 0.6) 70%, transparent 100%);
+  flex-direction: column;
   pointer-events: none;
 }
 
 .bf-header > * { pointer-events: all; }
 
+.bf-header__inner {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.9rem 3rem;
+  background: linear-gradient(to bottom, rgba(5, 5, 5, 0.98) 0%, rgba(5, 5, 5, 0.9) 75%, rgba(5, 5, 5, 0.75) 100%);
+  pointer-events: none;
+}
+
+.bf-header__inner > * { pointer-events: all; }
+
 .bf-logo-link {
   display: inline-flex;
   align-items: center;
-  transition: transform var(--t-fast) ease;
+  transition: transform var(--t-fast) ease, opacity var(--t-fast) ease;
+  z-index: 3;
 }
 
-.bf-logo-link:hover { transform: scale(1.02); }
+.bf-logo-link:hover { transform: scale(1.04); }
 
 .bf-logo-img {
-  height: clamp(48px, 6.5vw, 70px);
+  height: clamp(36px, 4.5vw, 48px);
   width: auto;
-  max-width: 260px;
+  max-width: 140px;
   object-fit: contain;
+  display: block;
+}
+
+.bf-header__mid-logo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: transform var(--t-fast) ease, opacity var(--t-fast) ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.bf-header__mid-logo:hover {
+  transform: translate(-50%, -50%) scale(1.03);
+}
+
+.bf-logo-mid-img {
+  height: clamp(24px, 3.2vw, 36px);
+  width: auto;
+  max-width: clamp(140px, 20vw, 220px);
+  object-fit: contain;
+  display: block;
 }
 
 .bf-nav-right {
   display: flex;
   align-items: center;
   gap: 2rem;
+  z-index: 3;
+}
+
+/* Continuous Horizontal Auto-Scrolling Ticker Banner */
+.bf-ticker-banner {
+  position: relative;
+  width: 100%;
+  height: 38px;
+  background-color: #ffe600;
+  color: #050505;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  pointer-events: all;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.45);
+  box-sizing: border-box;
+  user-select: none;
+}
+
+.bf-ticker-track {
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+  will-change: transform;
+  animation: bf-ticker-scroll 24s linear infinite;
+}
+
+.bf-ticker-group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.bf-ticker-item {
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, Arial, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #050505;
+  padding: 0 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.bf-ticker-sep {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #050505;
+  opacity: 0.55;
+  user-select: none;
+}
+
+/* Moves from LEFT to RIGHT in a continuous horizontal loop with NO pauses */
+@keyframes bf-ticker-scroll {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 .bf-nav-btn {
@@ -515,7 +618,7 @@ input, select, textarea { font: inherit; }
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding-top: 5.5rem;
+  padding-top: clamp(6.5rem, 9.5vw, 7.5rem);
 }
 
 
@@ -1677,7 +1780,12 @@ input, select, textarea { font: inherit; }
   a, button { cursor: auto; }
   .bf-cursor { display: none !important; }
 
-  .bf-header { padding: 1.2rem 1.5rem; }
+  .bf-header { padding: 0; }
+  .bf-header__inner { padding: 0.75rem 1.2rem; }
+  .bf-logo-img { height: 34px; }
+  .bf-logo-mid-img { height: 22px; max-width: 140px; }
+  .bf-ticker-banner { height: 34px; }
+  .bf-ticker-item { font-size: 0.74rem; padding: 0 0.85rem; }
   .bf-nav-right { gap: 1rem; }
 
   /* Landing mobile */
@@ -2285,7 +2393,7 @@ input, select, textarea { font: inherit; }
    ============================================================= */
 
 .bf-catalog-page {
-  padding-top: 5rem;
+  padding-top: clamp(6.5rem, 9.5vw, 7.5rem);
 }
 
 .bf-catalog-header {

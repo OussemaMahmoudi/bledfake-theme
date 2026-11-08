@@ -112,21 +112,119 @@ ul, ol { list-style: none; }
 .bf-header {
   position: fixed; top: 0; left: 0; right: 0;
   z-index: 200;
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 1.5rem 3rem;
-  background: linear-gradient(to bottom, rgba(5, 5, 5, 0.95) 0%, rgba(5, 5, 5, 0.6) 70%, transparent 100%);
+  display: flex; flex-direction: column;
   pointer-events: none;
 }
 .bf-header > * { pointer-events: all; }
 
+.bf-header__inner {
+  position: relative;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.9rem 3rem;
+  background: linear-gradient(to bottom, rgba(5, 5, 5, 0.98) 0%, rgba(5, 5, 5, 0.9) 75%, rgba(5, 5, 5, 0.75) 100%);
+  pointer-events: none;
+}
+.bf-header__inner > * { pointer-events: all; }
+
 .bf-logo-link {
   display: inline-flex; align-items: center;
-  transition: transform var(--t-fast) ease;
+  transition: transform var(--t-fast) ease, opacity var(--t-fast) ease;
+  z-index: 3;
 }
-.bf-logo-link:hover { transform: scale(1.02); }
+.bf-logo-link:hover { transform: scale(1.04); }
 .bf-logo-img {
-  height: clamp(34px, 4.5vw, 48px);
-  width: auto; max-width: 180px; object-fit: contain;
+  height: clamp(36px, 4.5vw, 48px);
+  width: auto; max-width: 140px; object-fit: contain;
+  display: block;
+}
+
+.bf-header__mid-logo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: transform var(--t-fast) ease, opacity var(--t-fast) ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+.bf-header__mid-logo:hover {
+  transform: translate(-50%, -50%) scale(1.03);
+}
+.bf-logo-mid-img {
+  height: clamp(24px, 3.2vw, 36px);
+  width: auto;
+  max-width: clamp(140px, 20vw, 220px);
+  object-fit: contain;
+  display: block;
+}
+
+/* Continuous Horizontal Auto-Scrolling Ticker Banner */
+.bf-ticker-banner {
+  position: relative;
+  width: 100%;
+  height: 38px;
+  background-color: #ffe600;
+  color: #050505;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  pointer-events: all;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.45);
+  box-sizing: border-box;
+  user-select: none;
+}
+
+.bf-ticker-track {
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+  will-change: transform;
+  animation: bf-ticker-scroll 24s linear infinite;
+}
+
+.bf-ticker-group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.bf-ticker-item {
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, Arial, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #050505;
+  padding: 0 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.bf-ticker-sep {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #050505;
+  opacity: 0.55;
+  user-select: none;
+}
+
+/* Moves from LEFT to RIGHT in a continuous horizontal loop with NO pauses */
+@keyframes bf-ticker-scroll {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 .bf-nav-right { display: flex; align-items: center; gap: 1.5rem; }
@@ -422,7 +520,12 @@ ul, ol { list-style: none; }
 
 @media (max-width: 900px) {
   body { cursor: auto; } a, button { cursor: auto; } #bf-cursor { display: none !important; }
-  .bf-header { padding: 1.2rem 1.5rem; }
+  .bf-header { padding: 0; }
+  .bf-header__inner { padding: 0.75rem 1.2rem; }
+  .bf-logo-img { height: 34px; }
+  .bf-logo-mid-img { height: 22px; max-width: 140px; }
+  .bf-ticker-banner { height: 34px; }
+  .bf-ticker-item { font-size: 0.74rem; padding: 0 0.85rem; }
   .bf-landing__content { padding: 0 1.5rem; max-width: 100%; }
   .bf-landing__city { height: 60%; }
   .bf-landing__mascot { right: 5%; bottom: 22%; width: 80px; }
@@ -451,7 +554,7 @@ ul, ol { list-style: none; }
      ================================================================ -->
 <nav class="bf-menu" id="bf-main-menu" role="navigation" aria-label="Main navigation" aria-modal="true">
   <div class="bf-menu__header">
-    <a href="#" class="bf-logo-link" onclick="showLanding(event)"><img src="img/Fichier 21.png" alt="BLED FAKE" class="bf-logo-img"></a>
+    <a href="#" class="bf-logo-link" onclick="showLanding(event)"><img src="img/MainLog.png" alt="BLED FAKE" class="bf-logo-img"></a>
     <button class="bf-nav-btn" id="menu-close-btn" aria-label="Close menu">
       <span>CLOSE ✕</span>
     </button>
@@ -500,7 +603,7 @@ ul, ol { list-style: none; }
   <!-- Top Brand Mark -->
   <header class="bf-minimal-gate__header" role="banner">
     <div class="bf-minimal-gate__logo">
-      <img src="img/Fichier 21.png" alt="BLED FAKE" class="bf-logo-img">
+      <img src="img/MainLog.png" alt="BLED FAKE" class="bf-logo-img">
     </div>
   </header>
 
@@ -554,21 +657,59 @@ ul, ol { list-style: none; }
      ================================================================ -->
 <section class="bf-page bf-catalog-page" id="catalog-view" style="display:none;" aria-label="BLED FAKE Catalog">
   <header class="bf-header" role="banner">
-    <a href="#" class="bf-logo-link" onclick="window.showLanding(event)">
-      <img src="img/Fichier 21.png" alt="BLED FAKE" class="bf-logo-img">
-    </a>
-    <div class="bf-nav-right">
-      <button class="bf-nav-btn" onclick="openCart()" aria-label="Open cart">
-        <span>BAG</span>
-        <span class="bf-cart-badge-count bf-cart-count" id="catalog-cart-badge">0</span>
-      </button>
-      <button class="bf-nav-btn" onclick="openMenu()" aria-label="Open menu">
-        <span>MENU</span>
-        <div class="bf-hamburger" aria-hidden="true">
-          <div class="bf-hamburger__line"></div>
-          <div class="bf-hamburger__line"></div>
+    <div class="bf-header__inner">
+      <a href="#" class="bf-logo-link" onclick="window.showLanding(event)">
+        <img src="img/MainLog.png" alt="BLED FAKE" class="bf-logo-img">
+      </a>
+      <a href="#" class="bf-header__mid-logo" onclick="window.showLanding(event)" aria-label="BLED FAKE">
+        <img src="img/MidLog.png" alt="BLED FAKE" class="bf-logo-mid-img">
+      </a>
+      <div class="bf-nav-right">
+        <button class="bf-nav-btn" onclick="openCart()" aria-label="Open cart">
+          <span>BAG</span>
+          <span class="bf-cart-badge-count bf-cart-count" id="catalog-cart-badge">0</span>
+        </button>
+        <button class="bf-nav-btn" onclick="openMenu()" aria-label="Open menu">
+          <span>MENU</span>
+          <div class="bf-hamburger" aria-hidden="true">
+            <div class="bf-hamburger__line"></div>
+            <div class="bf-hamburger__line"></div>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <div class="bf-ticker-banner" role="marquee" aria-label="BLED FAKE Announcement">
+      <div class="bf-ticker-track">
+        <div class="bf-ticker-group">
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
         </div>
-      </button>
+        <div class="bf-ticker-group" aria-hidden="true">
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -605,21 +746,59 @@ ul, ol { list-style: none; }
 <section class="bf-store" id="store">
   <!-- Top Bar -->
   <header class="bf-header" role="banner">
-    <a href="#" class="bf-logo-link" onclick="window.showLanding(event)">
-      <img src="img/Fichier 21.png" alt="BLED FAKE" class="bf-logo-img">
-    </a>
-    <div class="bf-nav-right">
-      <button class="bf-nav-btn" id="cart-open-btn" aria-label="Open cart">
-        <span>BAG</span>
-        <span class="bf-cart-badge-count" id="cart-badge">0</span>
-      </button>
-      <button class="bf-nav-btn" id="menu-open-btn-store" aria-label="Open menu">
-        <span>MENU</span>
-        <div class="bf-hamburger" aria-hidden="true">
-          <div class="bf-hamburger__line"></div>
-          <div class="bf-hamburger__line"></div>
+    <div class="bf-header__inner">
+      <a href="#" class="bf-logo-link" onclick="window.showLanding(event)">
+        <img src="img/MainLog.png" alt="BLED FAKE" class="bf-logo-img">
+      </a>
+      <a href="#" class="bf-header__mid-logo" onclick="window.showLanding(event)" aria-label="BLED FAKE">
+        <img src="img/MidLog.png" alt="BLED FAKE" class="bf-logo-mid-img">
+      </a>
+      <div class="bf-nav-right">
+        <button class="bf-nav-btn" id="cart-open-btn" aria-label="Open cart">
+          <span>BAG</span>
+          <span class="bf-cart-badge-count" id="cart-badge">0</span>
+        </button>
+        <button class="bf-nav-btn" id="menu-open-btn-store" aria-label="Open menu">
+          <span>MENU</span>
+          <div class="bf-hamburger" aria-hidden="true">
+            <div class="bf-hamburger__line"></div>
+            <div class="bf-hamburger__line"></div>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <div class="bf-ticker-banner" role="marquee" aria-label="BLED FAKE Announcement">
+      <div class="bf-ticker-track">
+        <div class="bf-ticker-group">
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
         </div>
-      </button>
+        <div class="bf-ticker-group" aria-hidden="true">
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -733,14 +912,52 @@ ul, ol { list-style: none; }
 <section class="bf-checkout-page" id="checkout" style="display: none;">
   <!-- Top Bar -->
   <header class="bf-header" role="banner">
-    <a href="#" class="bf-logo-link" onclick="showLanding(event)">
-      <img src="img/Fichier 21.png" alt="BLED FAKE" class="bf-logo-img">
-    </a>
-    <div class="bf-nav-right">
-      <button class="bf-nav-btn" onclick="showStore(event)">
-        <span>RETURN TO DROPS</span>
-        <span>←</span>
-      </button>
+    <div class="bf-header__inner">
+      <a href="#" class="bf-logo-link" onclick="showLanding(event)">
+        <img src="img/MainLog.png" alt="BLED FAKE" class="bf-logo-img">
+      </a>
+      <a href="#" class="bf-header__mid-logo" onclick="showLanding(event)" aria-label="BLED FAKE">
+        <img src="img/MidLog.png" alt="BLED FAKE" class="bf-logo-mid-img">
+      </a>
+      <div class="bf-nav-right">
+        <button class="bf-nav-btn" onclick="showStore(event)">
+          <span>RETURN TO DROPS</span>
+          <span>←</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="bf-ticker-banner" role="marquee" aria-label="BLED FAKE Announcement">
+      <div class="bf-ticker-track">
+        <div class="bf-ticker-group">
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+        </div>
+        <div class="bf-ticker-group" aria-hidden="true">
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -856,21 +1073,59 @@ ul, ol { list-style: none; }
      ================================================================ -->
 <section class="bf-page bf-about-page" id="about-view" style="display:none;" aria-label="About BLED FAKE">
   <header class="bf-header" role="banner">
-    <a href="#" class="bf-logo-link" onclick="window.showLanding(event)" aria-label="BLED FAKE — Home">
-      <img src="img/Fichier 21.png" alt="BLED FAKE" class="bf-logo-img">
-    </a>
-    <div class="bf-nav-right">
-      <button class="bf-nav-btn" onclick="openCart()" aria-label="Open cart">
-        <span>BAG</span>
-        <span class="bf-cart-badge-count bf-cart-count" id="about-cart-badge">0</span>
-      </button>
-      <button class="bf-nav-btn" onclick="openMenu()" aria-label="Open menu">
-        <span>MENU</span>
-        <div class="bf-hamburger" aria-hidden="true">
-          <div class="bf-hamburger__line"></div>
-          <div class="bf-hamburger__line"></div>
+    <div class="bf-header__inner">
+      <a href="#" class="bf-logo-link" onclick="window.showLanding(event)" aria-label="BLED FAKE — Home">
+        <img src="img/MainLog.png" alt="BLED FAKE" class="bf-logo-img">
+      </a>
+      <a href="#" class="bf-header__mid-logo" onclick="window.showLanding(event)" aria-label="BLED FAKE">
+        <img src="img/MidLog.png" alt="BLED FAKE" class="bf-logo-mid-img">
+      </a>
+      <div class="bf-nav-right">
+        <button class="bf-nav-btn" onclick="openCart()" aria-label="Open cart">
+          <span>BAG</span>
+          <span class="bf-cart-badge-count bf-cart-count" id="about-cart-badge">0</span>
+        </button>
+        <button class="bf-nav-btn" onclick="openMenu()" aria-label="Open menu">
+          <span>MENU</span>
+          <div class="bf-hamburger" aria-hidden="true">
+            <div class="bf-hamburger__line"></div>
+            <div class="bf-hamburger__line"></div>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <div class="bf-ticker-banner" role="marquee" aria-label="BLED FAKE Announcement">
+      <div class="bf-ticker-track">
+        <div class="bf-ticker-group">
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
         </div>
-      </button>
+        <div class="bf-ticker-group" aria-hidden="true">
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -942,21 +1197,59 @@ ul, ol { list-style: none; }
      ================================================================ -->
 <section class="bf-page bf-manifesto-page" id="manifesto-view" style="display:none;" aria-label="BLED FAKE Manifesto">
   <header class="bf-header" role="banner">
-    <a href="#" class="bf-logo-link" onclick="window.showLanding(event)" aria-label="BLED FAKE — Home">
-      <img src="img/Fichier 21.png" alt="BLED FAKE" class="bf-logo-img">
-    </a>
-    <div class="bf-nav-right">
-      <button class="bf-nav-btn" onclick="openCart()" aria-label="Open cart">
-        <span>BAG</span>
-        <span class="bf-cart-badge-count bf-cart-count" id="manifesto-cart-badge">0</span>
-      </button>
-      <button class="bf-nav-btn" onclick="openMenu()" aria-label="Open menu">
-        <span>MENU</span>
-        <div class="bf-hamburger" aria-hidden="true">
-          <div class="bf-hamburger__line"></div>
-          <div class="bf-hamburger__line"></div>
+    <div class="bf-header__inner">
+      <a href="#" class="bf-logo-link" onclick="window.showLanding(event)" aria-label="BLED FAKE — Home">
+        <img src="img/MainLog.png" alt="BLED FAKE" class="bf-logo-img">
+      </a>
+      <a href="#" class="bf-header__mid-logo" onclick="window.showLanding(event)" aria-label="BLED FAKE">
+        <img src="img/MidLog.png" alt="BLED FAKE" class="bf-logo-mid-img">
+      </a>
+      <div class="bf-nav-right">
+        <button class="bf-nav-btn" onclick="openCart()" aria-label="Open cart">
+          <span>BAG</span>
+          <span class="bf-cart-badge-count bf-cart-count" id="manifesto-cart-badge">0</span>
+        </button>
+        <button class="bf-nav-btn" onclick="openMenu()" aria-label="Open menu">
+          <span>MENU</span>
+          <div class="bf-hamburger" aria-hidden="true">
+            <div class="bf-hamburger__line"></div>
+            <div class="bf-hamburger__line"></div>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <div class="bf-ticker-banner" role="marquee" aria-label="BLED FAKE Announcement">
+      <div class="bf-ticker-track">
+        <div class="bf-ticker-group">
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
         </div>
-      </button>
+        <div class="bf-ticker-group" aria-hidden="true">
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -1007,21 +1300,59 @@ ul, ol { list-style: none; }
      ================================================================ -->
 <section class="bf-page bf-contact-page" id="contact-view" style="display:none;" aria-label="Contact BLED FAKE">
   <header class="bf-header" role="banner">
-    <a href="#" class="bf-logo-link" onclick="window.showLanding(event)" aria-label="BLED FAKE — Home">
-      <img src="img/Fichier 21.png" alt="BLED FAKE" class="bf-logo-img">
-    </a>
-    <div class="bf-nav-right">
-      <button class="bf-nav-btn" onclick="openCart()" aria-label="Open cart">
-        <span>BAG</span>
-        <span class="bf-cart-badge-count bf-cart-count" id="contact-cart-badge">0</span>
-      </button>
-      <button class="bf-nav-btn" onclick="openMenu()" aria-label="Open menu">
-        <span>MENU</span>
-        <div class="bf-hamburger" aria-hidden="true">
-          <div class="bf-hamburger__line"></div>
-          <div class="bf-hamburger__line"></div>
+    <div class="bf-header__inner">
+      <a href="#" class="bf-logo-link" onclick="window.showLanding(event)" aria-label="BLED FAKE — Home">
+        <img src="img/MainLog.png" alt="BLED FAKE" class="bf-logo-img">
+      </a>
+      <a href="#" class="bf-header__mid-logo" onclick="window.showLanding(event)" aria-label="BLED FAKE">
+        <img src="img/MidLog.png" alt="BLED FAKE" class="bf-logo-mid-img">
+      </a>
+      <div class="bf-nav-right">
+        <button class="bf-nav-btn" onclick="openCart()" aria-label="Open cart">
+          <span>BAG</span>
+          <span class="bf-cart-badge-count bf-cart-count" id="contact-cart-badge">0</span>
+        </button>
+        <button class="bf-nav-btn" onclick="openMenu()" aria-label="Open menu">
+          <span>MENU</span>
+          <div class="bf-hamburger" aria-hidden="true">
+            <div class="bf-hamburger__line"></div>
+            <div class="bf-hamburger__line"></div>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <div class="bf-ticker-banner" role="marquee" aria-label="BLED FAKE Announcement">
+      <div class="bf-ticker-track">
+        <div class="bf-ticker-group">
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
         </div>
-      </button>
+        <div class="bf-ticker-group" aria-hidden="true">
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+          <span class="bf-ticker-item">وِلاد البلاد ستوديو علامة تجارية مسجّلة - FROM BLEDFAKE WITH LOVE</span>
+          <span class="bf-ticker-sep" aria-hidden="true">//</span>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -1115,7 +1446,7 @@ ul, ol { list-style: none; }
   <div class="bf-menu__grain" aria-hidden="true"></div>
   <div class="bf-menu__top">
     <a href="#" class="bf-logo-link" onclick="closeMenu(); showLanding(event);">
-      <img src="img/Fichier 21.png" alt="BLED FAKE" class="bf-logo-img">
+      <img src="img/MainLog.png" alt="BLED FAKE" class="bf-logo-img">
     </a>
     <button class="bf-menu__close" id="menu-close-btn" onclick="closeMenu()" aria-label="Close menu">
       ✕
@@ -2002,7 +2333,7 @@ if (checkoutForm) {
       document.getElementById('checkout').innerHTML = `
         <header class="bf-header" role="banner">
           <a href="#" class="bf-logo-link" onclick="window.showLanding(event)">
-            <img src="img/Fichier 21.png" alt="BLED FAKE" class="bf-logo-img">
+            <img src="img/MainLog.png" alt="BLED FAKE" class="bf-logo-img">
           </a>
         </header>
         <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80svh;gap:2rem;text-align:center;padding:2rem;">
