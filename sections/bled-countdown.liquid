@@ -79,17 +79,44 @@
       </div>
     </div>
 
-    <!-- Action Link -->
+    <!-- Password Gate + Follow -->
     <div class="bf-countdown-actions">
+
+      <!-- Password Access Form -->
+      <form class="bf-countdown-gate-form" id="bf-cd-gate-form" autocomplete="off" novalidate>
+        <div class="bf-countdown-gate-row" id="bf-cd-gate-row">
+          <input
+            type="password"
+            id="bf-cd-gate-input"
+            class="bf-countdown-gate-input"
+            placeholder="ENTER ACCESS CODE"
+            autocomplete="current-password"
+            aria-label="Enter access code to unlock early access"
+          >
+          <button type="submit" class="bf-countdown-gate-btn" aria-label="Unlock early access">
+            <span>UNLOCK</span>
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+        <div class="bf-countdown-gate-error" id="bf-cd-gate-error" role="alert" style="display:none;">
+          [ INVALID CODE — TRY AGAIN ]
+        </div>
+        <div class="bf-countdown-gate-success" id="bf-cd-gate-success" style="display:none;">
+          ✓ ACCESS GRANTED — WELCOME TO WLED BLED
+        </div>
+      </form>
+
+      <!-- Instagram Follow -->
       <a
-        href="{{ section.settings.instagram_url | default: 'https://instagram.com/bledfake' }}"
+        href="https://instagram.com/bledfake_"
         target="_blank"
         rel="noopener noreferrer"
         class="bf-countdown-cta"
       >
-        <span>FOLLOW @BLEDFAKE</span>
+        <span>FOLLOW @WLEDBLED</span>
         <span class="bf-countdown-cta__arrow" aria-hidden="true">→</span>
       </a>
+
     </div>
   </main>
 
@@ -103,7 +130,7 @@
 
 <script>
 (function() {
-  // Target: December 1, 2026 00:00:00 (Tunis / UTC+1)
+  // Target: December 1, 2026 00:00:00
   const targetDateStr = {{ section.settings.target_date | default: "2026-12-01T00:00:00" | json }};
   const targetTime = new Date(targetDateStr).getTime();
 
@@ -145,12 +172,42 @@
     soundBtn.addEventListener('click', () => {
       video.muted = !video.muted;
       soundBtn.textContent = video.muted ? 'SOUND: OFF' : 'SOUND: ON';
-      if (!video.muted) {
-        soundBtn.style.background = '#ffe600';
-        soundBtn.style.color = '#050505';
+      soundBtn.classList.toggle('is-active', !video.muted);
+    });
+  }
+
+  // Password gate
+  const gateForm    = document.getElementById('bf-cd-gate-form');
+  const gateInput   = document.getElementById('bf-cd-gate-input');
+  const gateRow     = document.getElementById('bf-cd-gate-row');
+  const gateError   = document.getElementById('bf-cd-gate-error');
+  const gateSuccess = document.getElementById('bf-cd-gate-success');
+
+  const CORRECT_PASS = 'frombledfakewithlove';
+
+  if (gateForm) {
+    gateForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const val = (gateInput ? gateInput.value : '').trim().toLowerCase();
+
+      if (val === CORRECT_PASS) {
+        // Correct password
+        if (gateError)   gateError.style.display   = 'none';
+        if (gateSuccess) gateSuccess.style.display = 'block';
+        if (gateRow)     gateRow.style.display      = 'none';
+        // Redirect to store after a short delay
+        setTimeout(() => {
+          window.location.href = '/collections/all';
+        }, 1200);
       } else {
-        soundBtn.style.background = '';
-        soundBtn.style.color = '';
+        // Wrong password
+        if (gateSuccess) gateSuccess.style.display = 'none';
+        if (gateError)   gateError.style.display   = 'block';
+        if (gateRow) {
+          gateRow.classList.add('is-error');
+          setTimeout(() => gateRow.classList.remove('is-error'), 600);
+        }
+        if (gateInput) { gateInput.focus(); gateInput.select(); }
       }
     });
   }
