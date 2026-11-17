@@ -3339,6 +3339,139 @@ input, select, textarea { font: inherit; }
   transform: translateX(4px);
 }
 
+/* Compact countdown variant — smaller numbers, top-positioned */
+.bf-countdown-timer--compact {
+  max-width: 520px;
+  margin-bottom: 1.6rem;
+  gap: clamp(0.5rem, 1.2vw, 1.2rem);
+}
+
+.bf-countdown-card--sm {
+  padding: clamp(0.55rem, 1.4vw, 0.9rem) clamp(0.4rem, 1vw, 0.8rem);
+}
+
+.bf-countdown-num--sm {
+  font-size: clamp(1.9rem, 4.5vw, 3.5rem);
+  margin-bottom: 0.2rem;
+}
+
+/* ── WAITLIST FORM ─────────────────────────── */
+.bf-waitlist-heading {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-body, 'Space Grotesk', sans-serif);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(241, 238, 230, 0.75);
+  margin-bottom: -0.4rem;
+}
+
+.bf-waitlist-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.bf-waitlist-row {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 0.5rem;
+  transition: opacity 0.3s ease;
+}
+
+.bf-waitlist-input {
+  flex: 1 1 160px;
+  min-width: 0;
+  height: 50px;
+  background: rgba(5, 10, 30, 0.72);
+  border: 1px solid rgba(26, 58, 143, 0.5);
+  backdrop-filter: blur(12px);
+  color: #F1EEE6;
+  font-family: var(--font-body, 'Space Grotesk', sans-serif);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 0 1.1rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bf-waitlist-input--email {
+  flex: 2 1 220px;
+}
+
+.bf-waitlist-input::placeholder {
+  color: rgba(241, 238, 230, 0.32);
+  letter-spacing: 0.16em;
+}
+
+.bf-waitlist-input:focus {
+  border-color: rgba(26, 58, 143, 0.9);
+  box-shadow: 0 0 0 2px rgba(10, 36, 99, 0.35);
+}
+
+.bf-waitlist-row.is-error .bf-waitlist-input--email {
+  border-color: #ff3333;
+  animation: bf-shake 0.4s ease;
+}
+
+.bf-waitlist-btn {
+  height: 50px;
+  background: var(--bf-off-white, #F1EEE6);
+  border: none;
+  color: #050505;
+  font-family: var(--font-display, 'Bebas Neue', sans-serif);
+  font-size: 1.3rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0 1.6rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.2s ease, transform 0.15s ease;
+  white-space: nowrap;
+  clip-path: polygon(0% 0%, 93% 0%, 100% 35%, 100% 100%, 7% 100%, 0% 65%);
+}
+
+.bf-waitlist-btn:hover {
+  background: #ffffff;
+  transform: translateY(-1px);
+}
+
+.bf-waitlist-error {
+  font-family: var(--font-body, 'Space Grotesk', sans-serif);
+  font-size: 0.63rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #ff3333;
+}
+
+.bf-waitlist-success {
+  font-family: var(--font-body, 'Space Grotesk', sans-serif);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #00ff88;
+}
+
+.bf-waitlist-note {
+  font-family: var(--font-body, 'Space Grotesk', sans-serif);
+  font-size: 0.57rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(241, 238, 230, 0.3);
+  margin-top: 0.2rem;
+}
+
 /* Footer */
 .bf-countdown-footer {
   position: relative;
@@ -3367,6 +3500,29 @@ input, select, textarea { font: inherit; }
   }
   .bf-countdown-card {
     padding: 0.8rem 0.3rem;
+  }
+  .bf-countdown-timer--compact {
+    gap: 0.35rem;
+    max-width: 100%;
+  }
+  .bf-countdown-card--sm {
+    padding: 0.5rem 0.2rem;
+  }
+  .bf-countdown-num--sm {
+    font-size: clamp(1.5rem, 7vw, 2.2rem);
+  }
+  .bf-waitlist-row {
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .bf-waitlist-input {
+    flex: none;
+    width: 100%;
+  }
+  .bf-waitlist-btn {
+    width: 100%;
+    justify-content: center;
+    clip-path: none;
   }
   .bf-countdown-actions {
     max-width: 100%;

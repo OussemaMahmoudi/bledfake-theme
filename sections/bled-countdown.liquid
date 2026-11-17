@@ -47,63 +47,79 @@
 
   <!-- Center Content: Countdown & Headline -->
   <main class="bf-countdown-center" role="main">
+
+    <!-- Countdown Timer Grid — compact, near top -->
     <div class="bf-countdown-tagline">
       <span>//</span>
       <span>OFFICIAL COUNTDOWN</span>
       <span>//</span>
     </div>
 
+    <div class="bf-countdown-timer bf-countdown-timer--compact" id="bf-countdown-timer" aria-live="polite">
+      <div class="bf-countdown-card bf-countdown-card--sm">
+        <span class="bf-countdown-num bf-countdown-num--sm" id="bf-cd-days">00</span>
+        <span class="bf-countdown-label">DAYS</span>
+      </div>
+      <div class="bf-countdown-card bf-countdown-card--sm">
+        <span class="bf-countdown-num bf-countdown-num--sm" id="bf-cd-hours">00</span>
+        <span class="bf-countdown-label">HOURS</span>
+      </div>
+      <div class="bf-countdown-card bf-countdown-card--sm">
+        <span class="bf-countdown-num bf-countdown-num--sm" id="bf-cd-mins">00</span>
+        <span class="bf-countdown-label">MINUTES</span>
+      </div>
+      <div class="bf-countdown-card bf-countdown-card--sm">
+        <span class="bf-countdown-num bf-countdown-num--sm" id="bf-cd-secs">00</span>
+        <span class="bf-countdown-label">SECONDS</span>
+      </div>
+    </div>
+
+    <!-- Drop Title & Subtitle -->
     <h1 class="bf-countdown-title">{{ section.settings.drop_title | default: "WLED BLED DROP DAY" }}</h1>
 
     <div class="bf-countdown-title-sub">
       {{ section.settings.drop_subtitle | default: "DECEMBER 01, 2026 // FROM BLEDFAKE WITH LOVE" }}
     </div>
 
-    <!-- Countdown Timer Grid -->
-    <div class="bf-countdown-timer" id="bf-countdown-timer" aria-live="polite">
-      <div class="bf-countdown-card">
-        <span class="bf-countdown-num" id="bf-cd-days">00</span>
-        <span class="bf-countdown-label">DAYS</span>
-      </div>
-      <div class="bf-countdown-card">
-        <span class="bf-countdown-num" id="bf-cd-hours">00</span>
-        <span class="bf-countdown-label">HOURS</span>
-      </div>
-      <div class="bf-countdown-card">
-        <span class="bf-countdown-num" id="bf-cd-mins">00</span>
-        <span class="bf-countdown-label">MINUTES</span>
-      </div>
-      <div class="bf-countdown-card">
-        <span class="bf-countdown-num" id="bf-cd-secs">00</span>
-        <span class="bf-countdown-label">SECONDS</span>
-      </div>
-    </div>
-
-    <!-- Password Gate + Follow -->
+    <!-- Waitlist Form -->
     <div class="bf-countdown-actions">
 
-      <!-- Password Access Form -->
-      <form class="bf-countdown-gate-form" id="bf-cd-gate-form" autocomplete="off" novalidate>
-        <div class="bf-countdown-gate-row" id="bf-cd-gate-row">
+      <div class="bf-waitlist-heading">
+        <span class="bf-status-dot"></span>
+        <span>JOIN THE WAITLIST — BE FIRST TO KNOW</span>
+      </div>
+
+      <form class="bf-waitlist-form" id="bf-waitlist-form" autocomplete="off" novalidate>
+        <div class="bf-waitlist-row" id="bf-waitlist-row">
           <input
-            type="password"
-            id="bf-cd-gate-input"
-            class="bf-countdown-gate-input"
-            placeholder="ENTER ACCESS CODE"
-            autocomplete="current-password"
-            aria-label="Enter access code to unlock early access"
+            type="text"
+            id="bf-waitlist-name"
+            class="bf-waitlist-input"
+            placeholder="YOUR NAME"
+            autocomplete="given-name"
+            aria-label="Enter your name"
           >
-          <button type="submit" class="bf-countdown-gate-btn" aria-label="Unlock early access">
-            <span>UNLOCK</span>
+          <input
+            type="email"
+            id="bf-waitlist-email"
+            class="bf-waitlist-input bf-waitlist-input--email"
+            placeholder="YOUR EMAIL"
+            autocomplete="email"
+            aria-label="Enter your email"
+            required
+          >
+          <button type="submit" class="bf-waitlist-btn" aria-label="Join the waitlist">
+            <span>JOIN</span>
             <span aria-hidden="true">→</span>
           </button>
         </div>
-        <div class="bf-countdown-gate-error" id="bf-cd-gate-error" role="alert" style="display:none;">
-          [ INVALID CODE — TRY AGAIN ]
+        <div class="bf-waitlist-error" id="bf-waitlist-error" role="alert" style="display:none;">
+          [ ENTER A VALID EMAIL TO JOIN ]
         </div>
-        <div class="bf-countdown-gate-success" id="bf-cd-gate-success" style="display:none;">
-          ✓ ACCESS GRANTED — WELCOME TO WLED BLED
+        <div class="bf-waitlist-success" id="bf-waitlist-success" style="display:none;">
+          ✓ YOU'RE ON THE LIST — STAY TUNED
         </div>
+        <p class="bf-waitlist-note">No spam. Drop notifications only.</p>
       </form>
 
       <!-- Instagram Follow -->
@@ -176,39 +192,43 @@
     });
   }
 
-  // Password gate
-  const gateForm    = document.getElementById('bf-cd-gate-form');
-  const gateInput   = document.getElementById('bf-cd-gate-input');
-  const gateRow     = document.getElementById('bf-cd-gate-row');
-  const gateError   = document.getElementById('bf-cd-gate-error');
-  const gateSuccess = document.getElementById('bf-cd-gate-success');
+  // Waitlist form
+  const waitlistForm    = document.getElementById('bf-waitlist-form');
+  const waitlistEmail   = document.getElementById('bf-waitlist-email');
+  const waitlistRow     = document.getElementById('bf-waitlist-row');
+  const waitlistError   = document.getElementById('bf-waitlist-error');
+  const waitlistSuccess = document.getElementById('bf-waitlist-success');
 
-  const CORRECT_PASS = 'frombledfakewithlove';
+  function isValidEmail(v) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  }
 
-  if (gateForm) {
-    gateForm.addEventListener('submit', (e) => {
+  if (waitlistForm) {
+    waitlistForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const val = (gateInput ? gateInput.value : '').trim().toLowerCase();
+      const email = (waitlistEmail ? waitlistEmail.value : '').trim();
 
-      if (val === CORRECT_PASS) {
-        // Correct password
-        if (gateError)   gateError.style.display   = 'none';
-        if (gateSuccess) gateSuccess.style.display = 'block';
-        if (gateRow)     gateRow.style.display      = 'none';
-        // Redirect to store after a short delay
-        setTimeout(() => {
-          window.location.href = '/collections/all';
-        }, 1200);
-      } else {
-        // Wrong password
-        if (gateSuccess) gateSuccess.style.display = 'none';
-        if (gateError)   gateError.style.display   = 'block';
-        if (gateRow) {
-          gateRow.classList.add('is-error');
-          setTimeout(() => gateRow.classList.remove('is-error'), 600);
+      if (!isValidEmail(email)) {
+        if (waitlistSuccess) waitlistSuccess.style.display = 'none';
+        if (waitlistError)   waitlistError.style.display   = 'block';
+        if (waitlistRow) {
+          waitlistRow.classList.add('is-error');
+          setTimeout(() => waitlistRow.classList.remove('is-error'), 600);
         }
-        if (gateInput) { gateInput.focus(); gateInput.select(); }
+        if (waitlistEmail) { waitlistEmail.focus(); }
+        return;
       }
+
+      // Store locally & show success
+      try {
+        const list = JSON.parse(localStorage.getItem('bf_waitlist') || '[]');
+        if (!list.includes(email)) { list.push(email); localStorage.setItem('bf_waitlist', JSON.stringify(list)); }
+      } catch(err) {}
+
+      if (waitlistError)   waitlistError.style.display   = 'none';
+      if (waitlistSuccess) waitlistSuccess.style.display = 'block';
+      if (waitlistRow)     waitlistRow.style.opacity     = '0.4';
+      if (waitlistForm)    waitlistForm.style.pointerEvents = 'none';
     });
   }
 })();
