@@ -67,10 +67,13 @@
         <span>JOIN THE WAITLIST — BE FIRST TO KNOW</span>
       </div>
 
-      <form class="bf-waitlist-form" id="bf-waitlist-form" autocomplete="off" novalidate>
+      {%- form 'customer', class: 'bf-waitlist-form', id: 'bf-waitlist-form' -%}
+        <input type="hidden" name="contact[tags]" value="waitlist, wled_bled_drop">
+
         <div class="bf-waitlist-row" id="bf-waitlist-row">
           <input
             type="text"
+            name="contact[first_name]"
             id="bf-waitlist-name"
             class="bf-waitlist-input"
             placeholder="YOUR NAME"
@@ -79,6 +82,7 @@
           >
           <input
             type="email"
+            name="contact[email]"
             id="bf-waitlist-email"
             class="bf-waitlist-input bf-waitlist-input--email"
             placeholder="YOUR EMAIL"
@@ -86,23 +90,38 @@
             aria-label="Enter your email"
             required
           >
-          <button type="submit" class="bf-waitlist-btn" aria-label="Join the waitlist">
-            <span>JOIN</span>
+          <button type="submit" class="bf-waitlist-btn" id="bf-waitlist-btn" aria-label="Join the waitlist">
+            <span id="bf-waitlist-btn-text">JOIN</span>
             <span aria-hidden="true">→</span>
           </button>
         </div>
-        <div class="bf-waitlist-error" id="bf-waitlist-error" role="alert" style="display:none;">
-          [ ENTER A VALID EMAIL TO JOIN ]
-        </div>
-        <div class="bf-waitlist-success" id="bf-waitlist-success" style="display:none;">
-          ✓ YOU'RE ON THE LIST — STAY TUNED
-        </div>
+
+        {%- if form.errors -%}
+          <div class="bf-waitlist-error" id="bf-waitlist-error" role="alert" style="display:block;">
+            [ {{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }} ]
+          </div>
+        {%- else -%}
+          <div class="bf-waitlist-error" id="bf-waitlist-error" role="alert" style="display:none;">
+            [ ENTER A VALID EMAIL TO JOIN ]
+          </div>
+        {%- endif -%}
+
+        {%- if form.posted_successfully? -%}
+          <div class="bf-waitlist-success" id="bf-waitlist-success" style="display:block;">
+            ✓ YOU'RE ON THE LIST — STAY TUNED
+          </div>
+        {%- else -%}
+          <div class="bf-waitlist-success" id="bf-waitlist-success" style="display:none;">
+            ✓ YOU'RE ON THE LIST — STAY TUNED
+          </div>
+        {%- endif -%}
+
         <p class="bf-waitlist-note">No spam. Drop notifications only.</p>
-      </form>
+      {%- endform -%}
 
       <!-- Instagram Follow — smaller -->
       <a
-        href="https://instagram.com/bledfake_"
+        href="https://instagram.com/wledbled_"
         target="_blank"
         rel="noopener noreferrer"
         class="bf-countdown-cta bf-countdown-cta--sm"
@@ -159,12 +178,14 @@
   updateCountdown();
   setInterval(updateCountdown, 1000);
 
-  // Waitlist form
+  // Waitlist form — submits directly to Shopify Customer database
   const waitlistForm    = document.getElementById('bf-waitlist-form');
   const waitlistEmail   = document.getElementById('bf-waitlist-email');
   const waitlistRow     = document.getElementById('bf-waitlist-row');
   const waitlistError   = document.getElementById('bf-waitlist-error');
   const waitlistSuccess = document.getElementById('bf-waitlist-success');
+  const waitlistBtn     = document.getElementById('bf-waitlist-btn');
+  const waitlistBtnText = document.getElementById('bf-waitlist-btn-text');
 
   function isValidEmail(v) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
@@ -172,12 +193,15 @@
 
   if (waitlistForm) {
     waitlistForm.addEventListener('submit', (e) => {
-      e.preventDefault();
       const email = (waitlistEmail ? waitlistEmail.value : '').trim();
 
       if (!isValidEmail(email)) {
+        e.preventDefault();
         if (waitlistSuccess) waitlistSuccess.style.display = 'none';
-        if (waitlistError)   waitlistError.style.display   = 'block';
+        if (waitlistError) {
+          waitlistError.textContent = '[ ENTER A VALID EMAIL TO JOIN ]';
+          waitlistError.style.display = 'block';
+        }
         if (waitlistRow) {
           waitlistRow.classList.add('is-error');
           setTimeout(() => waitlistRow.classList.remove('is-error'), 600);
@@ -186,16 +210,31 @@
         return;
       }
 
-      // Store locally & show success
-      try {
-        const list = JSON.parse(localStorage.getItem('bf_waitlist') || '[]');
-        if (!list.includes(email)) { list.push(email); localStorage.setItem('bf_waitlist', JSON.stringify(list)); }
-      } catch(err) {}
+      // If running on Shopify with fetch support, submit asynchronously
+      if (window.fetch && waitlistForm.action && waitlistForm.action.includes('/contact')) {
+        e.preventDefault();
+        if (waitlistBtnText) waitlistBtnText.textContent = '...';
 
-      if (waitlistError)   waitlistError.style.display   = 'none';
-      if (waitlistSuccess) waitlistSuccess.style.display = 'block';
-      if (waitlistRow)     waitlistRow.style.opacity     = '0.4';
-      if (waitlistForm)    waitlistForm.style.pointerEvents = 'none';
+        const formData = new FormData(waitlistForm);
+
+        fetch(waitlistForm.action, {
+          method: 'POST',
+          body: formData,
+          headers: { 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' }
+        })
+        .then(() => {
+          if (waitlistError)   waitlistError.style.display   = 'none';
+          if (waitlistSuccess) waitlistSuccess.style.display = 'block';
+          if (waitlistRow)     waitlistRow.style.opacity     = '0.35';
+          if (waitlistBtn)     waitlistBtn.disabled          = true;
+          if (waitlistBtnText) waitlistBtnText.textContent   = '✓';
+        })
+        .catch(() => {
+          // Fallback to normal submission
+          waitlistForm.submit();
+        });
+      }
+      // Otherwise allow standard form POST to handle submission
     });
   }
 })();
