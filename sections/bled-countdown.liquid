@@ -25,15 +25,9 @@
   <!-- Grain texture overlay -->
   <div class="bf-grain" aria-hidden="true"></div>
 
-  <!-- Top Brand Header -->
-  <header class="bf-countdown-header" role="banner">
-    <div class="bf-countdown-header__brand">
-      <img src="{{ 'MainLog.png' | asset_url }}" alt="BLED FAKE" class="bf-countdown-logo-img" width="52" height="58">
-      <div class="bf-countdown-badge">
-        <span class="bf-status-dot"></span>
-        <span>DROP SYSTEM ACTIVE</span>
-      </div>
-    </div>
+  <!-- Top Brand Header — logo centered, no badge -->
+  <header class="bf-countdown-header bf-countdown-header--centered" role="banner">
+    <img src="{{ 'MainLog.png' | asset_url }}" alt="BLED FAKE" class="bf-countdown-logo-img" width="52" height="58">
 
     <button
       type="button"
@@ -48,8 +42,8 @@
   <!-- Center Content: Countdown & Headline -->
   <main class="bf-countdown-center" role="main">
 
-    <!-- Drop Title — matches countdown size -->
-    <h1 class="bf-countdown-title bf-countdown-title--match">{{ section.settings.drop_title | default: "WLED BLED DROP DAY" }}</h1>
+    <!-- Drop Title — big, matches full countdown number scale -->
+    <h1 class="bf-countdown-title bf-countdown-title--hero">{{ section.settings.drop_title | default: "WLED BLED DROP DAY" }}</h1>
 
     <div class="bf-countdown-timer bf-countdown-timer--compact" id="bf-countdown-timer" aria-live="polite">
       <div class="bf-countdown-card bf-countdown-card--sm">
@@ -111,12 +105,12 @@
         <p class="bf-waitlist-note">No spam. Drop notifications only.</p>
       </form>
 
-      <!-- Instagram Follow -->
+      <!-- Instagram Follow — smaller -->
       <a
         href="https://instagram.com/bledfake_"
         target="_blank"
         rel="noopener noreferrer"
-        class="bf-countdown-cta"
+        class="bf-countdown-cta bf-countdown-cta--sm"
       >
         <span>FOLLOW @WLEDBLED</span>
         <span class="bf-countdown-cta__arrow" aria-hidden="true">→</span>

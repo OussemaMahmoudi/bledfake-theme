@@ -3158,6 +3158,7 @@ input, select, textarea { font: inherit; }
   border: 1px solid rgba(241, 238, 230, 0.12);
   padding: clamp(1rem, 2.5vw, 1.8rem) clamp(0.5rem, 1.5vw, 1.2rem);
   position: relative;
+  box-shadow: 0 0 22px rgba(241, 238, 230, 0.07), inset 0 1px 0 rgba(241, 238, 230, 0.06);
   transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -3339,6 +3340,16 @@ input, select, textarea { font: inherit; }
   transform: translateX(4px);
 }
 
+/* Smaller follow button variant */
+.bf-countdown-cta--sm {
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  padding: 0.5rem 1.3rem;
+  font-family: var(--font-body, 'Space Grotesk', sans-serif);
+  font-weight: 600;
+  box-shadow: none;
+}
+
 /* Small title above the countdown */
 .bf-countdown-title--sm {
   font-size: clamp(1.2rem, 3vw, 2rem);
@@ -3356,6 +3367,26 @@ input, select, textarea { font: inherit; }
   text-shadow: 0 2px 16px rgba(0, 0, 0, 0.7);
 }
 
+/* Hero title — full large scale matching the countdown display */
+.bf-countdown-title--hero {
+  font-size: clamp(2.8rem, 7vw, 6rem);
+  letter-spacing: 0.04em;
+  line-height: 0.92;
+  margin: 0 0 1.2rem 0;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.75);
+}
+
+/* Centered header variant — logo in center, sound btn on right */
+.bf-countdown-header--centered {
+  position: relative;
+  justify-content: center;
+}
+
+.bf-countdown-header--centered .bf-countdown-sound-btn {
+  position: absolute;
+  right: 0;
+}
+
 /* Compact countdown variant — smaller numbers, top-positioned */
 .bf-countdown-timer--compact {
   max-width: 520px;
@@ -3364,12 +3395,15 @@ input, select, textarea { font: inherit; }
 }
 
 .bf-countdown-card--sm {
-  padding: clamp(0.55rem, 1.4vw, 0.9rem) clamp(0.4rem, 1vw, 0.8rem);
+  padding: clamp(1rem, 2.5vw, 1.6rem) clamp(0.4rem, 1vw, 0.8rem);
+  min-height: clamp(90px, 14vw, 130px);
+  box-shadow: 0 0 18px rgba(241, 238, 230, 0.08), 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .bf-countdown-num--sm {
-  font-size: clamp(1.9rem, 4.5vw, 3.5rem);
+  font-size: clamp(2.4rem, 6vw, 5rem);
   margin-bottom: 0.2rem;
+  text-shadow: 0 0 24px rgba(241, 238, 230, 0.55), 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 /* ── WAITLIST FORM ─────────────────────────── */
