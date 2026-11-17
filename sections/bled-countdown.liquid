@@ -48,7 +48,9 @@
   <!-- Center Content: Countdown & Headline -->
   <main class="bf-countdown-center" role="main">
 
-    <!-- Countdown Timer Grid — compact, near top -->
+    <!-- Drop Title — small, above countdown -->
+    <h1 class="bf-countdown-title bf-countdown-title--sm">{{ section.settings.drop_title | default: "WLED BLED DROP DAY" }}</h1>
+
     <div class="bf-countdown-tagline">
       <span>//</span>
       <span>OFFICIAL COUNTDOWN</span>
@@ -72,13 +74,6 @@
         <span class="bf-countdown-num bf-countdown-num--sm" id="bf-cd-secs">00</span>
         <span class="bf-countdown-label">SECONDS</span>
       </div>
-    </div>
-
-    <!-- Drop Title & Subtitle -->
-    <h1 class="bf-countdown-title">{{ section.settings.drop_title | default: "WLED BLED DROP DAY" }}</h1>
-
-    <div class="bf-countdown-title-sub">
-      {{ section.settings.drop_subtitle | default: "DECEMBER 01, 2026 // FROM BLEDFAKE WITH LOVE" }}
     </div>
 
     <!-- Waitlist Form -->
