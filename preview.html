@@ -599,37 +599,24 @@ ul, ol { list-style: none; }
      ================================================================ -->
 <section class="bf-countdown-page" id="bf-landing" aria-label="BLED FAKE — WLED BLED DROP DAY">
 
-  <!-- Background Video Wrap -->
-  <div class="bf-countdown-video-wrap" aria-hidden="true">
-    <video
-      id="bf-countdown-bg-video"
-      class="bf-countdown-video"
-      autoplay
-      muted
-      loop
-      playsinline
-      preload="auto"
+  <!-- Background Image Wrap -->
+  <div class="bf-countdown-bg-wrap" aria-hidden="true">
+    <img
+      src="img/landing-hero.jpg"
+      alt="BLED FAKE Background"
+      class="bf-countdown-bg-img"
+      id="bf-countdown-bg-img"
+      loading="eager"
     >
-      <source src="img/IMG_3979_002.mp4" type="video/mp4">
-    </video>
     <div class="bf-countdown-overlay"></div>
   </div>
 
   <!-- Grain texture overlay -->
   <div class="bf-grain" aria-hidden="true"></div>
 
-  <!-- Top Brand Header — logo centered, no badge -->
+  <!-- Top Brand Header — logo centered on top -->
   <header class="bf-countdown-header bf-countdown-header--centered" role="banner">
     <img src="img/MainLog.png" alt="BLED FAKE" class="bf-countdown-logo-img">
-
-    <button
-      type="button"
-      id="bf-countdown-sound-toggle"
-      class="bf-countdown-sound-btn"
-      aria-label="Toggle sound"
-    >
-      SOUND: OFF
-    </button>
   </header>
 
   <!-- Center Content: Countdown & Headline -->
@@ -700,7 +687,7 @@ ul, ol { list-style: none; }
 
       <!-- Instagram Follow -->
       <a
-        href="https://instagram.com/wledbled_"
+        href="https://instagram.com/bledfake_"
         target="_blank"
         rel="noopener noreferrer"
         class="bf-countdown-cta bf-countdown-cta--sm"
@@ -1663,17 +1650,6 @@ function showLanding(e) {
 
   updateCountdown();
   setInterval(updateCountdown, 1000);
-
-  // Sound toggle
-  const soundBtn = document.getElementById('bf-countdown-sound-toggle');
-  const video = document.getElementById('bf-countdown-bg-video');
-  if (soundBtn && video) {
-    soundBtn.addEventListener('click', () => {
-      video.muted = !video.muted;
-      soundBtn.textContent = video.muted ? 'SOUND: OFF' : 'SOUND: ON';
-      soundBtn.classList.toggle('is-active', !video.muted);
-    });
-  }
 
   // Waitlist form
   const waitlistForm    = document.getElementById('bf-waitlist-form');

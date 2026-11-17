@@ -1,42 +1,37 @@
 {% comment %}
   BLED FAKE — Countdown Landing Page (bled-countdown.liquid)
-  Cinematic Brutalist Pre-launch Countdown Page with Looping Video Background.
+  Cinematic Brutalist Pre-launch Countdown Page with Hero Image Background.
   Target: December 1, 2026 — WLED BLED DROP DAY
 {% endcomment %}
 
 <section class="bf-countdown-page" id="bf-countdown" aria-label="BLED FAKE — WLED BLED DROP DAY">
 
-  <!-- Background Video Wrap -->
-  <div class="bf-countdown-video-wrap" aria-hidden="true">
-    <video
-      id="bf-countdown-bg-video"
-      class="bf-countdown-video"
-      autoplay
-      muted
-      loop
-      playsinline
-      preload="auto"
-    >
-      <source src="{{ 'IMG_3979_002.mp4' | asset_url }}" type="video/mp4">
-    </video>
+  <!-- Background Image Wrap -->
+  <div class="bf-countdown-bg-wrap" aria-hidden="true">
+    {%- if section.settings.background_image != blank -%}
+      <img
+        src="{{ section.settings.background_image | image_url: width: 2000 }}"
+        alt="BLED FAKE Background"
+        class="bf-countdown-bg-img"
+        loading="eager"
+      >
+    {%- else -%}
+      <img
+        src="{{ 'landing-hero.jpg' | asset_url }}"
+        alt="BLED FAKE Background"
+        class="bf-countdown-bg-img"
+        loading="eager"
+      >
+    {%- endif -%}
     <div class="bf-countdown-overlay"></div>
   </div>
 
   <!-- Grain texture overlay -->
   <div class="bf-grain" aria-hidden="true"></div>
 
-  <!-- Top Brand Header — logo centered, no badge -->
+  <!-- Top Brand Header — logo centered on top -->
   <header class="bf-countdown-header bf-countdown-header--centered" role="banner">
     <img src="{{ 'MainLog.png' | asset_url }}" alt="BLED FAKE" class="bf-countdown-logo-img" width="52" height="58">
-
-    <button
-      type="button"
-      id="bf-countdown-sound-toggle"
-      class="bf-countdown-sound-btn"
-      aria-label="Toggle sound"
-    >
-      SOUND: OFF
-    </button>
   </header>
 
   <!-- Center Content: Countdown & Headline -->
@@ -107,7 +102,7 @@
 
       <!-- Instagram Follow — smaller -->
       <a
-        href="https://instagram.com/wledbled_"
+        href="https://instagram.com/bledfake_"
         target="_blank"
         rel="noopener noreferrer"
         class="bf-countdown-cta bf-countdown-cta--sm"
@@ -164,17 +159,6 @@
   updateCountdown();
   setInterval(updateCountdown, 1000);
 
-  // Sound toggle
-  const soundBtn = document.getElementById('bf-countdown-sound-toggle');
-  const video = document.getElementById('bf-countdown-bg-video');
-  if (soundBtn && video) {
-    soundBtn.addEventListener('click', () => {
-      video.muted = !video.muted;
-      soundBtn.textContent = video.muted ? 'SOUND: OFF' : 'SOUND: ON';
-      soundBtn.classList.toggle('is-active', !video.muted);
-    });
-  }
-
   // Waitlist form
   const waitlistForm    = document.getElementById('bf-waitlist-form');
   const waitlistEmail   = document.getElementById('bf-waitlist-email');
@@ -222,6 +206,11 @@
   "name": "BLED Countdown Drop",
   "tag": "section",
   "settings": [
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background Image"
+    },
     {
       "type": "text",
       "id": "drop_title",
