@@ -144,7 +144,7 @@
 <script>
 (function() {
   // Target: December 1, 2026 00:00:00
-  const targetDateStr = {{ section.settings.target_date | default: "2026-12-01T00:00:00" | json }};
+  const targetDateStr = {{ section.settings.target_date | default: "2026-12-05T18:00:00" | json }};
   const targetTime = new Date(targetDateStr).getTime();
 
   const daysEl  = document.getElementById('bf-cd-days');
@@ -266,7 +266,7 @@
       "type": "text",
       "id": "target_date",
       "label": "Target Drop Date (ISO format)",
-      "default": "2026-12-01T00:00:00",
+      "default": "2026-12-05T18:00:00",
       "info": "Format: YYYY-MM-DDTHH:MM:SS"
     },
     {
